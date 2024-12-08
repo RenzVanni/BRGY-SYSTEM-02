@@ -2,7 +2,7 @@
 import { sidebar_navigation_data } from "@/data/sidebar";
 import { ChevronDown, ChevronUp, LogOut, User2 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DARK_GREEN } from "@/constants/colors";
 import CustomIcons from "./CustomIcons";
@@ -32,6 +32,9 @@ import {
   CollapsibleTrigger,
 } from "./ui/collapsible";
 import Link from "next/link";
+import { logout_auth } from "@/actions/auth";
+import { redirect } from "next/navigation";
+import { LOGIN } from "@/constants/navigation";
 
 const AppSidebar = () => {
   const [isOptions, setIsOptions] = useState<null | number>(null);
@@ -69,7 +72,7 @@ const AppSidebar = () => {
                     <SidebarMenuButton asChild>
                       <Link href={item.slug}>
                         <CustomIcons CustomIcon={item.icon} />
-                        <span>{item.title}</span>
+                        <span>{item.title.substring(1)}</span>
                       </Link>
                     </SidebarMenuButton>
                   ) : (
@@ -126,7 +129,11 @@ const AppSidebar = () => {
                 <DropdownMenuItem>
                   <span>Billing</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logout_auth(), router.push(LOGIN);
+                  }}
+                >
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

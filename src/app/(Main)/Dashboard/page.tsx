@@ -1,8 +1,10 @@
 "use client";
+import { dashboard_auth } from "@/actions/dashboard_auth";
+import { fetchResidents } from "@/api/fetch_residents";
+import CustomBarChart from "@/components/CustomBarChart";
 import CustomTitle from "@/components/CustomTitle";
-import { CustomBarChart } from "@/config/chart_config";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 const page = () => {
   return (
