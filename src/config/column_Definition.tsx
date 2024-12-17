@@ -252,14 +252,15 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
         id,
       } = row.original;
 
-      const formatBirthDate = new Date(birthDate).toISOString().split("T")[0];
       const {
         isEditResident,
         setIsEditResident,
         isCreateCertificate,
         setIsCreateCertificate,
+        setResidentData,
       } = useContext(ContextTheme);
-      console.log("table: ", id);
+
+      const formatBirthDate = new Date(birthDate).toISOString().split("T")[0];
       return (
         <>
           <DropdownMenu>
@@ -273,48 +274,45 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => setIsEditResident((prev) => !prev)}
+                onClick={() => {
+                  setIsEditResident((prev) => !prev);
+                  setResidentData({
+                    id,
+                    firstName,
+                    middleName,
+                    lastName,
+                    email,
+                    birthDate: formatBirthDate,
+                    birthPlace,
+                    address,
+                    status,
+                    sex,
+                  });
+                }}
               >
                 <span>Edit Resident</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setIsCreateCertificate((prev) => !prev)}
+                onClick={() => {
+                  setIsCreateCertificate((prev) => !prev);
+                  setResidentData({
+                    id,
+                    firstName,
+                    middleName,
+                    lastName,
+                    email,
+                    birthDate: formatBirthDate,
+                    birthPlace,
+                    address,
+                    status,
+                    sex,
+                  });
+                }}
               >
                 <span>Create Certificate</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <CustomDialog
-            id={id}
-            isOpen={isEditResident}
-            setIsOpen={setIsEditResident}
-            firstName={firstName}
-            middleName={middleName}
-            lastName={lastName}
-            picture="/images/eun.jpeg"
-            isResident={true}
-            email={email}
-            birthDate={formatBirthDate}
-            birthPlace={birthPlace}
-            address={address}
-            status={status}
-            sex={sex}
-          />
-          <CustomDialog
-            id={id}
-            isOpen={isCreateCertificate}
-            setIsOpen={setIsCreateCertificate}
-            firstName={firstName}
-            middleName={middleName}
-            lastName={lastName}
-            picture="/images/eun.jpeg"
-            birthDate={formatBirthDate}
-            birthPlace={birthPlace}
-            address={address}
-            status={status}
-            sex={sex}
-          />
         </>
       );
     },

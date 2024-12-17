@@ -1,4 +1,11 @@
-import React, { Dispatch, SetStateAction } from "react";
+"use client";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useContext,
+  useEffect,
+} from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +25,8 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { CircleUserRound } from "lucide-react";
+import { resident_auth } from "@/actions/auth";
+import { ContextTheme } from "@/config/config_context";
 
 type Prop = {
   id: string;
@@ -27,13 +36,16 @@ type Prop = {
   middleName: string;
   lastName: string;
   picture: string;
-  isResident: boolean;
   birthDate: string;
   birthPlace: string;
   email: string;
   address: string;
   status: string;
   sex: string;
+  is_Add_Resident: boolean;
+  is_Edit_Resident: boolean;
+  is_Create_Certificate: boolean;
+  whatsType: string;
 };
 
 type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
@@ -46,19 +58,39 @@ const CustomDialog = ({
   middleName,
   lastName,
   picture,
-  isResident,
   birthDate,
   birthPlace,
   email,
   address,
   status,
   sex,
+  is_Add_Resident,
+  is_Edit_Resident,
+  is_Create_Certificate,
+  whatsType = "",
 }: PartialExcept<Prop, "setIsOpen">) => {
   const checkMiddleName = middleName == null ? "" : middleName;
+  const [state, action, pending] = useActionState(resident_auth, undefined);
+  useEffect(() => {
+    if (pending) {
+      setIsOpen(false);
+    }
+  }, [pending]);
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      <DialogContent className={`${isResident && "pt-12"}`}>
-        {isResident ? (
+      <DialogContent className={`${is_Edit_Resident && "pt-12"}`}>
+        {is_Add_Resident && (
+          <>
+            <DialogHeader>
+              <DialogTitle>Add Resident</DialogTitle>
+              <DialogDescription>
+                Add resident here. Click save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+          </>
+        )}
+
+        {is_Edit_Resident && (
           <>
             {picture ? (
               <Image
@@ -76,16 +108,21 @@ const CustomDialog = ({
               <DialogDescription>{email}</DialogDescription>
             </DialogHeader>
           </>
-        ) : (
-          <DialogHeader>
-            <DialogTitle>Create Certificate</DialogTitle>
-            <DialogDescription>
-              Create your certificate/clearance here. Click save when you're
-              done.
-            </DialogDescription>
-          </DialogHeader>
         )}
-        <form action="" className="grid gap-4">
+
+        {is_Create_Certificate && (
+          <>
+            <DialogHeader>
+              <DialogTitle>Create Certificate/Clearance</DialogTitle>
+              <DialogDescription>
+                Create your certificate/clearance here. Click save when you're
+                done.
+              </DialogDescription>
+            </DialogHeader>
+          </>
+        )}
+
+        <form action={action} className="grid gap-4">
           <div className="grid grid-cols-3 items-center gap-2">
             <p>Name</p>
             <div className="grid grid-cols-3 gap-2 col-span-2">
@@ -115,7 +152,7 @@ const CustomDialog = ({
             </div>
           </div>
 
-          {isResident && (
+          {is_Edit_Resident && (
             <div className="grid grid-cols-3 items-center gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -123,7 +160,6 @@ const CustomDialog = ({
                 type="email"
                 name="email"
                 placeholder="jia@gmail.com"
-                required
                 className="col-span-2"
                 defaultValue={email}
               />
@@ -151,6 +187,7 @@ const CustomDialog = ({
               name="birthPlace"
               required
               className="col-span-2"
+              placeholder="Enter birth place..."
               defaultValue={birthPlace}
             />
           </div>
@@ -169,7 +206,7 @@ const CustomDialog = ({
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="sex">Sex</Label>
-            <Select defaultValue={sex && sex} name="sex">
+            <Select defaultValue={sex} name="sex">
               <SelectTrigger className="col-span-2" id="sex">
                 <SelectValue placeholder="Select Sex" />
               </SelectTrigger>
@@ -182,7 +219,7 @@ const CustomDialog = ({
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="status">Status</Label>
-            <Select defaultValue={status && status} name="status">
+            <Select defaultValue={status} name="status">
               <SelectTrigger className="col-span-2" id="status">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
@@ -194,19 +231,30 @@ const CustomDialog = ({
             </Select>
           </div>
 
-          <Input type="hidden" value={id} />
+          <Input type="hidden" name="whatsType" value={whatsType} />
+          <Input type="hidden" name="id" value={id} />
 
           <div
             className={`flex items-center ${
-              isResident ? "justify-between" : "justify-end"
+              is_Edit_Resident ? "justify-between" : "justify-end"
             }`}
           >
-            {isResident && (
-              <Button type="button" variant="destructive" className="w-[100px]">
+            {is_Edit_Resident && (
+              <Button
+                disabled={pending}
+                type="submit"
+                variant="destructive"
+                className="w-[100px]"
+              >
                 Delete
               </Button>
             )}
-            <Button type="button" variant="outline" className="w-[100px]">
+            <Button
+              disabled={pending}
+              type="submit"
+              variant="outline"
+              className="w-[100px]"
+            >
               Save
             </Button>
           </div>

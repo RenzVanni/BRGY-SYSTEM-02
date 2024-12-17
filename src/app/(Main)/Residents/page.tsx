@@ -19,12 +19,73 @@ const page = () => {
   }, []);
   console.log(data);
 
-  const { setIsAddResident, isAddResident } = useContext(ContextTheme);
+  const {
+    setIsAddResident,
+    setIsEditResident,
+    setIsCreateCertificate,
+    isAddResident,
+    isEditResident,
+    isCreateCertificate,
+    residentData,
+  } = useContext(ContextTheme);
+
+  const {
+    id,
+    firstName,
+    middleName,
+    lastName,
+    picture,
+    birthDate,
+    birthPlace,
+    email,
+    address,
+    sex,
+    status,
+  } = residentData;
   return (
     <>
       <CustomTitle>Residents</CustomTitle>
       <DataTable columns={ResidentsColumns} data={data} />
-      <CustomDialog setIsOpen={setIsAddResident} isOpen={isAddResident} />
+      <CustomDialog
+        isOpen={isAddResident}
+        setIsOpen={setIsAddResident}
+        is_Add_Resident={true}
+        whatsType="create"
+      />
+
+      <CustomDialog
+        id={id}
+        firstName={firstName}
+        middleName={middleName}
+        lastName={lastName}
+        picture="/images/eun.jpeg"
+        email={email}
+        birthDate={birthDate}
+        birthPlace={birthPlace}
+        address={address}
+        status={status}
+        sex={sex}
+        isOpen={isEditResident}
+        setIsOpen={setIsEditResident}
+        is_Edit_Resident={true}
+        whatsType="edit"
+      />
+
+      <CustomDialog
+        id={id}
+        firstName={firstName}
+        middleName={middleName}
+        lastName={lastName}
+        picture="/images/eun.jpeg"
+        birthDate={birthDate}
+        birthPlace={birthPlace}
+        address={address}
+        status={status}
+        sex={sex}
+        isOpen={isCreateCertificate}
+        setIsOpen={setIsCreateCertificate}
+        is_Create_Certificate={true}
+      />
     </>
   );
 };

@@ -37,27 +37,40 @@ export type FormState =
   | undefined;
 
 // Resident Definitions
-export type Edit_Resident_FormState =
+export const Resident_FormSchema = z.object({
+  id: z.string().trim(),
+  firstName: z.string().trim(),
+  middleName: z.string().trim().nullable(),
+  lastName: z.string().trim(),
+  birthDate: z.string().date(),
+  email: z.string().trim().nullable(),
+  birthPlace: z.string().trim(),
+  sex: z.string().trim(),
+  status: z.string().trim(),
+  address: z.string().trim(),
+  whatsType: z.string().trim(),
+});
+
+// export const Resident_FormSchema_Optional = Resident_FormSchema.partial({
+//   email: true,
+//   middleName: true,
+// });
+
+export type Resident_FormState =
   | {
       errors?: {
+        id?: string[];
+        firstName?: string[];
+        middleName?: string[];
+        lastName?: string[];
+        birthDate?: string[];
         email?: string[];
-        password?: string[];
+        birthPlace?: string[];
+        sex?: string[];
+        status?: string[];
+        address?: string[];
+        whatsType?: string[];
       };
       message?: string;
     }
   | undefined;
-
-const Edit_Resident_FormSchema = z.object({
-  id: z.string().trim(),
-  firstName: z.string().trim(),
-  middleName: z.string().trim(),
-  lastName: z.string().trim(),
-  birthDate: z.string().date(),
-  email: z.string().trim(),
-  birthPlace: z.string().trim(),
-  sex: z.string().trim(),
-  status: z.string().trim(),
-});
-
-export const Edit_Resident_FormSchema_Optional =
-  Edit_Resident_FormSchema.partial({ email: true, middleName: true });

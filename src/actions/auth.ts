@@ -2,13 +2,13 @@
 import {
   LoginFormSchema,
   FormState,
-  Edit_Resident_FormState,
-  Edit_Resident_FormSchema_Optional,
+  Resident_FormState,
+  Resident_FormSchema,
 } from "@/lib/definitions";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "@/lib/session";
-import { DASHBOARD } from "@/constants/navigation";
+import { DASHBOARD, RESIDENTS } from "@/constants/navigation";
 
 export const login_auth = async (state: FormState, formData: FormData) => {
   const validateFields = LoginFormSchema.safeParse({
@@ -48,11 +48,13 @@ export const logout_auth = async () => {
   await deleteSession();
 };
 
-export const edit_resident_auth = async (
-  state: Edit_Resident_FormState,
+// Residents
+
+export const resident_auth = async (
+  state: Resident_FormState,
   formData: FormData
 ) => {
-  const validateFields = Edit_Resident_FormSchema_Optional.safeParse({
+  const validateFields = Resident_FormSchema.safeParse({
     id: formData.get("id"),
     firstName: formData.get("firstName"),
     middleName: formData.get("middleName"),
@@ -62,6 +64,8 @@ export const edit_resident_auth = async (
     birthPlace: formData.get("birthPlace"),
     sex: formData.get("sex"),
     status: formData.get("status"),
+    address: formData.get("address"),
+    whatsType: formData.get("whatsType"),
   });
 
   if (!validateFields.success) {
@@ -80,9 +84,32 @@ export const edit_resident_auth = async (
         email,
         birthPlace,
         status,
+        sex,
+        address,
+        whatsType,
       } = validateFields.data;
+
+      console.log(email);
+
+      if (whatsType == "create") {
+        const response = await axios.post("http://localhost:5000/resident", {
+          firstName,
+          middleName,
+          lastName,
+          email,
+          birthDate,
+          birthPlace,
+          status,
+          sex,
+          address,
+        });
+
+        const responseData = response.data;
+        await createSession(responseData);
+      }
     } catch (error) {
       console.log(error);
     }
+    redirect(RESIDENTS);
   }
 };
