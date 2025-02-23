@@ -37,6 +37,12 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --importBtn: 221.2 83.2% 53.3%;
+    --import-foreground: 210 40% 98%;
+
+    --exportBtn: 346.8 77.2% 49.8%;
+    --export-foreground: 355.7 100% 97.3%;
   }
 
   .dark {
@@ -72,6 +78,12 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --importBtn: 217.2 91.2% 59.8%;
+    --import-foreground: 222.2 47.4% 11.2%;
+
+    --exportBtn: 346.8 77.2% 49.8%;
+    --export-foreground: 355.7 100% 97.3%;
   }
 }
 

@@ -7,12 +7,14 @@ import {
 } from "@/lib/definitions";
 import axios from "axios";
 import { redirect } from "next/navigation";
-import { createSession, deleteSession } from "@/lib/session";
+import { createSession, deleteSession, setSession } from "@/lib/session";
 import { DASHBOARD, RESIDENTS } from "@/constants/navigation";
+import { instance } from "@/api/config/axios_config";
 
 export const login_auth = async (state: FormState, formData: FormData) => {
   const validateFields = LoginFormSchema.safeParse({
-    email: formData.get("email"),
+    // email: formData.get("email"),
+    username: formData.get("username"),
     password: formData.get("password"),
   });
 
@@ -24,19 +26,20 @@ export const login_auth = async (state: FormState, formData: FormData) => {
 
   if (validateFields.success) {
     try {
-      const { email, password } = validateFields.data;
+      const { password, username } = validateFields.data;
 
-      const response = await axios.post(
-        "http://localhost:5000/login",
+      const response = await instance.post(
+        "/login",
         {
-          email,
+          username,
           password,
-        },
-        { withCredentials: true }
+        }
+        // { withCredentials: true }
       );
 
       const responseData = response.data;
-      await createSession(responseData);
+      await setSession(responseData);
+      // await createSession(responseData);
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +52,6 @@ export const logout_auth = async () => {
 };
 
 // Residents
-
 export const resident_auth = async (
   state: Resident_FormState,
   formData: FormData
@@ -60,10 +62,9 @@ export const resident_auth = async (
     middleName: formData.get("middleName"),
     lastName: formData.get("lastName"),
     birthDate: formData.get("birthDate"),
-    email: formData.get("email"),
     birthPlace: formData.get("birthPlace"),
-    sex: formData.get("sex"),
-    status: formData.get("status"),
+    gender: formData.get("gender"),
+    civilStatus: formData.get("civilStatus"),
     address: formData.get("address"),
     whatsType: formData.get("whatsType"),
   });
@@ -81,31 +82,32 @@ export const resident_auth = async (
         middleName,
         lastName,
         birthDate,
-        email,
         birthPlace,
-        status,
-        sex,
+        civilStatus,
+        gender,
         address,
         whatsType,
       } = validateFields.data;
 
-      console.log(email);
 
       if (whatsType == "create") {
-        const response = await axios.post("http://localhost:5000/resident", {
+        const response = await instance.post("/residents", {
           firstName,
           middleName,
           lastName,
-          email,
           birthDate,
           birthPlace,
-          status,
-          sex,
+          civilStatus,
+          gender,
           address,
         });
 
         const responseData = response.data;
-        await createSession(responseData);
+
+        // if (response.status == 401) {
+        //   await deleteSession();
+        // }
+        // await createSession(responseData);
       }
     } catch (error) {
       console.log(error);

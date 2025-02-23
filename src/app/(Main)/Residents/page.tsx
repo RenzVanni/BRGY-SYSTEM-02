@@ -5,19 +5,35 @@ import CustomTitle from "@/components/CustomTitle";
 import { DataTable } from "@/components/Table";
 import { Resident, ResidentsColumns } from "@/config/column_Definition";
 import { ContextTheme } from "@/config/config_context";
+import { RESIDENT_PROP } from "@/constants/Resident_Prop";
 import React, { useContext, useEffect, useState } from "react";
 
 const page = () => {
-  const [data, setData] = useState<Resident[]>([]);
+  const [data, setData] = useState<RESIDENT_PROP[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
       const response = await fetchResidents();
-      setData(response?.data);
+      if (response != undefined) {
+        setData(response);
+      }
+      console.log("this is from useffect: ", response);
     };
     fetch();
   }, []);
-  console.log(data);
+  console.log("This is the table: ", data);
+
+  const dialogOption = [
+    { is_Add_Resident: true, whatsType: "create" },
+    {
+      is_Edit_Resident: true,
+      whatsType: "edit",
+    },
+    {
+      is_Create_Certificate: true,
+      whatsType: "",
+    },
+  ];
 
   const {
     setIsAddResident,
@@ -31,21 +47,26 @@ const page = () => {
 
   const {
     id,
-    firstName,
-    middleName,
-    lastName,
-    picture,
+    firstname,
+    middlename,
+    lastname,
+    gender,
     birthDate,
     birthPlace,
-    email,
     address,
-    sex,
-    status,
+    contactNo,
+    citizenship,
+    civilStatus,
+    voterStatus,
+    osy,
+    pwd,
+    profileImageUrl,
   } = residentData;
   return (
     <>
       <CustomTitle>Residents</CustomTitle>
       <DataTable columns={ResidentsColumns} data={data} />
+
       <CustomDialog
         isOpen={isAddResident}
         setIsOpen={setIsAddResident}
@@ -55,16 +76,15 @@ const page = () => {
 
       <CustomDialog
         id={id}
-        firstName={firstName}
-        middleName={middleName}
-        lastName={lastName}
-        picture="/images/eun.jpeg"
-        email={email}
+        firstname={firstname}
+        middlename={middlename}
+        lastname={lastname}
+        profileImageUrl={profileImageUrl}
         birthDate={birthDate}
         birthPlace={birthPlace}
         address={address}
-        status={status}
-        sex={sex}
+        civilStatus={civilStatus}
+        gender={gender}
         isOpen={isEditResident}
         setIsOpen={setIsEditResident}
         is_Edit_Resident={true}
@@ -73,15 +93,15 @@ const page = () => {
 
       <CustomDialog
         id={id}
-        firstName={firstName}
-        middleName={middleName}
-        lastName={lastName}
-        picture="/images/eun.jpeg"
+        firstname={firstname}
+        middlename={middlename}
+        lastname={lastname}
+        profileImageUrl={profileImageUrl}
         birthDate={birthDate}
         birthPlace={birthPlace}
         address={address}
-        status={status}
-        sex={sex}
+        civilStatus={civilStatus}
+        gender={gender}
         isOpen={isCreateCertificate}
         setIsOpen={setIsCreateCertificate}
         is_Create_Certificate={true}

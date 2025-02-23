@@ -59,7 +59,8 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const { setIsAddResident } = useContext(ContextTheme);
+  const { setIsAddResident, setIsEditResident, setIsCreateCertificate } =
+    useContext(ContextTheme);
 
   return (
     <>
@@ -72,9 +73,18 @@ export function DataTable<TData, TValue>({
               onChange={(e) => table.setGlobalFilter(String(e.target.value))}
               className="max-w-sm"
             />
-            <Button>Import CSV</Button>
-            <Button>Export CSV</Button>
-            <Button onClick={() => setIsAddResident(true)}>Add Resident</Button>
+            <Button className="font-semibold bg-importBtn text-importBtn-foreground ">
+              Import CSV
+            </Button>
+            <Button className="font-semibold bg-exportBtn text-exportBtn-foreground">
+              Export CSV
+            </Button>
+            <Button
+              onClick={() => setIsAddResident(true)}
+              className="font-semibold"
+            >
+              Add Resident
+            </Button>
           </div>
         </div>
         <div className="flex-1">

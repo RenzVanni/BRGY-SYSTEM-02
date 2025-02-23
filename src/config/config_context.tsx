@@ -1,19 +1,22 @@
 "use client";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
-
-type Resident_Prop = {
-  id: string;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  picture?: string;
-  birthDate: string;
-  birthPlace: string;
-  email?: string;
-  address: string;
-  sex: string;
-  status: string;
-};
+import {
+  DEFAULT_RESIDENT_DATA,
+  RESIDENT_PROP,
+} from "@/constants/Resident_Prop";
+// type Resident_Prop = {
+//   id: string;
+//   firstName: string;
+//   middleName?: string;
+//   lastName: string;
+//   picture?: string;
+//   birthDate: string;
+//   birthPlace: string;
+//   email?: string;
+//   address: string;
+//   sex: string;
+//   status: string;
+// };
 
 type Prop = {
   isAddResident: boolean;
@@ -22,8 +25,8 @@ type Prop = {
   setIsEditResident: Dispatch<SetStateAction<boolean>>;
   isCreateCertificate: boolean;
   setIsCreateCertificate: Dispatch<SetStateAction<boolean>>;
-  residentData: Resident_Prop;
-  setResidentData: Dispatch<SetStateAction<Resident_Prop>>;
+  residentData: RESIDENT_PROP;
+  setResidentData: Dispatch<SetStateAction<RESIDENT_PROP>>;
 };
 
 const contextDefault: Prop = {
@@ -33,19 +36,7 @@ const contextDefault: Prop = {
   setIsEditResident: () => {},
   isCreateCertificate: false,
   setIsCreateCertificate: () => {},
-  residentData: {
-    id: "",
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    picture: "",
-    birthDate: "",
-    birthPlace: "",
-    email: "",
-    address: "",
-    sex: "",
-    status: "",
-  },
+  residentData: DEFAULT_RESIDENT_DATA,
   setResidentData: () => {},
 };
 
@@ -59,19 +50,9 @@ export const ContextProvider = ({
   const [isAddResident, setIsAddResident] = useState(false);
   const [isEditResident, setIsEditResident] = useState(false);
   const [isCreateCertificate, setIsCreateCertificate] = useState(false);
-  const [residentData, setResidentData] = useState<Resident_Prop>({
-    id: "",
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    picture: "",
-    birthDate: "",
-    birthPlace: "",
-    email: "",
-    address: "",
-    sex: "",
-    status: "",
-  });
+  const [residentData, setResidentData] = useState<RESIDENT_PROP>(
+    DEFAULT_RESIDENT_DATA
+  );
   return (
     <ContextTheme.Provider
       value={{

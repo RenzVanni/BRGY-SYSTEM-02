@@ -27,6 +27,10 @@ export const decrypt = async (session: string | undefined = "") => {
   }
 };
 
+export const setSession = async (token: string) => {
+  const save = (await cookies()).set("session", token);
+};
+
 export const createSession = async (user: SessionPayload) => {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const session = await encrypt({ ...user, expiresAt });

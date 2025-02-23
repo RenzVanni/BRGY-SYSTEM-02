@@ -55,6 +55,14 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        importBtn: {
+          DEFAULT: "hsl(var(--importBtn))",
+          foreground: "hsl(var(--import-foreground))",
+        },
+        exportBtn: {
+          DEFAULT: "hsl(var(--exportBtn))",
+          foreground: "hsl(var(--export-foreground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

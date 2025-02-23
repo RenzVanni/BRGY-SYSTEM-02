@@ -29,19 +29,23 @@ import { resident_auth } from "@/actions/auth";
 import { ContextTheme } from "@/config/config_context";
 
 type Prop = {
-  id: string;
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  picture: string;
+  id: number;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  gender: string;
   birthDate: string;
   birthPlace: string;
-  email: string;
   address: string;
-  status: string;
-  sex: string;
+  contactNo: string;
+  citizenship: string;
+  civilStatus: string;
+  voterStatus: string;
+  osy: string;
+  pwd: string;
+  profileImageUrl: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   is_Add_Resident: boolean;
   is_Edit_Resident: boolean;
   is_Create_Certificate: boolean;
@@ -50,26 +54,49 @@ type Prop = {
 
 type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
+// const tempo = {
+//   id,
+//   isOpen,
+//   setIsOpen,
+//   firstName,
+//   middleName,
+//   lastName,
+//   picture,
+//   birthDate,
+//   birthPlace,
+//   email,
+//   address,
+//   status,
+//   sex,
+//   is_Add_Resident,
+//   is_Edit_Resident,
+//   is_Create_Certificate,
+//   whatsType = "",
+// };
 const CustomDialog = ({
   id,
-  isOpen,
-  setIsOpen,
-  firstName,
-  middleName,
-  lastName,
-  picture,
+  firstname,
+  middlename,
+  lastname,
+  gender,
   birthDate,
   birthPlace,
-  email,
   address,
-  status,
-  sex,
+  contactNo,
+  citizenship,
+  civilStatus,
+  voterStatus,
+  osy,
+  pwd,
+  profileImageUrl,
+  isOpen,
+  setIsOpen,
   is_Add_Resident,
   is_Edit_Resident,
   is_Create_Certificate,
   whatsType = "",
 }: PartialExcept<Prop, "setIsOpen">) => {
-  const checkMiddleName = middleName == null ? "" : middleName;
+  const checkMiddleName = middlename == null ? "" : middlename;
   const [state, action, pending] = useActionState(resident_auth, undefined);
   useEffect(() => {
     if (pending) {
@@ -92,9 +119,9 @@ const CustomDialog = ({
 
         {is_Edit_Resident && (
           <>
-            {picture ? (
+            {profileImageUrl ? (
               <Image
-                src={picture}
+                src={profileImageUrl}
                 alt="image"
                 width={70}
                 height={70}
@@ -104,8 +131,7 @@ const CustomDialog = ({
               <CircleUserRound />
             )}
             <DialogHeader>
-              <DialogTitle>{firstName}</DialogTitle>
-              <DialogDescription>{email}</DialogDescription>
+              <DialogTitle>{firstname}</DialogTitle>
             </DialogHeader>
           </>
         )}
@@ -131,7 +157,7 @@ const CustomDialog = ({
                 type="text"
                 name="firstName"
                 placeholder="First name..."
-                defaultValue={firstName}
+                defaultValue={firstname}
                 required
               />
               <Input
@@ -146,13 +172,13 @@ const CustomDialog = ({
                 type="text"
                 name="lastName"
                 placeholder="Last name..."
-                defaultValue={lastName}
+                defaultValue={lastname}
                 required
               />
             </div>
           </div>
 
-          {is_Edit_Resident && (
+          {/* {is_Edit_Resident && (
             <div className="grid grid-cols-3 items-center gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -164,7 +190,7 @@ const CustomDialog = ({
                 defaultValue={email}
               />
             </div>
-          )}
+          )} */}
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="address">Address</Label>
@@ -205,28 +231,28 @@ const CustomDialog = ({
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
-            <Label htmlFor="sex">Sex</Label>
-            <Select defaultValue={sex} name="sex">
+            <Label htmlFor="gender">Gender</Label>
+            <Select defaultValue={gender} name="gender">
               <SelectTrigger className="col-span-2" id="sex">
-                <SelectValue placeholder="Select Sex" />
+                <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Male">Male</SelectItem>
-                <SelectItem value="Female">Female</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
-            <Label htmlFor="status">Status</Label>
-            <Select defaultValue={status} name="status">
+            <Label htmlFor="civilStatus">Civil Status</Label>
+            <Select defaultValue={civilStatus} name="civilStatus">
               <SelectTrigger className="col-span-2" id="status">
-                <SelectValue placeholder="Select Status" />
+                <SelectValue placeholder="Select Civil Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Single">Single</SelectItem>
-                <SelectItem value="InRelation">In Relationship</SelectItem>
-                <SelectItem value="Married">Married</SelectItem>
+                <SelectItem value="single">Single</SelectItem>
+                <SelectItem value="inRelation">In Relationship</SelectItem>
+                <SelectItem value="married">Married</SelectItem>
               </SelectContent>
             </Select>
           </div>

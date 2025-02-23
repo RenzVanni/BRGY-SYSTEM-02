@@ -34,6 +34,7 @@ import { useContext, useState } from "react";
 import CustomDialog from "@/components/CustomDialog";
 import { format } from "path";
 import { ContextTheme } from "./config_context";
+import { RESIDENT_PROP } from "@/constants/Resident_Prop";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -82,18 +83,23 @@ export const columns: ColumnDef<Payment>[] = [
 //Residents Columns
 export type Resident = {
   id: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  gender: string;
   birthDate: Date;
-  email: string;
   birthPlace: string;
-  status: string;
   address: string;
-  sex: string;
+  contactNo: string;
+  citizenship: string;
+  civilStatus: string;
+  voterStatus: string;
+  osy: string;
+  pwd: string;
+  profileImageUrl: string;
 };
 
-export const ResidentsColumns: ColumnDef<Resident>[] = [
+export const ResidentsColumns: ColumnDef<RESIDENT_PROP>[] = [
   {
     accessorKey: "fullname",
     header: ({ column }) => {
@@ -108,18 +114,18 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
       );
     },
     cell: ({ row }) => {
-      const { firstName, middleName, lastName } = row.original;
-      return `${firstName} ${
-        middleName !== null ? middleName : " "
-      } ${lastName}`;
+      const { firstname, middlename, lastname } = row.original;
+      return `${firstname} ${
+        middlename !== null ? middlename : " "
+      } ${lastname}`;
     },
     sortingFn: (rowA, rowB) => {
-      const fullnameA = `${rowA.original.firstName} ${
-        rowA.original.middleName ?? ""
-      } ${rowA.original.lastName}}`;
-      const fullnameB = `${rowB.original.firstName} ${
-        rowB.original.middleName ?? ""
-      } ${rowB.original.lastName}}`;
+      const fullnameA = `${rowA.original.firstname} ${
+        rowA.original.middlename ?? ""
+      } ${rowA.original.lastname}}`;
+      const fullnameB = `${rowB.original.firstname} ${
+        rowB.original.middlename ?? ""
+      } ${rowB.original.lastname}}`;
       return fullnameA.localeCompare(fullnameB);
     },
   },
@@ -204,14 +210,14 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
     },
   },
   {
-    accessorKey: "sex",
+    accessorKey: "gender",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Sex
+          Gender
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -231,7 +237,7 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.original.status;
+      return row.original.civilStatus;
     },
   },
   {
@@ -240,16 +246,21 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
     id: "actions",
     cell: ({ row }) => {
       const {
-        firstName,
-        middleName,
-        lastName,
-        email,
-        address,
+        id,
+        firstname,
+        middlename,
+        lastname,
+        gender,
         birthDate,
         birthPlace,
-        status,
-        sex,
-        id,
+        address,
+        contactNo,
+        citizenship,
+        civilStatus,
+        voterStatus,
+        osy,
+        pwd,
+        profileImageUrl,
       } = row.original;
 
       const {
@@ -278,15 +289,20 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
                   setIsEditResident((prev) => !prev);
                   setResidentData({
                     id,
-                    firstName,
-                    middleName,
-                    lastName,
-                    email,
+                    firstname,
+                    middlename,
+                    lastname,
+                    gender,
                     birthDate: formatBirthDate,
                     birthPlace,
                     address,
-                    status,
-                    sex,
+                    contactNo,
+                    citizenship,
+                    civilStatus,
+                    voterStatus,
+                    osy,
+                    pwd,
+                    profileImageUrl,
                   });
                 }}
               >
@@ -297,15 +313,20 @@ export const ResidentsColumns: ColumnDef<Resident>[] = [
                   setIsCreateCertificate((prev) => !prev);
                   setResidentData({
                     id,
-                    firstName,
-                    middleName,
-                    lastName,
-                    email,
+                    firstname,
+                    middlename,
+                    lastname,
+                    gender,
                     birthDate: formatBirthDate,
                     birthPlace,
                     address,
-                    status,
-                    sex,
+                    contactNo,
+                    citizenship,
+                    civilStatus,
+                    voterStatus,
+                    osy,
+                    pwd,
+                    profileImageUrl,
                   });
                 }}
               >

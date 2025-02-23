@@ -14,7 +14,8 @@ export type SessionPayload = {
 
 // Login Definitions
 export const LoginFormSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  // email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  username: z.string().trim(),
   password: z
     .string()
     .min(8, { message: "Be at least 8 characters long" })
@@ -29,7 +30,8 @@ export const LoginFormSchema = z.object({
 export type FormState =
   | {
       errors?: {
-        email?: string[];
+        // email?: string[];
+        username?: string[];
         password?: string[];
       };
       message?: string;
@@ -43,10 +45,9 @@ export const Resident_FormSchema = z.object({
   middleName: z.string().trim().nullable(),
   lastName: z.string().trim(),
   birthDate: z.string().date(),
-  email: z.string().trim().nullable(),
   birthPlace: z.string().trim(),
-  sex: z.string().trim(),
-  status: z.string().trim(),
+  gender: z.string().trim(),
+  civilStatus: z.string().trim(),
   address: z.string().trim(),
   whatsType: z.string().trim(),
 });
@@ -64,10 +65,9 @@ export type Resident_FormState =
         middleName?: string[];
         lastName?: string[];
         birthDate?: string[];
-        email?: string[];
         birthPlace?: string[];
-        sex?: string[];
-        status?: string[];
+        gender?: string[];
+        civilStatus?: string[];
         address?: string[];
         whatsType?: string[];
       };

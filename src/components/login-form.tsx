@@ -37,7 +37,7 @@ export function LoginForm() {
       <CardContent>
         <form action={action}>
           <div className="grid gap-4">
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -47,7 +47,19 @@ export function LoginForm() {
                 required
               />
             </div>
-            {state?.errors?.email && <p>{state?.errors?.email}</p>}
+            {state?.errors?.email && <p>{state?.errors?.email}</p>} */}
+
+            <div className="grid gap-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="username"
+                name="username"
+                placeholder="Username"
+                required
+              />
+            </div>
+            {state?.errors?.username && <p>{state?.errors?.username}</p>}
 
             <div className="grid gap-2">
               <div className="flex items-center">

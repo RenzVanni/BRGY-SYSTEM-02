@@ -2,29 +2,24 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
-import { DASHBOARD, LOGIN } from "./constants/navigation";
+import { DASHBOARD, LOGIN, RESIDENTS } from "./constants/navigation";
 
-const protectedRoutes = [DASHBOARD];
+const protectedRoutes = [DASHBOARD, RESIDENTS];
 const publicRoutes = [LOGIN];
-export const middleware = async (req: NextRequest) => {
+export const middleware = async (req: NextRequest, res: NextResponse) => {
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
+  const token = req.cookies.get("session")?.value;
 
-  const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
 
-  if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL(LOGIN, req.nextUrl));
-  }
-
-  if (isPublicRoute && session && !req.nextUrl.pathname.startsWith(DASHBOARD)) {
-    return NextResponse.redirect(new URL(DASHBOARD, req.nextUrl));
+  if (protectedRoutes.includes(req.nextUrl.pathname)) {
+    if (!token) {
+      return NextResponse.redirect(new URL(LOGIN, req.url));
+    }
   }
 
   return NextResponse.next();
 };
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: [DASHBOARD, RESIDENTS],
 };
