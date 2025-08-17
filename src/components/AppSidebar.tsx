@@ -1,5 +1,5 @@
 "use client";
-import { sidebar_navigation_data } from "@/data/sidebar";
+import { SIDEBAR_DATA, sidebar_navigation_data } from "@/data/sidebar";
 import { ChevronDown, ChevronUp, LogOut, User2 } from "lucide-react";
 import Image from "next/image";
 import React, { useActionState, useState } from "react";
@@ -35,6 +35,10 @@ import Link from "next/link";
 import { logout_auth } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import { LOGIN } from "@/constants/navigation";
+import { ModeToggle } from "./mode-btn";
+import NavMain from "./SidebarComponents/NavMain";
+import NavDocuments from "./SidebarComponents/NavDocuments";
+import NavSecondary from "./SidebarComponents/NavSecondary";
 
 const AppSidebar = () => {
   const [isOptions, setIsOptions] = useState<null | number>(null);
@@ -46,11 +50,11 @@ const AppSidebar = () => {
   };
 
   return (
-    <Sidebar>
-      <SidebarHeader>
+    <Sidebar className="border-none">
+      <SidebarHeader className="pt-6 pl-6">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="flex items-center space-x-2 h-15 hover:bg-none">
+          <SidebarMenuItem className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
               <Image
                 src="/images/brgy-logo.png"
                 alt="logo"
@@ -58,57 +62,23 @@ const AppSidebar = () => {
                 height={35}
               />
               <p>Barangay Zone 4</p>
-            </SidebarMenuButton>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebar_navigation_data.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  {!item?.option ? (
-                    <SidebarMenuButton asChild>
-                      <Link href={item.slug}>
-                        <CustomIcons CustomIcon={item.icon} />
-                        <span>{item.title.substring(1)}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  ) : (
-                    <SidebarMenu>
-                      <Collapsible className="group/collapsible">
-                        <SidebarMenuItem>
-                          <CollapsibleTrigger asChild>
-                            <SidebarMenuButton>
-                              <CustomIcons CustomIcon={item.icon} />
-                              <span>{item.title}</span>
-                              <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                            </SidebarMenuButton>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              <SidebarMenuSubItem>
-                                {item?.folders.map((option) => (
-                                  <SidebarMenuButton key={option.subId}>
-                                    {/* <Link href={option.}> */}
-                                    <p>{option?.title}</p>
-                                    {/* </Link> */}
-                                  </SidebarMenuButton>
-                                ))}
-                              </SidebarMenuSubItem>
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </SidebarMenuItem>
-                      </Collapsible>
-                    </SidebarMenu>
-                  )}
-                </SidebarMenuItem>
-              ))}
+              <NavMain items={SIDEBAR_DATA.navMain} />
+              <NavDocuments items={SIDEBAR_DATA.navDocuments} />
+              <NavSecondary items={SIDEBAR_DATA.navSecondary} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

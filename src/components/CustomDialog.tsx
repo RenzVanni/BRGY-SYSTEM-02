@@ -5,6 +5,7 @@ import React, {
   useActionState,
   useContext,
   useEffect,
+  useState,
 } from "react";
 import {
   Dialog,
@@ -25,8 +26,12 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { CircleUserRound } from "lucide-react";
-import { resident_auth } from "@/actions/auth";
 import { ContextTheme } from "@/config/config_context";
+import { CIVIL_STATUS_PROP } from "@/constants/CivilStatus_Prop";
+import { fetch_civilStatus } from "@/api/civilStatus_api";
+import { GENDER_PROP } from "@/constants/Gender_Prop";
+import { fetch_gender } from "@/api/gender_api";
+import { resident_auth } from "@/api/resident_api";
 
 type Prop = {
   id: number;
@@ -96,13 +101,27 @@ const CustomDialog = ({
   is_Create_Certificate,
   whatsType = "",
 }: PartialExcept<Prop, "setIsOpen">) => {
-  const checkMiddleName = middlename == null ? "" : middlename;
   const [state, action, pending] = useActionState(resident_auth, undefined);
+  const [civilStatusData, setCivilStatusData] = useState<CIVIL_STATUS_PROP[]>();
+  const [genderData, setGenderData] = useState<GENDER_PROP[]>();
+  const checkMiddleName = middlename == null ? "" : middlename;
   useEffect(() => {
     if (pending) {
       setIsOpen(false);
     }
+    const fetch = async () => {
+      const response = await fetch_civilStatus();
+      if (response) {
+        setCivilStatusData(response);
+      }
+      const gender_response = await fetch_gender();
+      if (gender_response) {
+        setGenderData(gender_response);
+      }
+    };
+    fetch();
   }, [pending]);
+  console.log(civilStatusData);
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
       <DialogContent className={`${is_Edit_Resident && "pt-12"}`}>
@@ -232,27 +251,32 @@ const CustomDialog = ({
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select defaultValue={gender} name="gender">
+            <Select defaultValue={`${gender}`} name="gender">
               <SelectTrigger className="col-span-2" id="sex">
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
+                {genderData?.map((item) => (
+                  <SelectItem key={item.id} value={`${item.id}`}>
+                    {item.gender}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="civilStatus">Civil Status</Label>
-            <Select defaultValue={civilStatus} name="civilStatus">
+            <Select defaultValue={`${civilStatus}`} name="civilStatus">
               <SelectTrigger className="col-span-2" id="status">
                 <SelectValue placeholder="Select Civil Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="single">Single</SelectItem>
-                <SelectItem value="inRelation">In Relationship</SelectItem>
-                <SelectItem value="married">Married</SelectItem>
+                {civilStatusData?.map((item) => (
+                  <SelectItem key={item.id} value={`${item.id}`}>
+                    {item.civilStatus}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

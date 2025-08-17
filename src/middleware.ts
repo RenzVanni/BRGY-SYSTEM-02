@@ -10,7 +10,6 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("session")?.value;
 
-
   if (protectedRoutes.includes(req.nextUrl.pathname)) {
     if (!token) {
       return NextResponse.redirect(new URL(LOGIN, req.url));

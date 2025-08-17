@@ -1,9 +1,7 @@
 "use client";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
-import {
-  DEFAULT_RESIDENT_DATA,
-  RESIDENT_PROP,
-} from "@/constants/Resident_Prop";
+import { DEFAULT_RESIDENT_DATA } from "@/constants/Resident_Prop";
+import { RESIDENT_PROP } from "@/props/Resident_Prop";
 // type Resident_Prop = {
 //   id: string;
 //   firstName: string;

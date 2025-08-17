@@ -19,6 +19,59 @@ import {
   ClipboardMinus,
 } from "lucide-react";
 
+export const SIDEBAR_DATA = {
+  navMain: [
+    {
+      title: DASHBOARD,
+      url: DASHBOARD,
+      icon: LayoutDashboard,
+    },
+    {
+      title: OFFICIALS,
+      url: OFFICIALS,
+      icon: BookUser,
+    },
+    {
+      title: RESIDENTS,
+      url: RESIDENTS,
+      icon: UsersRound,
+    },
+  ],
+  navDocuments: [
+    {
+      title: "Certificate/Clearance",
+      icon: FileBox,
+      item: [
+        { title: "Barangay Clearance" },
+        { title: "Certificate of Indigency" },
+        { title: "Certificate of Late Birth Registration" },
+        { title: "Business Clearance" },
+      ],
+    },
+    {
+      title: "Reports",
+      icon: MessageSquareWarning,
+      item: [
+        { title: "Blotter" },
+        { title: "Awareness" },
+        { title: "Complain" },
+      ],
+    },
+  ],
+  navSecondary: [
+    {
+      title: ACCOUNT,
+      url: ACCOUNT,
+      icon: UserRoundPen,
+    },
+    {
+      title: CONTENT_MANAGEMENT,
+      url: CONTENT_MANAGEMENT_SLUG,
+      icon: TableOfContents,
+    },
+  ],
+};
+
 export const sidebar_navigation_data = [
   { id: 0, icon: LayoutDashboard, title: DASHBOARD, slug: DASHBOARD },
   { id: 1, icon: BookUser, title: OFFICIALS, slug: OFFICIALS },

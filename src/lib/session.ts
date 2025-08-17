@@ -47,3 +47,8 @@ export const deleteSession = async () => {
   const cookieStore = await cookies();
   cookieStore.delete("session");
 };
+
+export const deleteSession2 = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+};

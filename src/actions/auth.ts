@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { createSession, deleteSession, setSession } from "@/lib/session";
 import { DASHBOARD, RESIDENTS } from "@/constants/navigation";
 import { instance } from "@/api/config/axios_config";
+import { LOGIN_SLUG } from "@/constants/Backend_Slugs";
 
 export const login_auth = async (state: FormState, formData: FormData) => {
   const validateFields = LoginFormSchema.safeParse({
@@ -28,15 +29,23 @@ export const login_auth = async (state: FormState, formData: FormData) => {
     try {
       const { password, username } = validateFields.data;
 
-      const response = await instance.post(
-        "/login",
+      const data = new URLSearchParams();
+      data.append("client_id", "authId");
+      data.append("client_secret", "boqMrn6VLS3A2zfxLUjIWLVfCZqZIory");
+      data.append("username", username);
+      data.append("password", password);
+      data.append("grant_type", "password");
+
+      const response = await axios.post(
+        "http://localhost:8080/realms/auth/protocol/openid-connect/token",
+        data,
         {
-          username,
-          password,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
         // { withCredentials: true }
       );
 
+      console.log("Response ", response);
       const responseData = response.data;
       await setSession(responseData);
       // await createSession(responseData);
@@ -49,69 +58,4 @@ export const login_auth = async (state: FormState, formData: FormData) => {
 
 export const logout_auth = async () => {
   await deleteSession();
-};
-
-// Residents
-export const resident_auth = async (
-  state: Resident_FormState,
-  formData: FormData
-) => {
-  const validateFields = Resident_FormSchema.safeParse({
-    id: formData.get("id"),
-    firstName: formData.get("firstName"),
-    middleName: formData.get("middleName"),
-    lastName: formData.get("lastName"),
-    birthDate: formData.get("birthDate"),
-    birthPlace: formData.get("birthPlace"),
-    gender: formData.get("gender"),
-    civilStatus: formData.get("civilStatus"),
-    address: formData.get("address"),
-    whatsType: formData.get("whatsType"),
-  });
-
-  if (!validateFields.success) {
-    return {
-      errors: validateFields.error.flatten().fieldErrors,
-    };
-  }
-
-  if (validateFields.success) {
-    try {
-      const {
-        firstName,
-        middleName,
-        lastName,
-        birthDate,
-        birthPlace,
-        civilStatus,
-        gender,
-        address,
-        whatsType,
-      } = validateFields.data;
-
-
-      if (whatsType == "create") {
-        const response = await instance.post("/residents", {
-          firstName,
-          middleName,
-          lastName,
-          birthDate,
-          birthPlace,
-          civilStatus,
-          gender,
-          address,
-        });
-
-        const responseData = response.data;
-
-        // if (response.status == 401) {
-        //   await deleteSession();
-        // }
-        // await createSession(responseData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    redirect(RESIDENTS);
-  }
 };

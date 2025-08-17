@@ -1,20 +1,4 @@
-export type RESIDENT_PROP = {
-  id: number;
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  gender: string;
-  birthDate: string;
-  birthPlace: string;
-  address: string;
-  contactNo: string;
-  citizenship: string;
-  civilStatus: string;
-  voterStatus: string;
-  osy: string;
-  pwd: string;
-  profileImageUrl: string;
-};
+import { RESIDENT_PROP } from "@/props/Resident_Prop";
 
 export const DEFAULT_RESIDENT_DATA: RESIDENT_PROP = {
   id: 0,
@@ -22,14 +6,16 @@ export const DEFAULT_RESIDENT_DATA: RESIDENT_PROP = {
   middlename: "",
   lastname: "",
   gender: "",
-  birthDate: "",
-  birthPlace: "",
+  birth_date: "",
+  birth_place: "",
   address: "",
-  contactNo: "",
+  contact_no: "",
+  voter_status: "",
   citizenship: "",
-  civilStatus: "",
-  voterStatus: "",
-  osy: "",
-  pwd: "",
-  profileImageUrl: "",
+  civil_status: "",
+  osy: false,
+  pwd: false,
+  official_id: 0,
+  account_id: 0,
+  profile_image_url: "",
 };

@@ -27,11 +27,11 @@ export function LoginForm() {
     }
   }, [state]);
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-sm border-none">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
+        <CardTitle className="text-2xl text-center">Login</CardTitle>
+        <CardDescription className="text-center">
+          Enter your username below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent>

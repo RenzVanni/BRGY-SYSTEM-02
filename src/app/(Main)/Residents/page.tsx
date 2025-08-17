@@ -1,11 +1,14 @@
 "use client";
-import { fetchResidents } from "@/api/fetch_residents";
+import { fetchResidents } from "@/api/resident_api";
 import CustomDialog from "@/components/CustomDialog";
 import CustomTitle from "@/components/CustomTitle";
 import { DataTable } from "@/components/Table";
-import { Resident, ResidentsColumns } from "@/config/column_Definition";
 import { ContextTheme } from "@/config/config_context";
-import { RESIDENT_PROP } from "@/constants/Resident_Prop";
+import { ResidentsColumns } from "@/config/residents/resident_column_definition";
+import { LOGIN } from "@/constants/navigation";
+import { deleteSession } from "@/lib/session";
+import { RESIDENT_PROP } from "@/props/Resident_Prop";
+import { redirect } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const page = () => {
@@ -21,19 +24,6 @@ const page = () => {
     };
     fetch();
   }, []);
-  console.log("This is the table: ", data);
-
-  const dialogOption = [
-    { is_Add_Resident: true, whatsType: "create" },
-    {
-      is_Edit_Resident: true,
-      whatsType: "edit",
-    },
-    {
-      is_Create_Certificate: true,
-      whatsType: "",
-    },
-  ];
 
   const {
     setIsAddResident,
@@ -51,20 +41,19 @@ const page = () => {
     middlename,
     lastname,
     gender,
-    birthDate,
-    birthPlace,
+    birth_date,
+    birth_place,
     address,
-    contactNo,
+    contact_no,
     citizenship,
-    civilStatus,
-    voterStatus,
+    civil_status,
+    voter_status,
     osy,
     pwd,
-    profileImageUrl,
+    profile_image_url,
   } = residentData;
   return (
     <>
-      <CustomTitle>Residents</CustomTitle>
       <DataTable columns={ResidentsColumns} data={data} />
 
       <CustomDialog
@@ -79,11 +68,11 @@ const page = () => {
         firstname={firstname}
         middlename={middlename}
         lastname={lastname}
-        profileImageUrl={profileImageUrl}
-        birthDate={birthDate}
-        birthPlace={birthPlace}
+        profileImageUrl={profile_image_url}
+        birthDate={birth_date}
+        birthPlace={birth_place}
         address={address}
-        civilStatus={civilStatus}
+        civilStatus={civil_status}
         gender={gender}
         isOpen={isEditResident}
         setIsOpen={setIsEditResident}
@@ -96,11 +85,11 @@ const page = () => {
         firstname={firstname}
         middlename={middlename}
         lastname={lastname}
-        profileImageUrl={profileImageUrl}
-        birthDate={birthDate}
-        birthPlace={birthPlace}
+        profileImageUrl={profile_image_url}
+        birthDate={birth_date}
+        birthPlace={birth_place}
         address={address}
-        civilStatus={civilStatus}
+        civilStatus={civil_status}
         gender={gender}
         isOpen={isCreateCertificate}
         setIsOpen={setIsCreateCertificate}
