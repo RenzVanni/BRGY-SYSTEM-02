@@ -27,7 +27,7 @@ export function LoginForm() {
     }
   }, [state]);
   return (
-    <Card className="mx-auto max-w-sm border-none">
+    <Card className="w-[50%] border-none">
       <CardHeader>
         <CardTitle className="text-2xl text-center">Login</CardTitle>
         <CardDescription className="text-center">
