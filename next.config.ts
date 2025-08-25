@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*", // frontend calls /api/*
+  //       destination: "http://localhost:8222/:path*", // your backend
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

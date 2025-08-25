@@ -32,13 +32,13 @@ import {
   CollapsibleTrigger,
 } from "./ui/collapsible";
 import Link from "next/link";
-import { logout_auth } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import { LOGIN } from "@/constants/navigation";
 import { ModeToggle } from "./mode-btn";
 import NavMain from "./SidebarComponents/NavMain";
 import NavDocuments from "./SidebarComponents/NavDocuments";
 import NavSecondary from "./SidebarComponents/NavSecondary";
+import { logout_auth } from "@/api/auth/auth";
 
 const AppSidebar = () => {
   const [isOptions, setIsOptions] = useState<null | number>(null);

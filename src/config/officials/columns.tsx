@@ -11,7 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import DataTableColumnHeader from "../table/data-table-header";
 
-export type Payment = {
+export type OfficialsModel = {
   id: number;
   resident_id: number;
   term_start: string;
@@ -19,7 +19,7 @@ export type Payment = {
   position: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<OfficialsModel>[] = [
   {
     id: "select",
     header: ({ table }) => (

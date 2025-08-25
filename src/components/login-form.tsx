@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 import { DASHBOARD } from "@/constants/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { useActionState, useEffect, useState } from "react";
-import { login_auth } from "@/actions/auth";
 import { Loader2 } from "lucide-react";
+import { login_auth } from "@/api/auth/auth";
 
 export function LoginForm() {
   const [state, action, loading] = useActionState(login_auth, undefined);
