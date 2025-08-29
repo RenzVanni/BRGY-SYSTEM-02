@@ -14,13 +14,52 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { DASHBOARD } from "@/constants/navigation";
 import { useFormState, useFormStatus } from "react-dom";
-import { useActionState, useEffect, useState } from "react";
+import { FormEvent, useActionState, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { login_auth } from "@/api/auth/auth";
+import { instance } from "@/api/config/axios_config";
+import { set } from "zod";
 
 export function LoginForm() {
   const [state, action, loading] = useActionState(login_auth, undefined);
   const { pending } = useFormStatus();
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loginAuth = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username");
+    const password = formData.get("password");
+
+    try {
+      const response = await fetch(
+        "http://localhost:8222/api/v1/accounts/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+          credentials: "include",
+        }
+      );
+      
+      setIsLoading(true);
+
+      if (response.ok) {
+        router.push(DASHBOARD);
+      }
+    } catch (error) {
+      console.log("Login error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (state) {
       console.log("State: ", state);
@@ -35,7 +74,7 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action}>
+        <form onSubmit={loginAuth}>
           <div className="grid gap-4">
             {/* <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
@@ -83,7 +122,7 @@ export function LoginForm() {
                 </ul>
               </div>
             )}
-            {loading ? (
+            {isLoading ? (
               <Button disabled type="submit" className="w-full">
                 <Loader2 className="animate-spin" />
                 Submitting...

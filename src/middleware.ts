@@ -10,33 +10,23 @@ const publicRoutes = [LOGIN];
 export const middleware = async (req: NextRequest, res: NextResponse) => {
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("access_token")?.value;
-  console.log(" Cookie in Mid: ", token);
+  // console.log("Cookie in store: ", token);
 
-  // try {
-  //   const response = await instance.get("/accounts/token", {
-  //     withCredentials: true,
-  //   });
-  //   console.log("This is the token in frontend: ", response.status);
-  // } catch (error: any) {
-  //   console.log(error.response.status);
-  // }
+  const isPublic = [LOGIN].includes(path);
 
-  if (protectedRoutes.includes(req.nextUrl.pathname)) {
-    // if (!token) {
-    //   return NextResponse.redirect(new URL(LOGIN, req.url));
-    // }
-    try {
-      const response = await instance.get("/accounts/token", {
-        headers: {
-          Cookie: `access_token=${token}`,
-        },
-      });
-      console.log("This is the token in frontend: ", response.status);
-    } catch (error: any) {
-      console.log(error.response.status);
-      if (error.response.status == 401) {
-        return NextResponse.redirect(new URL(LOGIN, req.url));
-      }
+  // console.log("Cookie token: ", token);
+
+  if (isPublic) {
+    return NextResponse.next();
+  }
+
+  if (isPublic && token) {
+    return NextResponse.redirect(new URL(DASHBOARD, req.url));
+  }
+
+  if (protectedRoutes.includes(path)) {
+    if (!token) {
+      return NextResponse.redirect(new URL(LOGIN, req.url));
     }
   }
 
@@ -44,5 +34,5 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
 };
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: [`${DASHBOARD}/:path*`, `${RESIDENTS}/:path*`, LOGIN],
 };
