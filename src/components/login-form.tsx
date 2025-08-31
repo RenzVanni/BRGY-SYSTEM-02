@@ -47,8 +47,8 @@ export function LoginForm() {
           credentials: "include",
         }
       );
-      
-      setIsLoading(true);
+
+        setIsLoading(true);
 
       if (response.ok) {
         router.push(DASHBOARD);

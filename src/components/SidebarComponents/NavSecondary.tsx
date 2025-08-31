@@ -29,13 +29,13 @@ const NavSecondary = ({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title}>
-                {/* <Link
+                <Link
                   href={item.url}
                   className="w-full flex items-center  gap-2"
-                > */}
-                {item.icon && <item.icon size={16} />}
-                <p>{item.title.substring(1)}</p>
-                {/* </Link> */}
+                >
+                  {item.icon && <item.icon size={16} />}
+                  <p>{item.title.substring(1)}</p>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
