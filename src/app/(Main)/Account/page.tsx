@@ -1,11 +1,10 @@
 "use client";
-import CustomTitle from "@/components/CustomTitle";
+import { fetchAccounts } from "@/api/accountService";
 import {
   accountColumn,
   AccountColumnModel,
-  AccountDataDemo,
 } from "@/config/account/accountColumnDef";
-import { DataTable } from "@/config/table/data-table";
+import { DataTable } from "@/components/table/data-table";
 import React, { useEffect, useState } from "react";
 
 const page = () => {
@@ -13,14 +12,13 @@ const page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setData(await AccountDataDemo());
+      setData(await fetchAccounts());
     };
 
     fetchData();
   }, []);
   return (
     <div className="container mx-auto py-10">
-      <CustomTitle>Account</CustomTitle>
       <DataTable columns={accountColumn} data={data} />
     </div>
   );

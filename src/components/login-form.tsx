@@ -48,7 +48,7 @@ export function LoginForm() {
         }
       );
 
-        setIsLoading(true);
+      setIsLoading(true);
 
       if (response.ok) {
         router.push(DASHBOARD);
@@ -60,11 +60,11 @@ export function LoginForm() {
     }
   };
 
-  useEffect(() => {
-    if (state) {
-      console.log("State: ", state);
-    }
-  }, [state]);
+  // useEffect(() => {
+  //   if (state) {
+  //     console.log("State: ", state);
+  //   }
+  // }, [state]);
   return (
     <Card className="w-[50%] border-none">
       <CardHeader>

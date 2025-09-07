@@ -1,4 +1,4 @@
-import { OfficialsModel } from "@/config/officials/columns";
+import { OfficialsModel } from "@/config/officials/officialsColumnDef";
 
 export const statisticsCardData = [
   {

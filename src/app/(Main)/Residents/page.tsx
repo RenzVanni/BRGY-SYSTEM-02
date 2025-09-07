@@ -1,26 +1,22 @@
 "use client";
-import { fetchResidents } from "@/api/resident_api";
+import { fetchResidents, formatFetchedResidents } from "@/api/resident_api";
 import CustomDialog from "@/components/CustomDialog";
-import CustomTitle from "@/components/CustomTitle";
-import { DataTable } from "@/components/Table";
+import { DataTable } from "@/components/table/data-table";
 import { ContextTheme } from "@/config/config_context";
-import { ResidentsColumns } from "@/config/residents/resident_column_definition";
-import { LOGIN } from "@/constants/navigation";
-import { deleteSession } from "@/lib/session";
+import {
+  residentColumn,
+  ResidentColumnModel,
+} from "@/config/residents/residentsColumnsDef";
 import { RESIDENT_PROP } from "@/props/Resident_Prop";
-import { redirect } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const page = () => {
-  const [data, setData] = useState<RESIDENT_PROP[]>([]);
+  const [data, setData] = useState<ResidentColumnModel[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await fetchResidents();
-      if (response != undefined) {
-        setData(response);
-      }
-      console.log("this is from useffect: ", response);
+      const response = await formatFetchedResidents();
+      setData(response);
     };
     fetch();
   }, []);
@@ -54,7 +50,7 @@ const page = () => {
   } = residentData;
   return (
     <>
-      <DataTable columns={ResidentsColumns} data={data} />
+      <DataTable columns={residentColumn} data={data} />
 
       <CustomDialog
         isOpen={isAddResident}

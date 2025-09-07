@@ -32,6 +32,8 @@ import { fetch_civilStatus } from "@/api/civilStatus_api";
 import { GENDER_PROP } from "@/constants/Gender_Prop";
 import { fetch_gender } from "@/api/gender_api";
 import { resident_auth } from "@/api/resident_api";
+import { civilStatusData } from "@/data/civilStatus";
+import { genderData } from "@/data/gender";
 
 type Prop = {
   id: number;
@@ -102,26 +104,14 @@ const CustomDialog = ({
   whatsType = "",
 }: PartialExcept<Prop, "setIsOpen">) => {
   const [state, action, pending] = useActionState(resident_auth, undefined);
-  const [civilStatusData, setCivilStatusData] = useState<CIVIL_STATUS_PROP[]>();
-  const [genderData, setGenderData] = useState<GENDER_PROP[]>();
+
   const checkMiddleName = middlename == null ? "" : middlename;
   useEffect(() => {
     if (pending) {
       setIsOpen(false);
     }
-    const fetch = async () => {
-      const response = await fetch_civilStatus();
-      if (response) {
-        setCivilStatusData(response);
-      }
-      const gender_response = await fetch_gender();
-      if (gender_response) {
-        setGenderData(gender_response);
-      }
-    };
-    fetch();
   }, [pending]);
-  console.log(civilStatusData);
+
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
       <DialogContent className={`${is_Edit_Resident && "pt-12"}`}>
@@ -257,8 +247,8 @@ const CustomDialog = ({
               </SelectTrigger>
               <SelectContent>
                 {genderData?.map((item) => (
-                  <SelectItem key={item.id} value={`${item.id}`}>
-                    {item.gender}
+                  <SelectItem key={item} value={item}>
+                    {item}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -273,8 +263,8 @@ const CustomDialog = ({
               </SelectTrigger>
               <SelectContent>
                 {civilStatusData?.map((item) => (
-                  <SelectItem key={item.id} value={`${item.id}`}>
-                    {item.civilStatus}
+                  <SelectItem key={item} value={item}>
+                    {item}
                   </SelectItem>
                 ))}
               </SelectContent>

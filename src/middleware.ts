@@ -10,11 +10,8 @@ const publicRoutes = [LOGIN];
 export const middleware = async (req: NextRequest, res: NextResponse) => {
   const path = req.nextUrl.pathname;
   const token = req.cookies.get("access_token")?.value;
-  // console.log("Cookie in store: ", token);
 
   const isPublic = [LOGIN].includes(path);
-
-  // console.log("Cookie token: ", token);
 
   if (isPublic) {
     return NextResponse.next();

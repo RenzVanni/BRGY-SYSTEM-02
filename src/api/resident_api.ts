@@ -1,30 +1,84 @@
 "use server";
 import { deleteSession } from "@/lib/session";
-import { cookies } from "next/headers";
 import { instance } from "./config/axios_config";
 import { AxiosError } from "axios";
 import { redirect } from "next/navigation";
 import { LOGIN, RESIDENTS } from "@/constants/navigation";
 import { Resident_FormSchema, Resident_FormState } from "@/lib/definitions";
+import { cookies } from "next/headers";
+import {
+  ResidentColumnModel,
+  ResidentProp,
+} from "@/config/residents/residentsColumnsDef";
 
 //fetch residents
 export const fetchResidents = async () => {
   try {
-    const token = (await cookies()).get("session")?.value;
-    const response = await instance.get("/residents", {
+    const cookieHeader = (await cookies()).toString();
+    const response = await fetch(process.env.BACKEND_DEV_URL + "/residents", {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Cookie: cookieHeader,
       },
     });
 
-    return response.data;
-  } catch (error: unknown) {
-    // console.log((error as AxiosError).status);
-    if ((error as AxiosError).status == 401) {
-      await deleteSession();
-      // redirect(LOGIN);
+    if (response.status == 401) {
+      redirect(LOGIN);
     }
+    const data = response.json();
+
+    return data;
+  } catch (error: any) {
+    throw new Error("Something went wrong fetching residents data!");
   }
+};
+
+//format residents for resident table
+export const formatFetchedResidents = async () => {
+  const response: ResidentProp[] = await fetchResidents();
+
+  const data = response.map((item) => {
+    const {
+      id,
+      firstname,
+      middlename,
+      lastname,
+      gender,
+      birth_date,
+      birth_place,
+      address,
+      contact_no,
+      voter_status,
+      citizenship,
+      civil_status,
+      osy,
+      pwd,
+      official_id,
+      account_id,
+      profile_image_url,
+    } = item;
+
+    const middlenameValid = middlename ? " " + middlename + " " : " ";
+    const name = firstname + middlenameValid + lastname;
+
+    return {
+      id,
+      name,
+      gender,
+      birth_date,
+      birth_place,
+      address,
+      contact_no,
+      voter_status,
+      citizenship,
+      civil_status,
+      osy,
+      pwd,
+    };
+  });
+
+  return data;
 };
 
 // add resident
@@ -87,9 +141,8 @@ export const resident_auth = async (
         // await createSession(responseData);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     redirect(RESIDENTS);
   }
 };
-

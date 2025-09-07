@@ -9,7 +9,7 @@ const page = () => {
       <div className="w-full space-y-3 md:space-y-0 md:gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
         <StatisticsCard items={statisticsCardData} />
       </div>
-      <ChartComponent />
+      {/* <ChartComponent /> */}
     </>
   );
 };

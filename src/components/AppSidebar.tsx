@@ -1,24 +1,19 @@
 "use client";
-import { SIDEBAR_DATA, sidebar_navigation_data } from "@/data/sidebar";
-import { ChevronDown, ChevronUp, LogOut, User2 } from "lucide-react";
+import { SIDEBAR_DATA } from "@/data/sidebar";
+import { ChevronUp, User2 } from "lucide-react";
 import Image from "next/image";
-import React, { useActionState, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DARK_GREEN } from "@/constants/colors";
-import CustomIcons from "./CustomIcons";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
 } from "./ui/sidebar";
 import {
   DropdownMenu,
@@ -26,15 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "./ui/collapsible";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { LOGIN } from "@/constants/navigation";
-import { ModeToggle } from "./mode-btn";
 import NavMain from "./SidebarComponents/NavMain";
 import NavDocuments from "./SidebarComponents/NavDocuments";
 import NavSecondary from "./SidebarComponents/NavSecondary";
