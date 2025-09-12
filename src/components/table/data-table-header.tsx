@@ -26,7 +26,7 @@ const DataTableColumnHeader = <TData, TValue>({
     return <div className={cn(className)}>{title}</div>;
   }
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center justify-center gap-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -44,7 +44,7 @@ const DataTableColumnHeader = <TData, TValue>({
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
+        <DropdownMenuContent align="center">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUp />
             Asc

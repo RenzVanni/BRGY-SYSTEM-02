@@ -1,15 +1,22 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { RESIDENT_PROP } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/props/Resident_Prop";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useContext } from "react";
 import { ContextTheme } from "../config_context";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 //Residents Columns
-export const ResidentsColumns: ColumnDef<RESIDENT_PROP>[] = [
+export const ResidentsColumns: ColumnDef<ResidentProp>[] = [
   {
     accessorKey: "fullname",
     header: ({ column }) => {
@@ -206,7 +213,7 @@ export const ResidentsColumns: ColumnDef<RESIDENT_PROP>[] = [
         account_id,
         profile_image_url,
       };
-      
+
       return (
         <>
           <DropdownMenu>

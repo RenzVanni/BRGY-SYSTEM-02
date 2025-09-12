@@ -30,6 +30,8 @@ export function LoginForm() {
   const loginAuth = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setIsLoading(true);
+
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
@@ -47,8 +49,6 @@ export function LoginForm() {
           credentials: "include",
         }
       );
-
-      setIsLoading(true);
 
       if (response.ok) {
         router.push(DASHBOARD);

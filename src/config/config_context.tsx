@@ -1,20 +1,7 @@
 "use client";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
-import { DEFAULT_RESIDENT_DATA } from "@/constants/Resident_Prop";
-import { RESIDENT_PROP } from "@/props/Resident_Prop";
-// type Resident_Prop = {
-//   id: string;
-//   firstName: string;
-//   middleName?: string;
-//   lastName: string;
-//   picture?: string;
-//   birthDate: string;
-//   birthPlace: string;
-//   email?: string;
-//   address: string;
-//   sex: string;
-//   status: string;
-// };
+import { DEFAULT_RESIDENT_DATA } from "@/constants/ResidentDefault";
+import { ResidentProp } from "@/props/Resident_Prop";
 
 type Prop = {
   isAddResident: boolean;
@@ -23,8 +10,8 @@ type Prop = {
   setIsEditResident: Dispatch<SetStateAction<boolean>>;
   isCreateCertificate: boolean;
   setIsCreateCertificate: Dispatch<SetStateAction<boolean>>;
-  residentData: RESIDENT_PROP;
-  setResidentData: Dispatch<SetStateAction<RESIDENT_PROP>>;
+  residentData: ResidentProp;
+  setResidentData: Dispatch<SetStateAction<ResidentProp>>;
 };
 
 const contextDefault: Prop = {
@@ -34,7 +21,7 @@ const contextDefault: Prop = {
   setIsEditResident: () => {},
   isCreateCertificate: false,
   setIsCreateCertificate: () => {},
-  residentData: DEFAULT_RESIDENT_DATA,
+  residentData: {} as ResidentProp,
   setResidentData: () => {},
 };
 
@@ -48,8 +35,8 @@ export const ContextProvider = ({
   const [isAddResident, setIsAddResident] = useState(false);
   const [isEditResident, setIsEditResident] = useState(false);
   const [isCreateCertificate, setIsCreateCertificate] = useState(false);
-  const [residentData, setResidentData] = useState<RESIDENT_PROP>(
-    DEFAULT_RESIDENT_DATA
+  const [residentData, setResidentData] = useState<ResidentProp>(
+    {} as ResidentProp
   );
   return (
     <ContextTheme.Provider

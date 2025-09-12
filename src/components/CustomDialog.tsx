@@ -26,31 +26,14 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { CircleUserRound } from "lucide-react";
-import { ContextTheme } from "@/config/config_context";
-import { CIVIL_STATUS_PROP } from "@/constants/CivilStatus_Prop";
-import { fetch_civilStatus } from "@/api/civilStatus_api";
-import { GENDER_PROP } from "@/constants/Gender_Prop";
-import { fetch_gender } from "@/api/gender_api";
 import { resident_auth } from "@/api/resident_api";
 import { civilStatusData } from "@/data/civilStatus";
 import { genderData } from "@/data/gender";
+import { Checkbox } from "./ui/checkbox";
+import { ResidentProp } from "@/props/Resident_Prop";
 
 type Prop = {
-  id: number;
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  gender: string;
-  birthDate: string;
-  birthPlace: string;
-  address: string;
-  contactNo: string;
-  citizenship: string;
-  civilStatus: string;
-  voterStatus: string;
-  osy: string;
-  pwd: string;
-  profileImageUrl: string;
+  data?: ResidentProp;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   is_Add_Resident: boolean;
@@ -61,41 +44,8 @@ type Prop = {
 
 type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
-// const tempo = {
-//   id,
-//   isOpen,
-//   setIsOpen,
-//   firstName,
-//   middleName,
-//   lastName,
-//   picture,
-//   birthDate,
-//   birthPlace,
-//   email,
-//   address,
-//   status,
-//   sex,
-//   is_Add_Resident,
-//   is_Edit_Resident,
-//   is_Create_Certificate,
-//   whatsType = "",
-// };
 const CustomDialog = ({
-  id,
-  firstname,
-  middlename,
-  lastname,
-  gender,
-  birthDate,
-  birthPlace,
-  address,
-  contactNo,
-  citizenship,
-  civilStatus,
-  voterStatus,
-  osy,
-  pwd,
-  profileImageUrl,
+  data,
   isOpen,
   setIsOpen,
   is_Add_Resident,
@@ -104,13 +54,40 @@ const CustomDialog = ({
   whatsType = "",
 }: PartialExcept<Prop, "setIsOpen">) => {
   const [state, action, pending] = useActionState(resident_auth, undefined);
+  const [resident, setResident] = useState<ResidentProp>(data);
 
-  const checkMiddleName = middlename == null ? "" : middlename;
+  const {
+    id,
+    firstname,
+    middlename,
+    lastname,
+    gender,
+    birth_date,
+    birth_place,
+    address,
+    contact_no,
+    citizenship,
+    civil_status,
+    voter_status,
+    osy,
+    pwd,
+    profile_image_url,
+    official_id,
+    account_id,
+  } = resident ?? ({} as ResidentProp);
+
+  const [isVoterStatus, setIsVoterStatus] = useState<boolean>(voter_status);
+
+  const checkMiddleName = middlename == null ? "" : " " + middlename + " ";
   useEffect(() => {
     if (pending) {
       setIsOpen(false);
     }
-  }, [pending]);
+  }, [pending, data]);
+
+  console.log("Resident in Edit: ", resident);
+
+  const fullname = firstname + checkMiddleName + lastname;
 
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
@@ -128,9 +105,9 @@ const CustomDialog = ({
 
         {is_Edit_Resident && (
           <>
-            {profileImageUrl ? (
+            {profile_image_url ? (
               <Image
-                src={profileImageUrl}
+                src={profile_image_url}
                 alt="image"
                 width={70}
                 height={70}
@@ -140,7 +117,7 @@ const CustomDialog = ({
               <CircleUserRound />
             )}
             <DialogHeader>
-              <DialogTitle>{firstname}</DialogTitle>
+              <DialogTitle>{fullname}</DialogTitle>
             </DialogHeader>
           </>
         )}
@@ -215,34 +192,34 @@ const CustomDialog = ({
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
-            <Label htmlFor="birth">Birth Place</Label>
+            <Label htmlFor="birth_place">Birth Place</Label>
             <Input
-              id="birthPlace"
+              id="birth_place"
               type="text"
-              name="birthPlace"
+              name="birth_place"
               required
               className="col-span-2"
               placeholder="Enter birth place..."
-              defaultValue={birthPlace}
+              defaultValue={birth_place}
             />
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
-            <Label htmlFor="birth">Birth Date</Label>
+            <Label htmlFor="birth_date">Birth Date</Label>
             <Input
-              id="birth"
+              id="birth_date"
               type="date"
-              name="birthDate"
+              name="birth_date"
               required
               className="col-span-2"
-              defaultValue={birthDate}
+              defaultValue={birth_date}
             />
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select defaultValue={`${gender}`} name="gender">
-              <SelectTrigger className="col-span-2" id="sex">
+            <Select defaultValue={gender} name="gender">
+              <SelectTrigger className="col-span-2" id="gender">
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
               <SelectContent>
@@ -256,9 +233,9 @@ const CustomDialog = ({
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
-            <Label htmlFor="civilStatus">Civil Status</Label>
-            <Select defaultValue={`${civilStatus}`} name="civilStatus">
-              <SelectTrigger className="col-span-2" id="status">
+            <Label htmlFor="civil_status">Civil Status</Label>
+            <Select defaultValue={`${civil_status}`} name="civilStatus">
+              <SelectTrigger className="col-span-2" id="civil_status">
                 <SelectValue placeholder="Select Civil Status" />
               </SelectTrigger>
               <SelectContent>
@@ -269,6 +246,43 @@ const CustomDialog = ({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="grid grid-cols-3 items-center gap-2">
+            <Label htmlFor="contact_no">Contact No</Label>
+            <Input
+              id="contact_no"
+              type="text"
+              name="contact_no"
+              required
+              className="col-span-2"
+              defaultValue={contact_no}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 items-center gap-2">
+            <Label htmlFor="voter_status">Voter Status</Label>
+            <Checkbox
+              id="voter_status"
+              checked={isVoterStatus}
+              onCheckedChange={(check) => setIsVoterStatus(!!check)}
+              name="voter_status"
+              required
+              className="col-span-2"
+              // defaultValue={voter_status}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 items-center gap-2">
+            <Label htmlFor="citizenship">Citizenship</Label>
+            <Input
+              id="citizenship"
+              type="text"
+              name="citizenship"
+              required
+              className="col-span-2"
+              defaultValue={citizenship}
+            />
           </div>
 
           <Input type="hidden" name="whatsType" value={whatsType} />

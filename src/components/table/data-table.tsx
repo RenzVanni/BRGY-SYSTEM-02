@@ -27,8 +27,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DataTablePagination from "./data-table-pagination";
+import { ContextTheme } from "@/config/config_context";
 
 interface DataTableProp<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,6 +45,7 @@ export const DataTable = <TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState<any>("");
+  const { setIsAddResident } = useContext(ContextTheme);
 
   const table = useReactTable({
     data,
@@ -68,37 +70,54 @@ export const DataTable = <TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter"
           value={globalFilter}
           onChange={(e) => table.setGlobalFilter(String(e.target.value))}
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(e) => {
-                    column.toggleVisibility(!!e);
-                  }}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => {
+              setIsAddResident(true);
+            }}
+          >
+            Create
+          </Button>
+          <Button
+            variant="secondary"
+            // onClick={() => {
+            //   setIsAddResident(true);
+            // }}
+          >
+            Export
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(e) => {
+                      column.toggleVisibility(!!e);
+                    }}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -107,7 +126,11 @@ export const DataTable = <TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="bg-secondary">
+                    <TableHead
+                      key={header.id}
+                      className="bg-secondary"
+                      colSpan={header.colSpan}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -128,7 +151,7 @@ export const DataTable = <TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -150,6 +173,7 @@ export const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <br />
       <DataTablePagination table={table} />
     </div>
   );

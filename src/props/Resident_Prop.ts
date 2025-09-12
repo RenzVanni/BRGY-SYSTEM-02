@@ -1,4 +1,4 @@
-export type RESIDENT_PROP = {
+export type ResidentProp = {
   id: number;
   firstname: string;
   middlename: string;
@@ -8,7 +8,7 @@ export type RESIDENT_PROP = {
   birth_place: string;
   address: string;
   contact_no: string;
-  voter_status: string;
+  voter_status: boolean;
   citizenship: string;
   civil_status: string;
   osy: boolean;

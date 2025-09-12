@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import DataTableColumnHeader from "../components/table/data-table-header";
@@ -12,13 +11,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ContextTheme } from "./config_context";
+import { useContext, useEffect, useState } from "react";
+import { fetchResidentById } from "@/api/resident_api";
+import { ResidentProp } from "@/props/Resident_Prop";
 
 export type CustomColumnDefProp = {
   accessorKey: string;
   title: string;
 };
 
-export const customColumnDef = <TDATA,>({
+export const customColumnDef = <TDATA extends { id: number }>({
   prop,
 }: {
   prop: CustomColumnDefProp[];
@@ -27,11 +31,14 @@ export const customColumnDef = <TDATA,>({
     {
       id: "select",
       header: ({ table }) => (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <Checkbox
             checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate")
+              table.getIsAllPageRowsSelected()
+                ? true
+                : table.getIsSomePageRowsSelected()
+                ? "indeterminate"
+                : false
             }
             onCheckedChange={(e) => table.toggleAllPageRowsSelected(!!e)}
             aria-label="Select All"
@@ -39,7 +46,7 @@ export const customColumnDef = <TDATA,>({
         </div>
       ),
       cell: ({ row }) => (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(e) => row.toggleSelected(!!e)}
@@ -61,7 +68,43 @@ export const customColumnDef = <TDATA,>({
     {
       id: "actions",
       cell: ({ row }) => {
-        const payment = row.original;
+        const [data, setData] = useState<ResidentProp>();
+
+        const fetchy = async () => {
+          const residentId = row.original.id;
+
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/residents/${residentId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            }
+          );
+
+          console.log("Actions Edit: ", await response.json());
+        };
+
+        const resident = async () => {
+          const residentId = row.original.id;
+          const response = await fetchResidentById(residentId);
+          setData(response);
+          console.log("edit resident: ", data);
+        };
+
+        // fetchy();
+        // resident();
+        const { setIsEditResident, setResidentData } = useContext(ContextTheme);
+
+        const onEdit = async () => {
+          setIsEditResident(true);
+          const residentId = row.original.id;
+          const response = await fetchResidentById(residentId);
+          setData(response);
+          setResidentData(response);
+        };
 
         return (
           <DropdownMenu>
@@ -76,7 +119,7 @@ export const customColumnDef = <TDATA,>({
               <DropdownMenuItem className="font-semibold">
                 View
               </DropdownMenuItem>
-              <DropdownMenuItem className="font-semibold">
+              <DropdownMenuItem className="font-semibold" onClick={onEdit}>
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem className="text-destructive font-semibold">

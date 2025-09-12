@@ -1,15 +1,10 @@
 "use server";
-import { deleteSession } from "@/lib/session";
 import { instance } from "./config/axios_config";
-import { AxiosError } from "axios";
 import { redirect } from "next/navigation";
 import { LOGIN, RESIDENTS } from "@/constants/navigation";
 import { Resident_FormSchema, Resident_FormState } from "@/lib/definitions";
 import { cookies } from "next/headers";
-import {
-  ResidentColumnModel,
-  ResidentProp,
-} from "@/config/residents/residentsColumnsDef";
+import { ResidentProp } from "@/props/Resident_Prop";
 
 //fetch residents
 export const fetchResidents = async () => {
@@ -30,6 +25,7 @@ export const fetchResidents = async () => {
 
     return data;
   } catch (error: any) {
+    console.log("resident getch status: ", error.status);
     throw new Error("Something went wrong fetching residents data!");
   }
 };
@@ -79,6 +75,34 @@ export const formatFetchedResidents = async () => {
   });
 
   return data;
+};
+
+//fetch residents by id
+export const fetchResidentById = async (id: number) => {
+  try {
+    const cookieHeader = (await cookies()).toString();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/residents/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader,
+        },
+      }
+    );
+
+    if (response.status == 401) {
+      redirect(LOGIN);
+      return;
+    }
+    const data = await response.json();
+
+    return data;
+  } catch (error: any) {
+    console.log("resident getch status: ", error.status);
+    throw new Error("Something went wrong fetching residents data!");
+  }
 };
 
 // add resident
