@@ -1,5 +1,5 @@
 "use client";
-import { fetchResidents, formatFetchedResidents } from "@/api/resident_api";
+import { fetchResidents, formatFetchedResidents } from "@/app/api/resident_api";
 import CustomDialog from "@/components/CustomDialog";
 import { DataTable } from "@/components/table/data-table";
 import { ContextTheme } from "@/config/config_context";

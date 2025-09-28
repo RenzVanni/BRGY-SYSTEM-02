@@ -9,7 +9,7 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession, setSession } from "@/lib/session";
 import { DASHBOARD, LOGIN, RESIDENTS } from "@/constants/navigation";
-import { instance } from "@/api/config/axios_config";
+import { instance } from "@/app/api/config/axios_config";
 import { LOGIN_SLUG } from "@/constants/Backend_Slugs";
 import { cookies } from "next/headers";
 import { FormEvent } from "react";

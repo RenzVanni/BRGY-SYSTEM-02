@@ -34,11 +34,13 @@ import { ContextTheme } from "@/config/config_context";
 interface DataTableProp<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pages: number;
 }
 
 export const DataTable = <TData, TValue>({
   columns,
   data,
+  pages,
 }: DataTableProp<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -174,7 +176,7 @@ export const DataTable = <TData, TValue>({
         </Table>
       </div>
       <br />
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} pages={pages} />
     </div>
   );
 };

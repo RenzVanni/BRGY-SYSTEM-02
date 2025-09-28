@@ -1,11 +1,15 @@
+"use client";
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Montserrat } from "next/font/google";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
 });
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -23,7 +27,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>

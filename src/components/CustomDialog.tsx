@@ -26,7 +26,7 @@ import {
 } from "./ui/select";
 import { Button } from "./ui/button";
 import { CircleUserRound } from "lucide-react";
-import { resident_auth } from "@/api/resident_api";
+import { resident_auth } from "@/app/api/resident_api";
 import { civilStatusData } from "@/data/civilStatus";
 import { genderData } from "@/data/gender";
 import { Checkbox } from "./ui/checkbox";

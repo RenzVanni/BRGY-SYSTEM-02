@@ -12,6 +12,8 @@ type Prop = {
   setIsCreateCertificate: Dispatch<SetStateAction<boolean>>;
   residentData: ResidentProp;
   setResidentData: Dispatch<SetStateAction<ResidentProp>>;
+  paginateValue: number;
+  setPaginateValue: Dispatch<SetStateAction<number>>;
 };
 
 const contextDefault: Prop = {
@@ -23,6 +25,8 @@ const contextDefault: Prop = {
   setIsCreateCertificate: () => {},
   residentData: {} as ResidentProp,
   setResidentData: () => {},
+  paginateValue: 0,
+  setPaginateValue: () => {},
 };
 
 export const ContextTheme = createContext(contextDefault);
@@ -38,6 +42,8 @@ export const ContextProvider = ({
   const [residentData, setResidentData] = useState<ResidentProp>(
     {} as ResidentProp
   );
+  const [paginateValue, setPaginateValue] = useState(0);
+
   return (
     <ContextTheme.Provider
       value={{
@@ -49,6 +55,8 @@ export const ContextProvider = ({
         setIsCreateCertificate,
         residentData,
         setResidentData,
+        paginateValue,
+        setPaginateValue,
       }}
     >
       {children}

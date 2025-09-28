@@ -14,7 +14,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { ContextTheme } from "./config_context";
 import { useContext, useEffect, useState } from "react";
-import { fetchResidentById } from "@/api/resident_api";
+import { fetchResidentById } from "@/app/api/resident_api";
 import { ResidentProp } from "@/props/Resident_Prop";
 
 export type CustomColumnDefProp = {
@@ -22,7 +22,9 @@ export type CustomColumnDefProp = {
   title: string;
 };
 
-export const customColumnDef = <TDATA extends { id: number }>({
+export const customColumnDef = <
+  TDATA extends { id: number | string; resident_id: number }
+>({
   prop,
 }: {
   prop: CustomColumnDefProp[];
@@ -88,7 +90,12 @@ export const customColumnDef = <TDATA extends { id: number }>({
         };
 
         const resident = async () => {
-          const residentId = row.original.id;
+          let residentId: number;
+          if (row.original.resident_id != null) {
+            residentId = row.original.resident_id;
+          } else if (typeof row.original.id == "number") {
+            residentId = row.original.id;
+          }
           const response = await fetchResidentById(residentId);
           setData(response);
           console.log("edit resident: ", data);
@@ -100,7 +107,13 @@ export const customColumnDef = <TDATA extends { id: number }>({
 
         const onEdit = async () => {
           setIsEditResident(true);
-          const residentId = row.original.id;
+          let residentId: number;
+          if (row.original.resident_id != null) {
+            residentId = row.original.resident_id;
+          } else if (typeof row.original.id == "number") {
+            residentId = row.original.id;
+          }
+
           const response = await fetchResidentById(residentId);
           setData(response);
           setResidentData(response);

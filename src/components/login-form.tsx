@@ -16,9 +16,8 @@ import { DASHBOARD } from "@/constants/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { FormEvent, useActionState, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { login_auth } from "@/api/auth/auth";
-import { instance } from "@/api/config/axios_config";
 import { set } from "zod";
+import { login_auth } from "@/app/api/auth/auth";
 
 export function LoginForm() {
   const [state, action, loading] = useActionState(login_auth, undefined);
