@@ -12,7 +12,7 @@ import { useEffect } from "react";
 const page = () => {
   return (
     <>
-      <div className="w-full space-y-3 md:space-y-0 md:gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
+      <div className="w-full space-y-3 sm:space-y-0 sm:gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         <StatisticsCard items={statisticsCardData} />
       </div>
       {/* <ChartComponent /> */}

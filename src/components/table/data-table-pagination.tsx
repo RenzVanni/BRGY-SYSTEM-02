@@ -27,9 +27,9 @@ const DataTablePagination = <TData,>({
 }: DataTablePaginationProps<TData>) => {
   const context = useContext(ContextTheme);
   const { paginateValue, setPaginateValue } = context;
-  if (paginateValue < 0 || paginateValue >= pages) {
-    setPaginateValue(0);
-  }
+  // if (paginateValue < 0 || paginateValue >= pages) {
+  //   setPaginateValue(0);
+  // }
 
   return (
     <div className="flex items-center justify-between px-2">

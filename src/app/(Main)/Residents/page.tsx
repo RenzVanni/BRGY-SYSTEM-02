@@ -1,6 +1,7 @@
 "use client";
 import { fetchResidents, formatFetchedResidents } from "@/app/api/resident_api";
 import CustomDialog from "@/components/CustomDialog";
+import ResidentFormDialog from "@/components/FormDialog/ResidentFormDialog";
 import { DataTable } from "@/components/table/data-table";
 import { ContextTheme } from "@/config/config_context";
 import {
@@ -15,6 +16,18 @@ import React, { useContext, useEffect, useState } from "react";
 const page = () => {
   const [data, setData] = useState<ResidentColumnModel[]>([]);
   const router = useRouter();
+  const [isFormAvailable, setIsFormAvailable] = useState(false);
+  const {
+    setIsAddResident,
+    setIsEditResident,
+    setIsCreateCertificate,
+    isAddResident,
+    isEditResident,
+    isCreateCertificate,
+    residentData,
+  } = useContext(ContextTheme);
+
+  const isResidentPresent = Object.keys(residentData).length > 0;
 
   useEffect(() => {
     const fetchResidents = async () => {
@@ -89,23 +102,13 @@ const page = () => {
     fetchResidents();
   }, []);
 
-  const {
-    setIsAddResident,
-    setIsEditResident,
-    setIsCreateCertificate,
-    isAddResident,
-    isEditResident,
-    isCreateCertificate,
-    residentData,
-  } = useContext(ContextTheme);
-
-  const isResidentPresent = Object.keys(residentData).length > 0;
-
   return (
     <>
-      <DataTable columns={residentColumn} data={data} />
+      <DataTable columns={residentColumn} data={data} pages={0} />
 
-      {isResidentPresent && (
+      <ResidentFormDialog />
+
+      {/* {isResidentPresent && (
         <CustomDialog
           isOpen={isAddResident}
           setIsOpen={setIsAddResident}
@@ -131,7 +134,7 @@ const page = () => {
           setIsOpen={setIsCreateCertificate}
           is_Create_Certificate={true}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -31,30 +31,36 @@ import { civilStatusData } from "@/data/civilStatus";
 import { genderData } from "@/data/gender";
 import { Checkbox } from "./ui/checkbox";
 import { ResidentProp } from "@/props/Resident_Prop";
+import { ContextTheme } from "@/config/config_context";
 
 type Prop = {
   data?: ResidentProp;
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  // isOpen: boolean;
+  // setIsOpen: Dispatch<SetStateAction<boolean>>;
   is_Add_Resident: boolean;
   is_Edit_Resident: boolean;
   is_Create_Certificate: boolean;
   whatsType: string;
 };
 
-type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+type PartialExcept<T> = Partial<T>;
 
 const CustomDialog = ({
   data,
-  isOpen,
-  setIsOpen,
+  // isOpen,
+  // setIsOpen,
   is_Add_Resident,
   is_Edit_Resident,
   is_Create_Certificate,
   whatsType = "",
-}: PartialExcept<Prop, "setIsOpen">) => {
+}: PartialExcept<Prop>) => {
   const [state, action, pending] = useActionState(resident_auth, undefined);
-  const [resident, setResident] = useState<ResidentProp>(data);
+  const { residentData } = useContext(ContextTheme);
+  const [resident, setResident] = useState<ResidentProp>({} as ResidentProp);
+
+  useEffect(() => {
+    setResident(residentData);
+  }, [residentData]);
 
   const {
     id,
@@ -79,19 +85,26 @@ const CustomDialog = ({
   const [isVoterStatus, setIsVoterStatus] = useState<boolean>(voter_status);
 
   const checkMiddleName = middlename == null ? "" : " " + middlename + " ";
-  useEffect(() => {
-    if (pending) {
-      setIsOpen(false);
-    }
-  }, [pending, data]);
+  // useEffect(() => {
+  //   if (pending) {
+  //     setIsOpen(false);
+  //   }
+  // }, [pending, data]);
 
   console.log("Resident in Edit: ", resident);
 
   const fullname = firstname + checkMiddleName + lastname;
+  const { isDialogBox, setIsDialogBox } = useContext(ContextTheme);
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      <DialogContent className={`${is_Edit_Resident && "pt-12"}`}>
+    <Dialog
+      open={isDialogBox.isOpen}
+      onOpenChange={() => setIsDialogBox({ isOpen: false })}
+    >
+      <DialogContent
+        className={`${is_Edit_Resident && "pt-12"}`}
+        aria-describedby=""
+      >
         {is_Add_Resident && (
           <>
             <DialogHeader>
@@ -102,7 +115,6 @@ const CustomDialog = ({
             </DialogHeader>
           </>
         )}
-
         {is_Edit_Resident && (
           <>
             {profile_image_url ? (
@@ -121,7 +133,6 @@ const CustomDialog = ({
             </DialogHeader>
           </>
         )}
-
         {is_Create_Certificate && (
           <>
             <DialogHeader>
@@ -143,7 +154,13 @@ const CustomDialog = ({
                 type="text"
                 name="firstName"
                 placeholder="First name..."
-                defaultValue={firstname}
+                value={firstname}
+                onChange={(e) =>
+                  setResident((prev) => ({
+                    ...prev,
+                    firstname: e.target.value,
+                  }))
+                }
                 required
               />
               <Input
@@ -151,14 +168,26 @@ const CustomDialog = ({
                 type="text"
                 name="middleName"
                 placeholder="Middle name..."
-                defaultValue={checkMiddleName}
+                value={checkMiddleName}
+                onChange={(e) =>
+                  setResident((prev) => ({
+                    ...prev,
+                    middlename: e.target.value,
+                  }))
+                }
               />
               <Input
                 id="lastName"
                 type="text"
                 name="lastName"
                 placeholder="Last name..."
-                defaultValue={lastname}
+                value={lastname}
+                onChange={(e) =>
+                  setResident((prev) => ({
+                    ...prev,
+                    lastname: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
@@ -173,7 +202,7 @@ const CustomDialog = ({
                 name="email"
                 placeholder="jia@gmail.com"
                 className="col-span-2"
-                defaultValue={email}
+                value={email}
               />
             </div>
           )} */}
@@ -187,7 +216,13 @@ const CustomDialog = ({
               placeholder="Enter address..."
               required
               className="col-span-2"
-              defaultValue={address}
+              value={address}
+              onChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  address: e.target.value,
+                }))
+              }
             />
           </div>
 
@@ -200,7 +235,13 @@ const CustomDialog = ({
               required
               className="col-span-2"
               placeholder="Enter birth place..."
-              defaultValue={birth_place}
+              value={birth_place}
+              onChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  birth_place: e.target.value,
+                }))
+              }
             />
           </div>
 
@@ -212,13 +253,28 @@ const CustomDialog = ({
               name="birth_date"
               required
               className="col-span-2"
-              defaultValue={birth_date}
+              value={birth_date}
+              onChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  birth_date: e.target.value,
+                }))
+              }
             />
           </div>
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select defaultValue={gender} name="gender">
+            <Select
+              value={gender}
+              onValueChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  gender: e,
+                }))
+              }
+              name="gender"
+            >
               <SelectTrigger className="col-span-2" id="gender">
                 <SelectValue placeholder="Select Gender" />
               </SelectTrigger>
@@ -234,7 +290,16 @@ const CustomDialog = ({
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="civil_status">Civil Status</Label>
-            <Select defaultValue={`${civil_status}`} name="civilStatus">
+            <Select
+              value={`${civil_status}`}
+              onValueChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  civil_status: e,
+                }))
+              }
+              name="civilStatus"
+            >
               <SelectTrigger className="col-span-2" id="civil_status">
                 <SelectValue placeholder="Select Civil Status" />
               </SelectTrigger>
@@ -256,11 +321,17 @@ const CustomDialog = ({
               name="contact_no"
               required
               className="col-span-2"
-              defaultValue={contact_no}
+              value={contact_no}
+              onChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  contact_no: e.target.value,
+                }))
+              }
             />
           </div>
 
-          <div className="grid grid-cols-3 items-center gap-2">
+          {/* <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="voter_status">Voter Status</Label>
             <Checkbox
               id="voter_status"
@@ -269,9 +340,9 @@ const CustomDialog = ({
               name="voter_status"
               required
               className="col-span-2"
-              // defaultValue={voter_status}
+              value={voter_status}
             />
-          </div>
+          </div> */}
 
           <div className="grid grid-cols-3 items-center gap-2">
             <Label htmlFor="citizenship">Citizenship</Label>
@@ -281,7 +352,13 @@ const CustomDialog = ({
               name="citizenship"
               required
               className="col-span-2"
-              defaultValue={citizenship}
+              value={citizenship}
+              onChange={(e) =>
+                setResident((prev) => ({
+                  ...prev,
+                  citizenship: e.target.value,
+                }))
+              }
             />
           </div>
 

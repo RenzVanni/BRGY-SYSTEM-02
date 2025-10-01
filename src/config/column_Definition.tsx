@@ -70,42 +70,48 @@ export const customColumnDef = <
     {
       id: "actions",
       cell: ({ row }) => {
-        const [data, setData] = useState<ResidentProp>();
+        // const [data, setData] = useState<ResidentProp>();
 
-        const fetchy = async () => {
-          const residentId = row.original.id;
+        // const fetchy = async () => {
+        //   const residentId = row.original.id;
 
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/residents/${residentId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-            }
-          );
+        //   const response = await fetch(
+        //     `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/residents/${residentId}`,
+        //     {
+        //       method: "GET",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //       },
+        //       credentials: "include",
+        //     }
+        //   );
 
-          console.log("Actions Edit: ", await response.json());
-        };
+        //   console.log("Actions Edit: ", await response.json());
+        // };
 
-        const resident = async () => {
-          let residentId: number;
-          if (row.original.resident_id != null) {
-            residentId = row.original.resident_id;
-          } else if (typeof row.original.id == "number") {
-            residentId = row.original.id;
-          }
-          const response = await fetchResidentById(residentId);
-          setData(response);
-          console.log("edit resident: ", data);
-        };
+        // const resident = async () => {
+        //   let residentId: number;
+        //   if (row.original.resident_id != null) {
+        //     residentId = row.original.resident_id;
+        //   } else if (typeof row.original.id == "number") {
+        //     residentId = row.original.id;
+        //   }
+        //   const response = await fetchResidentById(residentId);
+        //   setData(response);
+        //   console.log("edit resident: ", data);
+        // };
 
         // fetchy();
         // resident();
-        const { setIsEditResident, setResidentData } = useContext(ContextTheme);
+        const {
+          setIsEditResident,
+          setResidentData,
+          setIsEdit,
+          setIsFormDialog,
+        } = useContext(ContextTheme);
 
         const onEdit = async () => {
+          setIsFormDialog({ dialogBoxType: "editResident", isOpen: true });
           setIsEditResident(true);
           let residentId: number;
           if (row.original.resident_id != null) {
@@ -113,9 +119,11 @@ export const customColumnDef = <
           } else if (typeof row.original.id == "number") {
             residentId = row.original.id;
           }
+          console.log("Edit Data ", row.original);
 
           const response = await fetchResidentById(residentId);
-          setData(response);
+          console.log("Res ", response);
+          // setData(response);
           setResidentData(response);
         };
 
