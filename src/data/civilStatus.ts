@@ -1,1 +1,1 @@
-export const civilStatusData = ["Single", "Married", "Divorced", "Widowed"];
+export const civilStatusData = ["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"];

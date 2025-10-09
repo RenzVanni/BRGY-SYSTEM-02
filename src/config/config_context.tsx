@@ -1,7 +1,7 @@
 "use client";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { DEFAULT_RESIDENT_DATA } from "@/constants/ResidentDefault";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 import { ResidentDefaultData } from "@/data/defaultData";
 
 type FormDialogProp = {

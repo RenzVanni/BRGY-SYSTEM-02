@@ -4,37 +4,15 @@ import { redirect } from "next/navigation";
 import { LOGIN, RESIDENTS } from "@/constants/navigation";
 import { Resident_FormSchema, Resident_FormState } from "@/lib/definitions";
 import { cookies } from "next/headers";
-import { ResidentProp } from "@/props/Resident_Prop";
-
-//fetch residents
-export const fetchResidents = async () => {
-  try {
-    const cookieHeader = (await cookies()).toString();
-    const response = await fetch(process.env.BACKEND_DEV_URL + "/residents", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieHeader,
-      },
-    });
-
-    if (response.status == 401) {
-      redirect(LOGIN);
-    }
-    const data = response.json();
-
-    return data;
-  } catch (error: any) {
-    console.log("resident getch status: ", error.status);
-    throw new Error("Something went wrong fetching residents data!");
-  }
-};
+import { ResidentProp } from "@/types/residentsType";
+import { paginateResidents } from "./residentApi";
 
 //format residents for resident table
-export const formatFetchedResidents = async () => {
-  const response: ResidentProp[] = await fetchResidents();
+export const formatFetchedResidents = async (page: number) => {
+  const response = await paginateResidents(page);
+  const resident: ResidentProp[] = await response.json();
 
-  const data = response.map((item) => {
+  const data = resident.map((item) => {
     const {
       id,
       firstname,

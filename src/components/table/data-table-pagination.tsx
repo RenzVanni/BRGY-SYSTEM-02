@@ -76,6 +76,7 @@ const DataTablePagination = <TData,>({
             variant="outline"
             size="icon"
             className="size-8"
+            disabled={paginateValue <= 0}
             onClick={() => {
               setPaginateValue(paginateValue - 1);
             }}

@@ -7,9 +7,10 @@ import { LOGIN } from "@/constants/navigation";
 import { AccountType } from "@/types/account";
 import { useRouter } from "next/navigation";
 import { ContextTheme } from "@/config/config_context";
-import { useAccounts } from "@/hooks/useAccounts";
+import { useAccounts } from "@/hooks/useQuery";
 import CustomDialog from "@/components/CustomDialog";
 import FormDialog from "@/components/FormDialog/ResidentFormDialog";
+import { paginateAccounts } from "@/app/api/accountApi";
 
 const page = () => {
   const context = useContext(ContextTheme);
@@ -21,7 +22,6 @@ const page = () => {
   const { data, error, isPending, isSuccess, status } =
     useAccounts(paginateValue);
 
-  console.log(status);
   // if (status == "401") {
   //   router.push(LOGIN);
   // }

@@ -15,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ContextTheme } from "./config_context";
 import { useContext, useEffect, useState } from "react";
 import { fetchResidentById } from "@/app/api/resident_api";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 
 export type CustomColumnDefProp = {
   accessorKey: string;
@@ -23,7 +23,7 @@ export type CustomColumnDefProp = {
 };
 
 export const customColumnDef = <
-  TDATA extends { id: number | string; resident_id: number }
+  TDATA extends { id: number | string; resident_id?: number }
 >({
   prop,
 }: {

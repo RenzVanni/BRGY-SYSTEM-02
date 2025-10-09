@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 
 type prop = {
   label: string;

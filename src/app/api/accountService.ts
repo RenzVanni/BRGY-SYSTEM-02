@@ -1,19 +1,26 @@
 "use server";
 
-import { ACCOUNT_COUNT_PATH, ACCOUNT_PATH } from "@/constants/Backend_Slugs";
+import {
+  ACCOUNT_COUNT_SLUG,
+  ACCOUNT_LOGIN_SLUG,
+} from "@/constants/Backend_Slugs";
 import { LOGIN } from "@/constants/navigation";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const fetchAccounts = async () => {
   const cookieHeader = (await cookies()).toString();
-  const response = await fetch(process.env.BACKEND_DEV_URL + ACCOUNT_PATH, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieHeader,
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/accounts?page=${0}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader,
+      },
+      cache: "no-store",
+    }
+  );
 
   console.log("Server status ", response.status);
 
@@ -34,7 +41,7 @@ export const fetchAccounts = async () => {
 export const countAccounts = async () => {
   const cookieHeader = (await cookies()).toString();
   const response = await fetch(
-    process.env.NEXT_PUBLIC_BACKEND_DEV_URL + ACCOUNT_COUNT_PATH,
+    process.env.NEXT_PUBLIC_BACKEND_DEV_URL + ACCOUNT_COUNT_SLUG,
     {
       method: "GET",
       headers: {

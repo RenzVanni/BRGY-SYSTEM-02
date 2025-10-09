@@ -1,4 +1,4 @@
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 
 export const DEFAULT_RESIDENT_DATA: ResidentProp = {
   id: 0,

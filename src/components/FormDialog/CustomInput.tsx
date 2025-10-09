@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 
 type Prop = {
   label: string;

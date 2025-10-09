@@ -30,7 +30,7 @@ import { resident_auth } from "@/app/api/resident_api";
 import { civilStatusData } from "@/data/civilStatus";
 import { genderData } from "@/data/gender";
 import { Checkbox } from "./ui/checkbox";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 import { ContextTheme } from "@/config/config_context";
 
 type Prop = {

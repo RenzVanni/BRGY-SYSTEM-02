@@ -1,5 +1,5 @@
 import { ContextTheme } from "@/config/config_context";
-import { ResidentProp } from "@/props/Resident_Prop";
+import { ResidentProp } from "@/types/residentsType";
 import React, { useActionState, useContext, useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import {
@@ -52,6 +52,23 @@ const ResidentFormDialog = () => {
     setResidentData({} as ResidentProp);
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    if (residentData != null) {
+      formData.append("file", residentData.profile_image_url);
+    }
+    formData.append(
+      "resident",
+      new Blob([JSON.stringify(residentData)], { type: "application/json" })
+    );
+    const response = await fetch(`/api/search?query=/residents/update`, {
+      method: "PATCH",
+      credentials: "include",
+      body: formData,
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => handleOnOpenChange(open)}>
       <DialogContent className={`${isOpen && "pt-12"}`} aria-describedby="">
@@ -64,7 +81,7 @@ const ResidentFormDialog = () => {
         )}
         {dialogBoxType == "createCertificate" && <CreateCertificateHeader />}
 
-        <form action="" className="grid gap-4">
+        <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="grid grid-cols-3 items-center gap-2">
             <p>Name</p>
             <div className="grid grid-cols-3 gap-2 col-span-2">
