@@ -15,6 +15,7 @@ import { civilStatusData } from "@/data/civilStatus";
 import { Button } from "../ui/button";
 import { resident_auth } from "@/app/api/resident_api";
 import { ResidentDefaultData } from "@/data/defaultData";
+import { Loader2 } from "lucide-react";
 
 const ResidentFormDialog = () => {
   const [state, action, pending] = useActionState(resident_auth, undefined);
@@ -52,6 +53,7 @@ const ResidentFormDialog = () => {
     setResidentData({} as ResidentProp);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
@@ -62,11 +64,18 @@ const ResidentFormDialog = () => {
       "resident",
       new Blob([JSON.stringify(residentData)], { type: "application/json" })
     );
-    const response = await fetch(`/api/search?query=/residents/update`, {
-      method: "PATCH",
-      credentials: "include",
-      body: formData,
-    });
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/search?query=/residents/update`, {
+        method: "PATCH",
+        credentials: "include",
+        body: formData,
+      });
+    } catch (error) {
+      console.log("Patch error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -212,14 +221,16 @@ const ResidentFormDialog = () => {
                 Delete
               </Button>
             )}
-            <Button
-              disabled={pending}
-              type="submit"
-              variant="outline"
-              className="w-[100px]"
-            >
-              Save
-            </Button>
+            {isLoading ? (
+              <Button disabled type="submit" className="w-fit">
+                <Loader2 className="animate-spin" />
+                Save...
+              </Button>
+            ) : (
+              <Button type="submit" className="w-fit">
+                Save
+              </Button>
+            )}
           </div>
         </form>
       </DialogContent>
