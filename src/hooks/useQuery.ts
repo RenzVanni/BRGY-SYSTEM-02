@@ -1,17 +1,33 @@
-import { paginateAccounts } from "@/app/api/accountApi";
-import { fetchAccounts } from "@/app/api/accountService";
-import { paginateResidents } from "@/app/api/residentApi";
-import { ResidentApiResponse } from "@/types/residentsType";
-import { useQuery } from "@tanstack/react-query";
+import { paginateAccountsApi } from '@/app/api/accountApi';
+import { paginateOfficialsApi } from '@/app/api/officialsApi';
+import { findResidentByIdApi, paginateResidentsApi } from '@/app/api/residentApi';
+import { AccountType } from '@/types/accountType';
+import { PaginateApiResponse } from '@/types/commonType';
+import { ResidentType } from '@/types/residentsType';
+import { useQuery } from '@tanstack/react-query';
 
+// find all or paginate
 export const useAccounts = (page: number) =>
-  useQuery({
-    queryKey: ["accounts", page],
-    queryFn: () => paginateAccounts(page),
+  useQuery<PaginateApiResponse>({
+    queryKey: ['accounts', page],
+    queryFn: () => paginateAccountsApi(page)
   });
 
 export const useResidents = (page: number) =>
-  useQuery<ResidentApiResponse>({
-    queryKey: ["residents", page],
-    queryFn: () => paginateResidents(page),
+  useQuery<PaginateApiResponse>({
+    queryKey: ['residents', page],
+    queryFn: () => paginateResidentsApi(page)
+  });
+
+export const useOfficials = (page: number, limit: number) =>
+  useQuery<PaginateApiResponse>({
+    queryKey: ['officials', page, limit],
+    queryFn: () => paginateOfficialsApi(page, limit)
+  });
+
+// find by ID query
+export const useFindResidentById = (id: number) =>
+  useQuery<ResidentType>({
+    queryKey: ['findResidentsById', id],
+    queryFn: () => findResidentByIdApi(id)
   });

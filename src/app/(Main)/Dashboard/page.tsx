@@ -4,7 +4,7 @@ import ChartComponent from "@/components/ChartComponent";
 import StatisticsCard from "@/components/DashboardComponents/StatisticsCard";
 import { LOGIN } from "@/constants/navigation";
 import { statisticsCardData } from "@/data/DashboardData";
-import { AccountType } from "@/types/account";
+import { AccountType } from "@/types/accountType";
 import { cookies } from "next/headers";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect } from "react";

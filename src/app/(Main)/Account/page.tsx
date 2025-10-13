@@ -1,40 +1,27 @@
-"use client";
-import { fetchAccounts } from "@/app/api/accountService";
-import { accountColumn } from "@/config/account/accountColumnDef";
-import { DataTable } from "@/components/table/data-table";
-import React, { useContext, useEffect, useState } from "react";
-import { LOGIN } from "@/constants/navigation";
-import { AccountType } from "@/types/account";
-import { useRouter } from "next/navigation";
-import { ContextTheme } from "@/config/config_context";
-import { useAccounts } from "@/hooks/useQuery";
-import CustomDialog from "@/components/CustomDialog";
-import FormDialog from "@/components/FormDialog/ResidentFormDialog";
-import { paginateAccounts } from "@/app/api/accountApi";
+'use client';
+import { accountColumn } from '@/config/account/accountColumnDef';
+import { DataTable } from '@/components/table/data-table';
+import React, { useContext, useEffect, useState } from 'react';
+import { LOGIN } from '@/constants/navigation';
+import { AccountType } from '@/types/accountType';
+import { useRouter } from 'next/navigation';
+import { ContextTheme } from '@/config/config_context';
+import { useAccounts } from '@/hooks/useQuery';
+import CustomDialog from '@/components/CustomDialog';
+import FormDialog from '@/components/FormDialog/ResidentFormDialog';
+import { paginateAccountsApi } from '@/app/api/accountApi';
+import AccountFormDialog from '@/components/FormDialog/AccountFormDialog';
 
 const page = () => {
-  const context = useContext(ContextTheme);
-  const { isEdit, setIsEdit, residentData } = context;
+  const { paginateValue } = useContext(ContextTheme);
 
-  const { paginateValue } = context;
-  const router = useRouter();
-
-  const { data, error, isPending, isSuccess, status } =
-    useAccounts(paginateValue);
-
-  // if (status == "401") {
-  //   router.push(LOGIN);
-  // }
+  const { data, error, isPending, isSuccess, status } = useAccounts(paginateValue);
 
   return (
     <>
-      <DataTable
-        columns={accountColumn}
-        data={data?.data ?? []}
-        pages={data?.pages}
-      />
+      <DataTable columns={accountColumn} data={(data?.data as AccountType[]) ?? []} pages={data?.pages} />
 
-      <FormDialog />
+      <AccountFormDialog />
     </>
   );
 };

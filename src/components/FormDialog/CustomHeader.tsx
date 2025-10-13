@@ -2,6 +2,7 @@ import React from "react";
 import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
+import { Label } from "../ui/label";
 
 export const CreateResidentHeader = () => {
   return (
@@ -23,19 +24,26 @@ type editResidentHeaderProp = {
 
 export const EditResidentHeader = (prop: editResidentHeaderProp) => {
   const { imageUrl, fullname } = prop;
+  console.log("IMG Type ", typeof imageUrl);
   return (
     <>
       {imageUrl ? (
-        <div className="rounded-full w-[70px] h-[70px] overflow-hidden absolute top-[-35px] left-6">
+        <Label
+          htmlFor="picture"
+          className="rounded-full w-[70px] h-[70px] overflow-hidden absolute top-[-35px] left-6 cursor-pointer hover:opacity-50"
+        >
           <Image
+            id="picture"
             src={imageUrl}
             alt="image"
             fill
             style={{ objectFit: "cover" }}
           />
-        </div>
+        </Label>
       ) : (
-        <CircleUserRound className="rounded-full w-[70px] h-[70px] overflow-hidden absolute top-[-35px] left-6" />
+        <Label htmlFor="picture" className="cursor-pointer hover:opacity-50">
+          <CircleUserRound className="rounded-full w-[70px] h-[70px] overflow-hidden absolute top-[-35px] left-6" />
+        </Label>
       )}
       <DialogHeader>
         <DialogTitle>{fullname}</DialogTitle>

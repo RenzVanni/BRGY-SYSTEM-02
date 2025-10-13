@@ -1,90 +1,47 @@
 "use client";
-import { createContext, Dispatch, SetStateAction, useState } from "react";
-import { DEFAULT_RESIDENT_DATA } from "@/constants/ResidentDefault";
-import { ResidentProp } from "@/types/residentsType";
-import { ResidentDefaultData } from "@/data/defaultData";
+import { createContext, useState } from "react";
+import { ResidentType } from "@/types/residentsType";
+import {
+  AccountDefaultData,
+  contextDefaultData,
+  ResidentDefaultData,
+} from "@/data/defaultData";
+import { AccountType } from "@/types/accountType";
+import { DataIdProp, FormDialogProp } from "@/types/contextType";
 
-type FormDialogProp = {
-  dialogBoxType?:
-    | "edit"
-    | "editResident"
-    | "create"
-    | "createResident"
-    | "createCertificate"
-    | "none";
-  isOpen: boolean;
-};
-
-type Prop = {
-  isAddResident: boolean;
-  setIsAddResident: Dispatch<SetStateAction<boolean>>;
-  isEditResident: boolean;
-  setIsEditResident: Dispatch<SetStateAction<boolean>>;
-  isCreateCertificate: boolean;
-  setIsCreateCertificate: Dispatch<SetStateAction<boolean>>;
-  residentData: ResidentProp;
-  setResidentData: Dispatch<SetStateAction<ResidentProp>>;
-  paginateValue: number;
-  setPaginateValue: Dispatch<SetStateAction<number>>;
-  isEdit: boolean;
-  setIsEdit: Dispatch<SetStateAction<boolean>>;
-  isFormDialog: FormDialogProp;
-  setIsFormDialog: Dispatch<SetStateAction<FormDialogProp>>;
-};
-
-const contextDefault: Prop = {
-  isAddResident: false,
-  setIsAddResident: () => {},
-  isEditResident: false,
-  setIsEditResident: () => {},
-  isCreateCertificate: false,
-  setIsCreateCertificate: () => {},
-  residentData: ResidentDefaultData,
-  setResidentData: () => {},
-  paginateValue: 0,
-  setPaginateValue: () => {},
-  isEdit: false,
-  setIsEdit: () => {},
-  isFormDialog: { dialogBoxType: "none", isOpen: false },
-  setIsFormDialog: () => {},
-};
-
-export const ContextTheme = createContext(contextDefault);
+export const ContextTheme = createContext(contextDefaultData);
 
 export const ContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [isAddResident, setIsAddResident] = useState(false);
-  const [isEditResident, setIsEditResident] = useState(false);
-  const [isCreateCertificate, setIsCreateCertificate] = useState(false);
   const [residentData, setResidentData] =
-    useState<ResidentProp>(ResidentDefaultData);
+    useState<ResidentType>(ResidentDefaultData);
+  const [accountData, setAccountData] =
+    useState<AccountType>(AccountDefaultData);
   const [paginateValue, setPaginateValue] = useState(0);
-  const [isEdit, setIsEdit] = useState(false);
   const [isFormDialog, setIsFormDialog] = useState<FormDialogProp>({
     dialogBoxType: "none",
     isOpen: false,
   });
-
+  const [dataId, setDataId] = useState<DataIdProp>({
+    resident: 0,
+    account: 0,
+  } as DataIdProp);
   return (
     <ContextTheme.Provider
       value={{
-        isAddResident,
-        setIsAddResident,
-        isEditResident,
-        setIsEditResident,
-        isCreateCertificate,
-        setIsCreateCertificate,
         residentData,
         setResidentData,
+        accountData,
+        setAccountData,
         paginateValue,
         setPaginateValue,
-        isEdit,
-        setIsEdit,
         isFormDialog,
         setIsFormDialog,
+        dataId,
+        setDataId,
       }}
     >
       {children}

@@ -4,4 +4,6 @@ export type AccountType = {
   email: string;
   resident_id: number;
   role: string[];
+  imgUrl: string | File;
 };
+

@@ -1,4 +1,4 @@
-export type ResidentProp = {
+export type ResidentType = {
   id: number;
   firstname: string;
   middlename: string;
@@ -15,12 +15,7 @@ export type ResidentProp = {
   pwd: boolean;
   official_id: number;
   account_id: number;
-  profile_image_url: string;
-};
-
-export type ResidentApiResponse = {
-  data: ResidentProp[];
-  pages: number;
+  profile_image_url: string | File;
 };
 
 export type ResidentColumnModel = {

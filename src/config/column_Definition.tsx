@@ -1,46 +1,44 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import DataTableColumnHeader from "../components/table/data-table-header";
+import { Button } from '@/components/ui/button';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import DataTableColumnHeader from '../components/table/data-table-header';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ContextTheme } from "./config_context";
-import { useContext, useEffect, useState } from "react";
-import { fetchResidentById } from "@/app/api/resident_api";
-import { ResidentProp } from "@/types/residentsType";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ContextTheme } from './config_context';
+import { useContext, useEffect, useState } from 'react';
+import { fetchResidentById } from '@/app/api/resident_api';
+import { ResidentType } from '@/types/residentsType';
+import { usePathname } from 'next/navigation';
+import { useFindResidentById } from '@/hooks/useQuery';
+import { findResidentByIdApi } from '@/app/api/residentApi';
+import { findAccountByIdApi } from '@/app/api/accountApi';
 
 export type CustomColumnDefProp = {
   accessorKey: string;
   title: string;
 };
 
-export const customColumnDef = <
-  TDATA extends { id: number | string; resident_id?: number }
->({
-  prop,
+export const customColumnDef = <TDATA extends { id: number | string; resident_id?: number }>({
+  prop
 }: {
   prop: CustomColumnDefProp[];
 }): ColumnDef<TDATA>[] => {
   return [
     {
-      id: "select",
+      id: 'select',
       header: ({ table }) => (
         <div className="flex items-center justify-center">
           <Checkbox
             checked={
-              table.getIsAllPageRowsSelected()
-                ? true
-                : table.getIsSomePageRowsSelected()
-                ? "indeterminate"
-                : false
+              table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? 'indeterminate' : false
             }
             onCheckedChange={(e) => table.toggleAllPageRowsSelected(!!e)}
             aria-label="Select All"
@@ -57,74 +55,43 @@ export const customColumnDef = <
         </div>
       ),
       enableSorting: false,
-      enableHiding: false,
+      enableHiding: false
     },
     ...prop.map((item) => {
       return {
         accessorKey: item.accessorKey,
         header: ({ column }: { column: any }) => {
           return <DataTableColumnHeader column={column} title={item.title} />;
-        },
+        }
       };
     }),
     {
-      id: "actions",
+      id: 'actions',
       cell: ({ row }) => {
-        // const [data, setData] = useState<ResidentProp>();
-
-        // const fetchy = async () => {
-        //   const residentId = row.original.id;
-
-        //   const response = await fetch(
-        //     `${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}/residents/${residentId}`,
-        //     {
-        //       method: "GET",
-        //       headers: {
-        //         "Content-Type": "application/json",
-        //       },
-        //       credentials: "include",
-        //     }
-        //   );
-
-        //   console.log("Actions Edit: ", await response.json());
-        // };
-
-        // const resident = async () => {
-        //   let residentId: number;
-        //   if (row.original.resident_id != null) {
-        //     residentId = row.original.resident_id;
-        //   } else if (typeof row.original.id == "number") {
-        //     residentId = row.original.id;
-        //   }
-        //   const response = await fetchResidentById(residentId);
-        //   setData(response);
-        //   console.log("edit resident: ", data);
-        // };
-
-        // fetchy();
-        // resident();
-        const {
-          setIsEditResident,
-          setResidentData,
-          setIsEdit,
-          setIsFormDialog,
-        } = useContext(ContextTheme);
+        const path = usePathname();
+        const { setResidentData, setIsFormDialog, setAccountData } = useContext(ContextTheme);
 
         const onEdit = async () => {
-          setIsFormDialog({ dialogBoxType: "editResident", isOpen: true });
-          setIsEditResident(true);
-          let residentId: number;
-          if (row.original.resident_id != null) {
-            residentId = row.original.resident_id;
-          } else if (typeof row.original.id == "number") {
-            residentId = row.original.id;
+          if (path == '/Residents') {
+            setIsFormDialog({ dialogBoxType: 'editResident', isOpen: true });
+            const response = await findResidentByIdApi(row.original.id as number);
+            setResidentData(response);
           }
-          console.log("Edit Data ", row.original);
+          if (path == '/Account') {
+            setIsFormDialog({ dialogBoxType: 'editAccount', isOpen: true });
+            const response = await findAccountByIdApi(row.original.id as string);
+            setAccountData(response);
+          }
+          // let residentId: number;
+          // if (row.original.resident_id != null) {
+          //   residentId = row.original.resident_id;
+          // } else if (typeof row.original.id == "number") {
+          //   residentId = row.original.id;
+          // }
+          // // const { data } = useFindResidentById(residentId);
 
-          const response = await fetchResidentById(residentId);
-          console.log("Res ", response);
-          // setData(response);
-          setResidentData(response);
+          // const response = await fetchResidentById(residentId);
+          // setResidentData(response);
         };
 
         return (
@@ -137,19 +104,15 @@ export const customColumnDef = <
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem className="font-semibold">
-                View
-              </DropdownMenuItem>
+              <DropdownMenuItem className="font-semibold">View</DropdownMenuItem>
               <DropdownMenuItem className="font-semibold" onClick={onEdit}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive font-semibold">
-                Delete
-              </DropdownMenuItem>
+              <DropdownMenuItem className="text-destructive font-semibold">Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
-      },
-    },
+      }
+    }
   ];
 };

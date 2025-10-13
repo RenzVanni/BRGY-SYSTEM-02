@@ -1,5 +1,5 @@
 import { ContextTheme } from "@/config/config_context";
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 import React, { useActionState, useContext, useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import {
@@ -16,11 +16,19 @@ import { Button } from "../ui/button";
 import { resident_auth } from "@/app/api/resident_api";
 import { ResidentDefaultData } from "@/data/defaultData";
 import { Loader2 } from "lucide-react";
+import { updateResidentMutation } from "@/hooks/useMutation";
+import { useFindResidentById } from "@/hooks/useQuery";
 
 const ResidentFormDialog = () => {
-  const [state, action, pending] = useActionState(resident_auth, undefined);
-
-  const { residentData, setResidentData } = useContext(ContextTheme);
+  const { mutate, isPending } = updateResidentMutation();
+  const {
+    residentData,
+    setResidentData,
+    isFormDialog,
+    setIsFormDialog,
+    dataId,
+  } = useContext(ContextTheme);
+  const { isOpen, dialogBoxType } = isFormDialog;
 
   const {
     id,
@@ -45,36 +53,32 @@ const ResidentFormDialog = () => {
   const checkMiddleName = middlename == null ? " " : " " + middlename + " ";
   const fullname = firstname + checkMiddleName + lastname;
 
-  const { isFormDialog, setIsFormDialog } = useContext(ContextTheme);
-  const { isOpen, dialogBoxType } = isFormDialog;
-
   const handleOnOpenChange = (open: boolean) => {
     setIsFormDialog({ isOpen: open, dialogBoxType: "none" });
-    setResidentData({} as ResidentProp);
+    setResidentData({} as ResidentType);
   };
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [previewImg, setPreviewImg] = useState(null);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
-    if (residentData != null) {
-      formData.append("file", residentData.profile_image_url);
+    const { profile_image_url } = residentData;
+    if (profile_image_url != null) {
+      formData.append("file", profile_image_url);
     }
     formData.append(
       "resident",
-      new Blob([JSON.stringify(residentData)], { type: "application/json" })
+      new Blob(
+        [JSON.stringify({ ...residentData, profile_image_url: undefined })],
+        {
+          type: "application/json",
+        }
+      )
     );
-    setIsLoading(true);
     try {
-      const response = await fetch(`/api/search?query=/residents/update`, {
-        method: "PATCH",
-        credentials: "include",
-        body: formData,
-      });
+      mutate(formData);
     } catch (error) {
       console.log("Patch error: ", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -84,59 +88,40 @@ const ResidentFormDialog = () => {
         {dialogBoxType == "createResident" && <CreateResidentHeader />}
         {dialogBoxType == "editResident" && (
           <EditResidentHeader
-            imageUrl={profile_image_url}
+            imageUrl={previewImg || profile_image_url}
             fullname={fullname}
           />
         )}
         {dialogBoxType == "createCertificate" && <CreateCertificateHeader />}
 
         <form onSubmit={handleSubmit} className="grid gap-4">
-          <div className="grid grid-cols-3 items-center gap-2">
-            <p>Name</p>
-            <div className="grid grid-cols-3 gap-2 col-span-2">
-              <Input
-                id="firstName"
-                type="text"
-                name="firstName"
-                placeholder="First name..."
-                value={firstname ?? ""}
-                onChange={(e) =>
-                  setResidentData((prev) => ({
-                    ...prev,
-                    firstname: e.target.value,
-                  }))
-                }
-                required
-              />
-              <Input
-                id="middleName"
-                type="text"
-                name="middleName"
-                placeholder="Middle name..."
-                value={middlename ?? ""}
-                onChange={(e) =>
-                  setResidentData((prev) => ({
-                    ...prev,
-                    middlename: e.target.value,
-                  }))
-                }
-              />
-              <Input
-                id="lastName"
-                type="text"
-                name="lastName"
-                placeholder="Last name..."
-                value={lastname ?? ""}
-                onChange={(e) =>
-                  setResidentData((prev) => ({
-                    ...prev,
-                    lastname: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-          </div>
+          <CustomInput
+            label="Firstname"
+            name="firstname"
+            placeholder="Enter First Name..."
+            value={firstname}
+            type="text"
+            setResidentData={setResidentData}
+          />
+
+          <CustomInput
+            label="Middlename"
+            name="middlename"
+            placeholder="Enter Middle Name..."
+            value={middlename}
+            type="text"
+            setResidentData={setResidentData}
+            isRequired={false}
+          />
+
+          <CustomInput
+            label="Lastname"
+            name="lastname"
+            placeholder="Enter Last Name..."
+            value={lastname}
+            type="text"
+            setResidentData={setResidentData}
+          />
 
           <CustomInput
             label="Address"
@@ -201,27 +186,39 @@ const ResidentFormDialog = () => {
             setResidentData={setResidentData}
           />
 
+          <Input
+            id="picture"
+            type="file"
+            onChange={(e) => {
+              setPreviewImg(URL.createObjectURL(e.target.files[0]));
+              setResidentData((prev) => ({
+                ...prev,
+                profile_image_url: e.target.files?.[0],
+              }));
+            }}
+            hidden
+          />
+
           <Input type="hidden" name="whatsType" value={dialogBoxType ?? ""} />
           <Input type="hidden" name="id" value={id ?? 0} />
 
           <div
-            className={`flex items-center ${
+            className={`flex items-center gap-3 ${
               isFormDialog.dialogBoxType == "editResident"
-                ? "justify-between"
+                ? "justify-end"
                 : "justify-end"
             }`}
           >
             {isFormDialog.dialogBoxType == "editResident" && (
               <Button
-                disabled={pending}
-                type="submit"
+                disabled={isPending}
                 variant="destructive"
-                className="w-[100px]"
+                className="w-fit"
               >
                 Delete
               </Button>
             )}
-            {isLoading ? (
+            {isPending ? (
               <Button disabled type="submit" className="w-fit">
                 <Loader2 className="animate-spin" />
                 Save...

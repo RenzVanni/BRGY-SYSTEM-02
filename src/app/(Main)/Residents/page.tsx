@@ -1,42 +1,29 @@
-"use client";
-import { formatFetchedResidents } from "@/app/api/resident_api";
-import { paginateResidents } from "@/app/api/residentApi";
-import CustomDialog from "@/components/CustomDialog";
-import ResidentFormDialog from "@/components/FormDialog/ResidentFormDialog";
-import { DataTable } from "@/components/table/data-table";
-import { ContextTheme } from "@/config/config_context";
-import { residentColumn } from "@/config/residents/residentsColumnsDef";
-import { LOGIN } from "@/constants/navigation";
-import { mapResidents } from "@/hooks/mapper";
-import { useResidents } from "@/hooks/useQuery";
-import { ResidentColumnModel, ResidentProp } from "@/types/residentsType";
-import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+'use client';
+import { formatFetchedResidents } from '@/app/api/resident_api';
+import { paginateResidentsApi } from '@/app/api/residentApi';
+import CustomDialog from '@/components/CustomDialog';
+import ResidentFormDialog from '@/components/FormDialog/ResidentFormDialog';
+import { DataTable } from '@/components/table/data-table';
+import { ContextTheme } from '@/config/config_context';
+import { residentColumn } from '@/config/residents/residentsColumnsDef';
+import { LOGIN } from '@/constants/navigation';
+import { mapResidents } from '@/hooks/mapper';
+import { useResidents } from '@/hooks/useQuery';
+import { ResidentColumnModel, ResidentType } from '@/types/residentsType';
+import { useRouter } from 'next/navigation';
+import React, { useContext, useEffect, useState } from 'react';
 
 const page = () => {
   const [resident, setResident] = useState<ResidentColumnModel[]>([]);
-  const router = useRouter();
-  const [isFormAvailable, setIsFormAvailable] = useState(false);
-  const {
-    setIsAddResident,
-    setIsEditResident,
-    setIsCreateCertificate,
-    isAddResident,
-    isEditResident,
-    isCreateCertificate,
-    residentData,
-  } = useContext(ContextTheme);
-
   // const isResidentPresent = Object.keys(residentData).length > 0;
 
   const { paginateValue } = useContext(ContextTheme);
 
-  const { data, error, isPending, isSuccess, status } =
-    useResidents(paginateValue);
+  const { data, error, isPending, isSuccess, status } = useResidents(paginateValue);
 
   useEffect(() => {
     if (isSuccess) {
-      const mapped = data?.data.map((resident) => {
+      const mapped = data?.data?.map((resident) => {
         return mapResidents(resident);
       });
       setResident(mapped);

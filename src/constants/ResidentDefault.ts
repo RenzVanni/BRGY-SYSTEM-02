@@ -1,6 +1,6 @@
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 
-export const DEFAULT_RESIDENT_DATA: ResidentProp = {
+export const DEFAULT_RESIDENT_DATA: ResidentType = {
   id: 0,
   firstname: "",
   middlename: "",

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useContext } from "react";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 //Residents Columns
-export const ResidentsColumns: ColumnDef<ResidentProp>[] = [
+export const ResidentsColumns: ColumnDef<ResidentType>[] = [
   {
     accessorKey: "fullname",
     header: ({ column }) => {

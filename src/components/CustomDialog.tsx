@@ -30,11 +30,11 @@ import { resident_auth } from "@/app/api/resident_api";
 import { civilStatusData } from "@/data/civilStatus";
 import { genderData } from "@/data/gender";
 import { Checkbox } from "./ui/checkbox";
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 import { ContextTheme } from "@/config/config_context";
 
 type Prop = {
-  data?: ResidentProp;
+  data?: ResidentType;
   // isOpen: boolean;
   // setIsOpen: Dispatch<SetStateAction<boolean>>;
   is_Add_Resident: boolean;
@@ -56,7 +56,7 @@ const CustomDialog = ({
 }: PartialExcept<Prop>) => {
   const [state, action, pending] = useActionState(resident_auth, undefined);
   const { residentData } = useContext(ContextTheme);
-  const [resident, setResident] = useState<ResidentProp>({} as ResidentProp);
+  const [resident, setResident] = useState<ResidentType>({} as ResidentType);
 
   useEffect(() => {
     setResident(residentData);
@@ -80,7 +80,7 @@ const CustomDialog = ({
     profile_image_url,
     official_id,
     account_id,
-  } = resident ?? ({} as ResidentProp);
+  } = resident ?? ({} as ResidentType);
 
   const [isVoterStatus, setIsVoterStatus] = useState<boolean>(voter_status);
 

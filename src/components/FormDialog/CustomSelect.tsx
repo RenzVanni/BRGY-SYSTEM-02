@@ -7,14 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 
 type prop = {
   label: string;
   name: "gender" | "civil_status";
   placeholder: string;
   value: string;
-  setResidentData: React.Dispatch<React.SetStateAction<ResidentProp>>;
+  setResidentData: React.Dispatch<React.SetStateAction<ResidentType>>;
   data: string[];
 };
 
@@ -24,7 +24,7 @@ const CustomSelect = (prop: prop) => {
     <div className="grid grid-cols-3 items-center gap-2">
       <Label htmlFor={name}>{label}</Label>
       <Select
-        value={value}
+        value={value ?? ""}
         onValueChange={(e) =>
           setResidentData((prev) => ({
             ...prev,

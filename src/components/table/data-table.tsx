@@ -1,20 +1,9 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+'use client';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,11 +14,11 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { useContext, useState } from "react";
-import DataTablePagination from "./data-table-pagination";
-import { ContextTheme } from "@/config/config_context";
+  VisibilityState
+} from '@tanstack/react-table';
+import { useContext, useState } from 'react';
+import DataTablePagination from './data-table-pagination';
+import { ContextTheme } from '@/config/config_context';
 
 interface DataTableProp<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,17 +26,13 @@ interface DataTableProp<TData, TValue> {
   pages: number;
 }
 
-export const DataTable = <TData, TValue>({
-  columns,
-  data,
-  pages,
-}: DataTableProp<TData, TValue>) => {
+export const DataTable = <TData, TValue>({ columns, data, pages }: DataTableProp<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState<any>("");
-  const { setIsAddResident } = useContext(ContextTheme);
+  const [globalFilter, setGlobalFilter] = useState<any>('');
+  const { setIsFormDialog } = useContext(ContextTheme);
 
   const table = useReactTable({
     data,
@@ -66,8 +51,8 @@ export const DataTable = <TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
-      globalFilter,
-    },
+      globalFilter
+    }
   });
 
   return (
@@ -82,9 +67,8 @@ export const DataTable = <TData, TValue>({
         <div className="flex gap-3">
           <Button
             onClick={() => {
-              setIsAddResident(true);
-            }}
-          >
+              setIsFormDialog({ dialogBoxType: 'createResident', isOpen: true });
+            }}>
             Create
           </Button>
           <Button
@@ -112,8 +96,7 @@ export const DataTable = <TData, TValue>({
                     checked={column.getIsVisible()}
                     onCheckedChange={(e) => {
                       column.toggleVisibility(!!e);
-                    }}
-                  >
+                    }}>
                     {column.id}
                   </DropdownMenuCheckboxItem>
                 ))}
@@ -128,17 +111,8 @@ export const DataTable = <TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="bg-secondary"
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead key={header.id} className="bg-secondary" colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -148,26 +122,17 @@ export const DataTable = <TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No Result
                 </TableCell>
               </TableRow>

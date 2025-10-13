@@ -1,6 +1,6 @@
-import { ResidentProp } from "@/types/residentsType";
+import { ResidentType } from "@/types/residentsType";
 
-export const mapResidents = (prop: ResidentProp) => {
+export const mapResidents = (prop: ResidentType) => {
   const {
     id,
     firstname,
