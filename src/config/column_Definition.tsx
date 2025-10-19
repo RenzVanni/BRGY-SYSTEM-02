@@ -20,6 +20,7 @@ import { usePathname } from 'next/navigation';
 import { useFindResidentById } from '@/hooks/useQuery';
 import { findResidentByIdApi } from '@/app/api/residentApi';
 import { findAccountByIdApi } from '@/app/api/accountApi';
+import { findOfficialByIdApi } from '@/app/api/officialsApi';
 
 export type CustomColumnDefProp = {
   accessorKey: string;
@@ -69,7 +70,7 @@ export const customColumnDef = <TDATA extends { id: number | string; resident_id
       id: 'actions',
       cell: ({ row }) => {
         const path = usePathname();
-        const { setResidentData, setIsFormDialog, setAccountData } = useContext(ContextTheme);
+        const { setResidentData, setIsFormDialog, setAccountData, setOfficialsData } = useContext(ContextTheme);
 
         const onEdit = async () => {
           if (path == '/Residents') {
@@ -81,6 +82,11 @@ export const customColumnDef = <TDATA extends { id: number | string; resident_id
             setIsFormDialog({ dialogBoxType: 'editAccount', isOpen: true });
             const response = await findAccountByIdApi(row.original.id as string);
             setAccountData(response);
+          }
+          if (path == '/Officials') {
+            setIsFormDialog({ dialogBoxType: 'editOfficial', isOpen: true });
+            const response = await findOfficialByIdApi(row.original.id as number);
+            setOfficialsData(response);
           }
           // let residentId: number;
           // if (row.original.resident_id != null) {

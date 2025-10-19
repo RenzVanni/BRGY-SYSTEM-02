@@ -1,3 +1,6 @@
+/**
+ * * Resident type
+ */
 export type ResidentType = {
   id: number;
   firstname: string;
@@ -18,6 +21,27 @@ export type ResidentType = {
   profile_image_url: string | File;
 };
 
+/**
+ * * Mapped resident type
+ */
+export type MappedResidentType = {
+  id: number;
+  name: string;
+  gender: string;
+  birth_date: string;
+  birth_place: string;
+  address: string;
+  contact_no: string;
+  voter_status: boolean;
+  citizenship: string;
+  civil_status: string;
+  osy: boolean;
+  pwd: boolean;
+};
+
+/**
+ * * Resident table column model
+ */
 export type ResidentColumnModel = {
   id: number;
   name: string;

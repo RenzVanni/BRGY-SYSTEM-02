@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type SessionPayload = {
   id: String;
@@ -18,14 +18,18 @@ export const LoginFormSchema = z.object({
   username: z.string().trim(),
   password: z
     .string()
-    .min(8, { message: "Be at least 8 characters long" })
+    .min(8, { message: 'Be at least 8 characters long' })
     // .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
     // .regex(/[0-9]/, { message: "Contain at least one number." })
     // .regex(/[^a-zA-Z0-9]/, {
     //   message: "Contain at least one special character.",
     // })
-    .trim(),
+    .trim()
 });
+
+export const initialState = {
+  message: ''
+};
 
 export type FormState =
   | {
@@ -49,7 +53,7 @@ export const Resident_FormSchema = z.object({
   gender: z.string().trim(),
   civilStatus: z.string().trim(),
   address: z.string().trim(),
-  whatsType: z.string().trim(),
+  whatsType: z.string().trim()
 });
 
 // export const Resident_FormSchema_Optional = Resident_FormSchema.partial({

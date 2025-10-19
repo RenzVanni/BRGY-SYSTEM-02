@@ -1,8 +1,9 @@
 import { paginateAccountsApi } from '@/app/api/accountApi';
-import { paginateOfficialsApi } from '@/app/api/officialsApi';
+import { findOfficialByIdApi, paginateOfficialsApi } from '@/app/api/officialsApi';
 import { findResidentByIdApi, paginateResidentsApi } from '@/app/api/residentApi';
 import { AccountType } from '@/types/accountType';
 import { PaginateApiResponse } from '@/types/commonType';
+import { OfficialsType } from '@/types/officialsType';
 import { ResidentType } from '@/types/residentsType';
 import { useQuery } from '@tanstack/react-query';
 
@@ -30,4 +31,10 @@ export const useFindResidentById = (id: number) =>
   useQuery<ResidentType>({
     queryKey: ['findResidentsById', id],
     queryFn: () => findResidentByIdApi(id)
+  });
+
+export const useFindOfficialById = (id: number) =>
+  useQuery<OfficialsType>({
+    queryKey: ['findOfficialById', id],
+    queryFn: () => findOfficialByIdApi(id)
   });

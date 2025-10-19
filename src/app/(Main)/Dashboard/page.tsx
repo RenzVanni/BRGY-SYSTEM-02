@@ -1,5 +1,4 @@
 "use client";
-import { countAccounts } from "@/app/api/accountService";
 import ChartComponent from "@/components/ChartComponent";
 import StatisticsCard from "@/components/DashboardComponents/StatisticsCard";
 import { LOGIN } from "@/constants/navigation";

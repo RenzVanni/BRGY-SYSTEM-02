@@ -11,13 +11,15 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import DataTableColumnHeader from '../../components/table/data-table-header';
 import { customColumnDef, CustomColumnDefProp } from '../column_Definition';
-import { OfficialsType } from '@/types/officialsType';
+import { OfficialsColumnModel, OfficialsType } from '@/types/officialsType';
 
 const columnData: CustomColumnDefProp[] = [
-  { accessorKey: 'resident_id', title: 'Resident' },
+  { accessorKey: 'resident', title: 'Resident' },
   { accessorKey: 'position', title: 'Position' },
   { accessorKey: 'term_start', title: 'Term Start' },
   { accessorKey: 'term_end', title: 'Term End' }
 ];
 
-export const officialsColumn: ColumnDef<OfficialsType>[] = customColumnDef<OfficialsType>({ prop: columnData });
+export const officialsColumn: ColumnDef<OfficialsColumnModel>[] = customColumnDef<OfficialsColumnModel>({
+  prop: columnData
+});

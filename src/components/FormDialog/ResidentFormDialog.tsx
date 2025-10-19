@@ -1,33 +1,24 @@
-import { ContextTheme } from "@/config/config_context";
-import { ResidentType } from "@/types/residentsType";
-import React, { useActionState, useContext, useEffect, useState } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
-import {
-  CreateCertificateHeader,
-  CreateResidentHeader,
-  EditResidentHeader,
-} from "./CustomHeader";
-import { Input } from "../ui/input";
-import CustomInput from "./CustomInput";
-import CustomSelect from "./CustomSelect";
-import { genderData } from "@/data/gender";
-import { civilStatusData } from "@/data/civilStatus";
-import { Button } from "../ui/button";
-import { resident_auth } from "@/app/api/resident_api";
-import { ResidentDefaultData } from "@/data/defaultData";
-import { Loader2 } from "lucide-react";
-import { updateResidentMutation } from "@/hooks/useMutation";
-import { useFindResidentById } from "@/hooks/useQuery";
+import { ContextTheme } from '@/config/config_context';
+import { ResidentType } from '@/types/residentsType';
+import React, { useActionState, useContext, useEffect, useState } from 'react';
+import { Dialog, DialogContent } from '../ui/dialog';
+import { CreateCertificateHeader, CreateResidentHeader, EditResidentHeader } from './components/CustomHeader';
+import { Input } from '../ui/input';
+import CustomInput from './components/CustomInput';
+import CustomSelect from './components/CustomSelect';
+import { genderData } from '@/data/gender';
+import { civilStatusData } from '@/data/civilStatus';
+import { Button } from '../ui/button';
+import { resident_auth } from '@/app/api/resident_api';
+import { ResidentDefaultData } from '@/data/defaultData';
+import { Loader2 } from 'lucide-react';
+import { updateResidentMutation } from '@/hooks/useMutation';
+import { useFindResidentById } from '@/hooks/useQuery';
+import { customOnOpenChange, onUpdateAccount, onUpdateResident } from '@/hooks/customHooks';
 
 const ResidentFormDialog = () => {
   const { mutate, isPending } = updateResidentMutation();
-  const {
-    residentData,
-    setResidentData,
-    isFormDialog,
-    setIsFormDialog,
-    dataId,
-  } = useContext(ContextTheme);
+  const { residentData, setResidentData, isFormDialog, setIsFormDialog, dataId } = useContext(ContextTheme);
   const { isOpen, dialogBoxType } = isFormDialog;
 
   const {
@@ -47,14 +38,14 @@ const ResidentFormDialog = () => {
     pwd,
     profile_image_url,
     official_id,
-    account_id,
+    account_id
   } = residentData;
 
-  const checkMiddleName = middlename == null ? " " : " " + middlename + " ";
+  const checkMiddleName = middlename == null ? ' ' : ' ' + middlename + ' ';
   const fullname = firstname + checkMiddleName + lastname;
 
   const handleOnOpenChange = (open: boolean) => {
-    setIsFormDialog({ isOpen: open, dialogBoxType: "none" });
+    setIsFormDialog({ isOpen: open, dialogBoxType: 'none' });
     setResidentData({} as ResidentType);
   };
 
@@ -64,37 +55,40 @@ const ResidentFormDialog = () => {
     const formData = new FormData();
     const { profile_image_url } = residentData;
     if (profile_image_url != null) {
-      formData.append("file", profile_image_url);
+      formData.append('file', profile_image_url);
     }
     formData.append(
-      "resident",
-      new Blob(
-        [JSON.stringify({ ...residentData, profile_image_url: undefined })],
-        {
-          type: "application/json",
-        }
-      )
+      'resident',
+      new Blob([JSON.stringify({ ...residentData, profile_image_url: undefined })], {
+        type: 'application/json'
+      })
     );
     try {
       mutate(formData);
     } catch (error) {
-      console.log("Patch error: ", error);
+      console.log('Patch error: ', error);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => handleOnOpenChange(open)}>
-      <DialogContent className={`${isOpen && "pt-12"}`} aria-describedby="">
-        {dialogBoxType == "createResident" && <CreateResidentHeader />}
-        {dialogBoxType == "editResident" && (
-          <EditResidentHeader
-            imageUrl={previewImg || profile_image_url}
-            fullname={fullname}
-          />
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) =>
+        customOnOpenChange({
+          isOpen: open,
+          type: 'resident',
+          setIsFormDialog: setIsFormDialog,
+          setResidentData: setResidentData
+        })
+      }>
+      <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
+        {dialogBoxType == 'createResident' && <CreateResidentHeader />}
+        {dialogBoxType == 'editResident' && (
+          <EditResidentHeader imageUrl={previewImg || profile_image_url} fullname={fullname} />
         )}
-        {dialogBoxType == "createCertificate" && <CreateCertificateHeader />}
+        {dialogBoxType == 'createCertificate' && <CreateCertificateHeader />}
 
-        <form onSubmit={handleSubmit} className="grid gap-4">
+        <form onSubmit={(e) => onUpdateResident({ e: e, data: residentData, mutate: mutate })} className="grid gap-4">
           <CustomInput
             label="Firstname"
             name="firstname"
@@ -193,28 +187,21 @@ const ResidentFormDialog = () => {
               setPreviewImg(URL.createObjectURL(e.target.files[0]));
               setResidentData((prev) => ({
                 ...prev,
-                profile_image_url: e.target.files?.[0],
+                profile_image_url: e.target.files?.[0]
               }));
             }}
             hidden
           />
 
-          <Input type="hidden" name="whatsType" value={dialogBoxType ?? ""} />
+          <Input type="hidden" name="whatsType" value={dialogBoxType ?? ''} />
           <Input type="hidden" name="id" value={id ?? 0} />
 
           <div
             className={`flex items-center gap-3 ${
-              isFormDialog.dialogBoxType == "editResident"
-                ? "justify-end"
-                : "justify-end"
-            }`}
-          >
-            {isFormDialog.dialogBoxType == "editResident" && (
-              <Button
-                disabled={isPending}
-                variant="destructive"
-                className="w-fit"
-              >
+              isFormDialog.dialogBoxType == 'editResident' ? 'justify-end' : 'justify-end'
+            }`}>
+            {isFormDialog.dialogBoxType == 'editResident' && (
+              <Button disabled={isPending} variant="destructive" className="w-fit">
                 Delete
               </Button>
             )}

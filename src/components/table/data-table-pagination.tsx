@@ -1,41 +1,32 @@
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ContextTheme } from "@/config/config_context";
-import { Table } from "@tanstack/react-table";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import React, { useContext } from "react";
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ContextTheme } from '@/config/config_context';
+import { Table } from '@tanstack/react-table';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import React, { useContext, useEffect } from 'react';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   pages: number;
 }
 
-const DataTablePagination = <TData,>({
-  table,
-  pages,
-}: DataTablePaginationProps<TData>) => {
+const DataTablePagination = <TData,>({ table, pages }: DataTablePaginationProps<TData>) => {
+  const path = usePathname();
   const context = useContext(ContextTheme);
   const { paginateValue, setPaginateValue } = context;
   // if (paginateValue < 0 || paginateValue >= pages) {
   //   setPaginateValue(0);
   // }
 
+  useEffect(() => {
+    setPaginateValue(0);
+  }, [path]);
+
   return (
     <div className="flex items-center justify-between px-2">
       <div className="text-muted-foreground flex-1 text-sm">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         {/* <div className="flex items-center space-x-2">
@@ -67,8 +58,7 @@ const DataTablePagination = <TData,>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => setPaginateValue(0)}
-            disabled={paginateValue <= 0}
-          >
+            disabled={paginateValue <= 0}>
             <span className="sr-only">Go to first page</span>
             <ChevronsLeft />
           </Button>
@@ -79,8 +69,7 @@ const DataTablePagination = <TData,>({
             disabled={paginateValue <= 0}
             onClick={() => {
               setPaginateValue(paginateValue - 1);
-            }}
-          >
+            }}>
             <span className="sr-only">Go to previous page</span>
             <ChevronLeft />
           </Button>
@@ -91,8 +80,7 @@ const DataTablePagination = <TData,>({
             onClick={() => {
               setPaginateValue(paginateValue + 1);
             }}
-            disabled={paginateValue + 1 >= pages}
-          >
+            disabled={paginateValue + 1 >= pages}>
             <span className="sr-only">Go to next page</span>
             <ChevronRight />
           </Button>
@@ -101,8 +89,7 @@ const DataTablePagination = <TData,>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => setPaginateValue(pages - 1)}
-            disabled={paginateValue + 1 >= pages}
-          >
+            disabled={paginateValue + 1 >= pages}>
             <span className="sr-only">Go to last page</span>
             <ChevronsRight />
           </Button>

@@ -1,36 +1,29 @@
-"use client";
-import type { Metadata } from "next";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Montserrat } from "next/font/google";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+'use client';
+import type { Metadata } from 'next';
+import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Montserrat } from 'next/font/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
+  subsets: ['latin']
 });
 
 const queryClient = new QueryClient();
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${montserrat.className} antialiased h-screen overflow-hidden`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <QueryClientProvider client={queryClient}>
-            {children}
-          </QueryClientProvider>
+      <body className={`${montserrat.className} antialiased h-screen overflow-hidden`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </ThemeProvider>
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );

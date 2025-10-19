@@ -1,6 +1,6 @@
 // "use client";
-import React from "react";
-import { LoginForm } from "@/components/login-form";
+import React from 'react';
+import { LoginForm } from '@/components/LoginForm';
 
 const page = () => {
   return (
@@ -11,8 +11,7 @@ const page = () => {
         </div>
         <div>
           <p className="text-lg">
-            "Efficient governance, empowered communities—streamlining barangay
-            management for a better tomorrow."
+            "Efficient governance, empowered communities—streamlining barangay management for a better tomorrow."
           </p>
         </div>
       </div>

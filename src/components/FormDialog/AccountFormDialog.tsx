@@ -1,57 +1,40 @@
-import { ContextTheme } from "@/config/config_context";
-import { ResidentType } from "@/types/residentsType";
-import React, { useActionState, useContext, useEffect, useState } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
-import {
-  CreateCertificateHeader,
-  CreateResidentHeader,
-  EditResidentHeader,
-} from "./CustomHeader";
-import { Input } from "../ui/input";
-import CustomInput from "./CustomInput";
-import CustomSelect from "./CustomSelect";
-import { genderData } from "@/data/gender";
-import { civilStatusData } from "@/data/civilStatus";
-import { Button } from "../ui/button";
-import { resident_auth } from "@/app/api/resident_api";
-import { ResidentDefaultData } from "@/data/defaultData";
-import { Loader2 } from "lucide-react";
-import { updateResidentMutation } from "@/hooks/useMutation";
-import { AccountType } from "@/types/accountType";
+import { ContextTheme } from '@/config/config_context';
+import React, { useContext, useState } from 'react';
+import { Dialog, DialogContent } from '../ui/dialog';
+import { CreateResidentHeader, EditResidentHeader } from './components/CustomHeader';
+import { Input } from '../ui/input';
+import CustomInput from './components/CustomInput';
+import { updateAccountMutation } from '@/hooks/useMutation';
+import CustomButtonGroup from './components/CustomButtonGroup';
+import { getFullname } from '@/hooks/methods';
+import { customOnOpenChange, onUpdateAccount } from '@/hooks/customHooks';
 
 const AccountFormDialog = () => {
-  const { accountData, setAccountData } = useContext(ContextTheme);
-  // const { data } = useFindResidentById(residentId);
-
-  console.log("Edit Account: ", accountData);
-
-  const { id, username, email, resident_id, role } = accountData;
-
-  // const checkMiddleName = middlename == null ? " " : " " + middlename + " ";
-  // const fullname = firstname + checkMiddleName + lastname;
-
-  const { isFormDialog, setIsFormDialog } = useContext(ContextTheme);
+  const { accountData, setAccountData, isFormDialog, setIsFormDialog } = useContext(ContextTheme);
+  const { id, username, email, resident, role, imgUrl } = accountData;
   const { isOpen, dialogBoxType } = isFormDialog;
+  const fullname = getFullname(resident?.firstname, resident?.middlename, resident?.lastname);
 
-  const handleOnOpenChange = (open: boolean) => {
-    setIsFormDialog({ isOpen: open, dialogBoxType: "none" });
-    setAccountData({} as AccountType);
-  };
+  const { mutate, isPending } = updateAccountMutation();
 
   const [previewImg, setPreviewImg] = useState(null);
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => handleOnOpenChange(open)}>
-      <DialogContent className={`${isOpen && "pt-12"}`} aria-describedby="">
-        {dialogBoxType == "createAccount" && <CreateResidentHeader />}
-        {dialogBoxType == "editAccount" && (
-          <EditResidentHeader
-            // imageUrl={previewImg || profile_image_url}
-            fullname={username}
-          />
-        )}
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) =>
+        customOnOpenChange({
+          isOpen: open,
+          type: 'account',
+          setAccountData: setAccountData,
+          setIsFormDialog: setIsFormDialog
+        })
+      }>
+      <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
+        {dialogBoxType == 'createAccount' && <CreateResidentHeader />}
+        {dialogBoxType == 'editAccount' && <EditResidentHeader imageUrl={previewImg || imgUrl} fullname={fullname} />}
 
-        <form className="grid gap-4">
+        <form onSubmit={(e) => onUpdateAccount({ e: e, data: accountData, mutate: mutate })} className="grid gap-4">
           <CustomInput
             label="Username"
             name="username"
@@ -70,50 +53,23 @@ const AccountFormDialog = () => {
             setAccountData={setAccountData}
           />
 
-          {/* <Input
+          <Input
             id="picture"
             type="file"
             onChange={(e) => {
               setPreviewImg(URL.createObjectURL(e.target.files[0]));
-              setResidentData((prev) => ({
+              setAccountData((prev) => ({
                 ...prev,
-                profile_image_url: e.target.files?.[0],
+                imgUrl: e.target.files?.[0]
               }));
             }}
             hidden
-          /> */}
+          />
 
-          <Input type="hidden" name="whatsType" value={dialogBoxType ?? ""} />
-          <Input type="hidden" name="resident_id" value={resident_id} />
+          <Input type="hidden" name="resident_id" value={resident?.id ?? 0} />
           <Input type="hidden" name="id" value={id} />
 
-          <div
-            className={`flex items-center gap-3 ${
-              isFormDialog.dialogBoxType == "editResident"
-                ? "justify-end"
-                : "justify-end"
-            }`}
-          >
-            {isFormDialog.dialogBoxType == "editResident" && (
-              <Button
-                // disabled={pending}
-                variant="destructive"
-                className="w-fit"
-              >
-                Delete
-              </Button>
-            )}
-            {/* {isPending ? (
-              <Button disabled type="submit" className="w-fit">
-                <Loader2 className="animate-spin" />
-                Save...
-              </Button>
-            ) : (
-              <Button type="submit" className="w-fit">
-                Save
-              </Button>
-            )} */}
-          </div>
+          <CustomButtonGroup isPending={isPending} btnFor="editAccount" />
         </form>
       </DialogContent>
     </Dialog>
