@@ -27,7 +27,7 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-[50%] border-none">
+    <Card className="w-full max-w-[350px] border-none bg-transparent">
       <CardHeader>
         <CardTitle className="text-2xl text-center">Login</CardTitle>
         <CardDescription className="text-center">Enter your username below to login to your account</CardDescription>
@@ -45,7 +45,7 @@ export function LoginForm() {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
+                <Link href="#" className="ml-auto inline-block text-[11px] underline">
                   Forgot your password?
                 </Link>
               </div>
@@ -57,16 +57,16 @@ export function LoginForm() {
                 Submitting...
               </Button>
             ) : (
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 Login
               </Button>
             )}
           </div>
         </form>
 
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-4 text-center text-[11px]">
           Don&apos;t have an account?{' '}
-          <Link href="#" className="underline">
+          <Link href="#" className="underline text-[11px]">
             Sign Up
           </Link>
         </div>

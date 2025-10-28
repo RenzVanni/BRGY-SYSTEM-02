@@ -1,4 +1,4 @@
-import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import React, { ForwardRefExoticComponent, RefAttributes } from 'react';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -6,24 +6,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubItem,
-} from "../ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
-import { ChevronRight, LucideProps } from "lucide-react";
-import Link from "next/link";
+  SidebarMenuSubItem
+} from '../ui/sidebar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { ChevronRight, LucideProps } from 'lucide-react';
+import Link from 'next/link';
 
 export const NavDocuments = ({
-  items,
+  items
 }: {
   items: {
     title: string;
-    icon?: ForwardRefExoticComponent<
-      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-    >;
+    icon?: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
     isActive?: boolean;
     item: { title: string; url?: string }[];
   }[];
@@ -33,12 +27,7 @@ export const NavDocuments = ({
       <SidebarGroupLabel>Documents</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={false}
-            className="group/collapsible"
-          >
+          <Collapsible key={item.title} asChild defaultOpen={false} className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
@@ -52,9 +41,9 @@ export const NavDocuments = ({
                   {item.item.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuButton asChild>
-                        {/* <Link href={subItem.url}> */}
-                        <span>{subItem.title}</span>
-                        {/* </Link> */}
+                        <Link href={subItem?.url}>
+                          <span>{subItem.title}</span>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuSubItem>
                   ))}

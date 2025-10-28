@@ -58,7 +58,7 @@ const CustomInput = (prop: Prop) => {
         placeholder={placeholder}
         required={isRequired}
         disabled={isDisabled}
-        className="col-span-2"
+        className="col-span-2 capitalize"
         value={value ?? ''}
         onChange={(e) => {
           setResidentData?.((prev) => ({

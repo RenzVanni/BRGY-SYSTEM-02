@@ -15,10 +15,14 @@ import { Loader2 } from 'lucide-react';
 import { updateResidentMutation } from '@/hooks/useMutation';
 import { useFindResidentById } from '@/hooks/useQuery';
 import { customOnOpenChange, onUpdateAccount, onUpdateResident } from '@/hooks/customHooks';
+import { useFullname } from '@/hooks/methods';
+import CustomFile from './components/CustomFile';
+import CustomButtonGroup from './components/CustomButtonGroup';
 
 const ResidentFormDialog = () => {
   const { mutate, isPending } = updateResidentMutation();
-  const { residentData, setResidentData, isFormDialog, setIsFormDialog, dataId } = useContext(ContextTheme);
+  const { residentData, setResidentData, isFormDialog, setIsFormDialog, previewImg, setPreviewImg } =
+    useContext(ContextTheme);
   const { isOpen, dialogBoxType } = isFormDialog;
 
   const {
@@ -41,33 +45,10 @@ const ResidentFormDialog = () => {
     account_id
   } = residentData;
 
-  const checkMiddleName = middlename == null ? ' ' : ' ' + middlename + ' ';
-  const fullname = firstname + checkMiddleName + lastname;
+  const fullname = useFullname(residentData);
 
-  const handleOnOpenChange = (open: boolean) => {
-    setIsFormDialog({ isOpen: open, dialogBoxType: 'none' });
-    setResidentData({} as ResidentType);
-  };
-
-  const [previewImg, setPreviewImg] = useState(null);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData();
-    const { profile_image_url } = residentData;
-    if (profile_image_url != null) {
-      formData.append('file', profile_image_url);
-    }
-    formData.append(
-      'resident',
-      new Blob([JSON.stringify({ ...residentData, profile_image_url: undefined })], {
-        type: 'application/json'
-      })
-    );
-    try {
-      mutate(formData);
-    } catch (error) {
-      console.log('Patch error: ', error);
-    }
+    onUpdateResident({ e: e, data: residentData, mutate: mutate });
   };
 
   return (
@@ -88,7 +69,7 @@ const ResidentFormDialog = () => {
         )}
         {dialogBoxType == 'createCertificate' && <CreateCertificateHeader />}
 
-        <form onSubmit={(e) => onUpdateResident({ e: e, data: residentData, mutate: mutate })} className="grid gap-4">
+        <form onSubmit={(e) => handleSubmit(e)} className="grid gap-4">
           <CustomInput
             label="Firstname"
             name="firstname"
@@ -180,42 +161,10 @@ const ResidentFormDialog = () => {
             setResidentData={setResidentData}
           />
 
-          <Input
-            id="picture"
-            type="file"
-            onChange={(e) => {
-              setPreviewImg(URL.createObjectURL(e.target.files[0]));
-              setResidentData((prev) => ({
-                ...prev,
-                profile_image_url: e.target.files?.[0]
-              }));
-            }}
-            hidden
-          />
-
-          <Input type="hidden" name="whatsType" value={dialogBoxType ?? ''} />
+          <CustomFile setPreviewImg={setPreviewImg} setResidentData={setResidentData} />
           <Input type="hidden" name="id" value={id ?? 0} />
 
-          <div
-            className={`flex items-center gap-3 ${
-              isFormDialog.dialogBoxType == 'editResident' ? 'justify-end' : 'justify-end'
-            }`}>
-            {isFormDialog.dialogBoxType == 'editResident' && (
-              <Button disabled={isPending} variant="destructive" className="w-fit">
-                Delete
-              </Button>
-            )}
-            {isPending ? (
-              <Button disabled type="submit" className="w-fit">
-                <Loader2 className="animate-spin" />
-                Save...
-              </Button>
-            ) : (
-              <Button type="submit" className="w-fit">
-                Save
-              </Button>
-            )}
-          </div>
+          <CustomButtonGroup isPending={isPending} btnFor="editResident" />
         </form>
       </DialogContent>
     </Dialog>

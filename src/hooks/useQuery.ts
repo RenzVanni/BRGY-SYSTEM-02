@@ -1,4 +1,5 @@
 import { paginateAccountsApi } from '@/app/api/accountApi';
+import { mainPaginateApi } from '@/app/api/mainApi';
 import { findOfficialByIdApi, paginateOfficialsApi } from '@/app/api/officialsApi';
 import { findResidentByIdApi, paginateResidentsApi } from '@/app/api/residentApi';
 import { AccountType } from '@/types/accountType';
@@ -8,6 +9,12 @@ import { ResidentType } from '@/types/residentsType';
 import { useQuery } from '@tanstack/react-query';
 
 // find all or paginate
+export const usePaginate = (page: number, limit: number, path: string) =>
+  useQuery<PaginateApiResponse>({
+    queryKey: ['paginate', page, limit, path],
+    queryFn: () => mainPaginateApi(page, limit, path)
+  });
+
 export const useAccounts = (page: number) =>
   useQuery<PaginateApiResponse>({
     queryKey: ['accounts', page],

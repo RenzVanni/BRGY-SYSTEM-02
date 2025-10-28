@@ -1,30 +1,27 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { ResidentType } from "@/types/residentsType";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { useContext } from "react";
-import { ContextTheme } from "../config_context";
+import { Button } from '@/components/ui/button';
+import { ResidentType } from '@/types/residentsType';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { useContext } from 'react';
+import { ContextTheme } from '../config_context';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 //Residents Columns
 export const ResidentsColumns: ColumnDef<ResidentType>[] = [
   {
-    accessorKey: "fullname",
+    accessorKey: 'fullname',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Fullname
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -32,42 +29,30 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
     },
     cell: ({ row }) => {
       const { firstname, middlename, lastname } = row.original;
-      return `${firstname} ${
-        middlename !== null ? middlename : " "
-      } ${lastname}`;
+      return `${firstname} ${middlename !== null ? middlename : ' '} ${lastname}`;
     },
     sortingFn: (rowA, rowB) => {
-      const fullnameA = `${rowA.original.firstname} ${
-        rowA.original.middlename ?? ""
-      } ${rowA.original.lastname}}`;
-      const fullnameB = `${rowB.original.firstname} ${
-        rowB.original.middlename ?? ""
-      } ${rowB.original.lastname}}`;
+      const fullnameA = `${rowA.original.firstname} ${rowA.original.middlename ?? ''} ${rowA.original.lastname}}`;
+      const fullnameB = `${rowB.original.firstname} ${rowB.original.middlename ?? ''} ${rowB.original.lastname}}`;
       return fullnameA.localeCompare(fullnameB);
-    },
+    }
   },
   {
-    accessorKey: "address",
+    accessorKey: 'address',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Address
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
-    },
+    }
   },
   {
-    accessorKey: "placeOfBirth",
+    accessorKey: 'placeOfBirth',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Place of Birth
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -75,36 +60,28 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
     },
     cell: ({ row }) => {
       return row.original.birth_place;
-    },
+    }
   },
   {
-    accessorKey: "dateOfBirth",
+    accessorKey: 'dateOfBirth',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Date of Birth
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const formatBirthDate = new Date(row.original.birth_date)
-        .toISOString()
-        .split("T")[0];
+      const formatBirthDate = new Date(row.original.birth_date).toISOString().split('T')[0];
       return formatBirthDate;
-    },
+    }
   },
   {
-    accessorKey: "age",
+    accessorKey: 'age',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Age
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -117,23 +94,17 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
       let age = today.getFullYear() - birthDate.getFullYear();
       const monthDifference = today.getMonth() - birthDate.getMonth();
 
-      if (
-        monthDifference < 0 ||
-        (monthDifference === 0 && today.getDate() < birthDate.getDate())
-      ) {
+      if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
       return age;
-    },
+    }
   },
   {
-    accessorKey: "gender",
+    accessorKey: 'gender',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Gender
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -141,16 +112,13 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
     },
     cell: ({ row }) => {
       return row.original.gender;
-    },
+    }
   },
   {
-    accessorKey: "civilStatus",
+    accessorKey: 'civilStatus',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Civil Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -158,12 +126,12 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
     },
     cell: ({ row }) => {
       return row.original.civil_status;
-    },
+    }
   },
   {
-    accessorKey: "actions",
-    header: "Actions",
-    id: "actions",
+    accessorKey: 'actions',
+    header: 'Actions',
+    id: 'actions',
     cell: ({ row }) => {
       const {
         id,
@@ -182,18 +150,12 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
         pwd,
         official_id,
         account_id,
-        profile_image_url,
+        profile_image_url
       } = row.original;
 
-      const {
-        isEditResident,
-        setIsEditResident,
-        isCreateCertificate,
-        setIsCreateCertificate,
-        setResidentData,
-      } = useContext(ContextTheme);
+      const { setResidentData } = useContext(ContextTheme);
 
-      const formatBirthDate = new Date(birth_date).toISOString().split("T")[0];
+      const formatBirthDate = new Date(birth_date).toISOString().split('T')[0];
       const setResidentValue = {
         id,
         firstname,
@@ -211,7 +173,7 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
         pwd,
         official_id,
         account_id,
-        profile_image_url,
+        profile_image_url
       };
 
       return (
@@ -228,24 +190,20 @@ export const ResidentsColumns: ColumnDef<ResidentType>[] = [
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  setIsEditResident((prev) => !prev);
                   setResidentData(setResidentValue);
-                }}
-              >
+                }}>
                 <span>Edit Resident</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setIsCreateCertificate((prev) => !prev);
-                  setResidentData(setResidentValue);
-                }}
-              >
+                    setResidentData(setResidentValue);
+                }}>
                 <span>Create Certificate</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </>
       );
-    },
-  },
+    }
+  }
 ];

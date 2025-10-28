@@ -3,6 +3,8 @@ import { DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { CircleUserRound } from 'lucide-react';
 import Image from 'next/image';
 import { Label } from '../../ui/label';
+import { useContextTheme } from '@/hooks/hooks';
+import { useFullname } from '@/hooks/methods';
 
 export const CreateResidentHeader = () => {
   return (
@@ -36,7 +38,7 @@ export const EditResidentHeader = (prop: editResidentHeaderProp) => {
         </Label>
       )}
       <DialogHeader>
-        <DialogTitle>{fullname}</DialogTitle>
+        <DialogTitle className="capitalize">{fullname}</DialogTitle>
       </DialogHeader>
     </>
   );

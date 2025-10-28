@@ -6,29 +6,25 @@ import { LOGIN } from '@/constants/navigation';
 import { AccountColumnModel, AccountType } from '@/types/accountType';
 import { useRouter } from 'next/navigation';
 import { ContextTheme } from '@/config/config_context';
-import { useAccounts } from '@/hooks/useQuery';
+import { useAccounts, usePaginate } from '@/hooks/useQuery';
 import CustomDialog from '@/components/CustomDialog';
 import FormDialog from '@/components/FormDialog/ResidentFormDialog';
 import { paginateAccountsApi } from '@/app/api/accountApi';
 import AccountFormDialog from '@/components/FormDialog/AccountFormDialog';
 import { accountMapperForData } from '@/hooks/mapper';
+import { ACCOUNT_PATH } from '@/constants/Backend_Slugs';
+import { apiHooks } from '@/hooks/apiHooks';
 
 const page = () => {
-  const { paginateValue } = useContext(ContextTheme);
-  const [account, setAccount] = useState<AccountColumnModel[]>([]);
-  const { data, error, isPending, isSuccess, status } = useAccounts(paginateValue);
+  // const { paginateValue } = useContext(ContextTheme);
+  // const { data } = usePaginate(paginateValue, 3, ACCOUNT_PATH);
 
-  useEffect(() => {
-    if (isSuccess) {
-      const mappedAccounts = data?.data?.map((item) => {
-        return accountMapperForData(item);
-      });
-      setAccount(mappedAccounts);
-    }
-  }, [isSuccess]);
+  // const accounts = data?.data?.map((item) => accountMapperForData(item)) ?? [];
+  const { paginateAccountsHook } = apiHooks(ACCOUNT_PATH);
+  const { payload, pages } = paginateAccountsHook();
   return (
     <>
-      <DataTable columns={accountColumn} data={account ?? []} pages={data?.pages} />
+      <DataTable columns={accountColumn} data={payload} pages={pages} />
 
       <AccountFormDialog />
     </>

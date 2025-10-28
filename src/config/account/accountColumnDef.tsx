@@ -9,4 +9,4 @@ const columnData: CustomColumnDefProp[] = [
   { accessorKey: 'role', title: 'Role' }
 ];
 
-export const accountColumn: ColumnDef<AccountColumnModel>[] = customColumnDef<AccountColumnModel>({ prop: columnData });
+export const accountColumn = customColumnDef<AccountColumnModel>({ prop: columnData });

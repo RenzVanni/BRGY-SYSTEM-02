@@ -1,6 +1,7 @@
 import { AccountColumnModel, AccountType, UpdateAccountRequestDTO } from '@/types/accountType';
 import { MappedResidentType, ResidentType } from '@/types/residentsType';
-import { getFullname } from './methods';
+import { useFullname } from './methods';
+import { OfficialsType, UpdateOfficialRequestDTO } from '@/types/officialsType';
 
 export const mapResidents = (prop: ResidentType): MappedResidentType => {
   const {
@@ -40,6 +41,9 @@ export const mapResidents = (prop: ResidentType): MappedResidentType => {
   };
 };
 
+/**
+ * * Account
+ */
 export const accountMapper = (prop: AccountType): UpdateAccountRequestDTO => {
   const { id, username, email, resident, role } = prop;
   return { id: id, username: username, email: email, resident_id: resident?.id, role: role };
@@ -47,7 +51,7 @@ export const accountMapper = (prop: AccountType): UpdateAccountRequestDTO => {
 
 export const accountMapperForData = (prop: AccountType): AccountColumnModel => {
   const { id, username, email, resident, role, imgUrl } = prop;
-  const fullname = getFullname(resident?.firstname, resident?.middlename, resident?.lastname);
+  const fullname = useFullname(resident);
   return {
     id: id,
     name: fullname,
@@ -56,5 +60,19 @@ export const accountMapperForData = (prop: AccountType): AccountColumnModel => {
     resident_id: resident?.id,
     role: role,
     imgUrl: imgUrl
+  };
+};
+
+/**
+ * * Official
+ */
+export const updateOfficialRequestDTOMapper = (data: OfficialsType): UpdateOfficialRequestDTO => {
+  const { id, resident, term_start, term_end, position } = data;
+  return {
+    id: id,
+    resident_id: resident?.id,
+    term_start: term_start,
+    term_end: term_end,
+    position: position
   };
 };

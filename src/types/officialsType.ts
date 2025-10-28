@@ -9,7 +9,7 @@ export type OfficialsType = {
   term_start: string;
   term_end: string;
   position: string;
-  imgUrl: string | File;
+  imgurl: string | File;
 };
 
 /**

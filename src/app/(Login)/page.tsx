@@ -4,8 +4,8 @@ import { LoginForm } from '@/components/LoginForm';
 
 const page = () => {
   return (
-    <div className="flex h-full items-center justify-center">
-      <div className="flex-col item justify-between flex-1 p-10 h-full bg-primary hidden md:flex">
+    <div className="flex h-full items-center justify-center p-6">
+      <div className="flex-col item justify-between w-[50%] rounded-2xl p-10 h-full bg-primary hidden md:flex">
         <div>
           <h1 className="text-lg font-semibold">BRGY CORE</h1>
         </div>
@@ -15,7 +15,7 @@ const page = () => {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-center flex-1 h-full">
+      <div className="flex items-center justify-center md:w-[50%] h-full">
         <LoginForm />
       </div>
     </div>

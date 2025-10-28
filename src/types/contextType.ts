@@ -17,11 +17,6 @@ export type FormDialogProp = {
   isOpen: boolean;
 };
 
-export type DataIdProp = {
-  resident?: number;
-  account?: number;
-};
-
 export type ContextType = {
   residentData: ResidentType;
   setResidentData: Dispatch<SetStateAction<ResidentType>>;
@@ -33,6 +28,6 @@ export type ContextType = {
   setPaginateValue: Dispatch<SetStateAction<number>>;
   isFormDialog: FormDialogProp;
   setIsFormDialog: Dispatch<SetStateAction<FormDialogProp>>;
-  dataId: DataIdProp;
-  setDataId: Dispatch<SetStateAction<DataIdProp>>;
+  previewImg: any;
+  setPreviewImg: Dispatch<any>;
 };

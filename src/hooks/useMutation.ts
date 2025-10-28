@@ -47,8 +47,8 @@ export const updateResidentMutation = () => {
 };
 
 export const updateOfficialMutation = () => {
-  return useMutation<SuccessResponse, ErrorResponse, UpdateOfficialRequestDTO>({
-    mutationFn: (formData: UpdateOfficialRequestDTO) => updateOfficialApi(formData),
+  return useMutation<SuccessResponse, ErrorResponse, FormData>({
+    mutationFn: (formData: FormData) => updateOfficialApi(formData),
     onSuccess: (data) => {
       toast.success(data.message);
     },

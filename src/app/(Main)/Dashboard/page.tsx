@@ -1,12 +1,14 @@
-"use client";
-import ChartComponent from "@/components/ChartComponent";
-import StatisticsCard from "@/components/DashboardComponents/StatisticsCard";
-import { LOGIN } from "@/constants/navigation";
-import { statisticsCardData } from "@/data/DashboardData";
-import { AccountType } from "@/types/accountType";
-import { cookies } from "next/headers";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
+'use client';
+import ChartComponent from '@/components/ChartComponent';
+import StatisticsCard from '@/components/DashboardComponents/StatisticsCard';
+import { BLOTTER_PATH, COMPLAINT_PATH } from '@/constants/Backend_Slugs';
+import { LOGIN } from '@/constants/navigation';
+import { statisticsCardData } from '@/data/DashboardData';
+import { usePaginate } from '@/hooks/useQuery';
+import { AccountType } from '@/types/accountType';
+import { cookies } from 'next/headers';
+import { redirect, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const page = () => {
   return (

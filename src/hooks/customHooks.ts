@@ -1,14 +1,14 @@
-import { ContextTheme, customUseContext } from '@/config/config_context';
 import { AccountDefaultData, OfficialsDefaultData, ResidentDefaultData } from '@/data/defaultData';
 import { AccountType, LoginType } from '@/types/accountType';
 import { ResidentType } from '@/types/residentsType';
 import { Dispatch, SetStateAction, useContext } from 'react';
-import { accountMapper } from './mapper';
+import { accountMapper, updateOfficialRequestDTOMapper } from './mapper';
 import { UseMutateFunction } from '@tanstack/react-query';
 import { ErrorResponse, SuccessResponse } from '@/types/commonType';
 import { FormDialogProp } from '@/types/contextType';
 import { OfficialsType } from '@/types/officialsType';
 import { FormState, LoginFormSchema } from '@/lib/definitions';
+import { useContextTheme } from './hooks';
 
 type customOnOpenChangePropType = {
   isOpen: boolean;
@@ -20,6 +20,7 @@ type customOnOpenChangePropType = {
 };
 
 export const customOnOpenChange = (prop: customOnOpenChangePropType) => {
+  const { setPreviewImg } = useContextTheme();
   const { type, setAccountData, setResidentData, setOfficialsData, setIsFormDialog, isOpen } = prop;
 
   setIsFormDialog({ isOpen: isOpen, dialogBoxType: 'none' });
@@ -28,6 +29,7 @@ export const customOnOpenChange = (prop: customOnOpenChangePropType) => {
   }
   if (type == 'resident') {
     setResidentData(ResidentDefaultData);
+    setPreviewImg(null);
   }
   if (type == 'officials') {
     setOfficialsData(OfficialsDefaultData);
@@ -113,16 +115,27 @@ export const onUpdateResident = async (prop: onUpdateResidentProp) => {
   mutate(formData);
 };
 
-/**
- * TODO - update officials
- */
 type onUpdateOfficialsProp = {
   e: React.FormEvent<HTMLFormElement>;
-  data: ResidentType;
+  data: OfficialsType;
   mutate: UseMutateFunction<SuccessResponse, ErrorResponse, FormData, unknown>;
 };
 
-// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//   e.preventDefault();
-//   mutate({ id: id, resident_id: resident.id, term_start: term_start, term_end: term_end, position: position });
-// };
+export const onUpdateOfficial = async (prop: onUpdateOfficialsProp) => {
+  const { e, data, mutate } = prop;
+  const { imgurl } = data;
+  const mappedOfficial = updateOfficialRequestDTOMapper(data);
+  e.preventDefault();
+
+  const formData = new FormData();
+  if (imgurl != null) {
+    formData.append('file', imgurl);
+  }
+  formData.append(
+    'body',
+    new Blob([JSON.stringify({ ...mappedOfficial })], {
+      type: 'application/json'
+    })
+  );
+  mutate(formData);
+};

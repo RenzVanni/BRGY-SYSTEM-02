@@ -10,6 +10,12 @@ import { ResidentType } from '@/types/residentsType';
 import { mapResidents } from '@/hooks/mapper';
 import { OFFICIALS_PATH } from '@/constants/Backend_Slugs';
 
+/**
+ * * Paginate officials
+ * @param page
+ * @param limit
+ * @returns
+ */
 export const paginateOfficialsApi = async (page: number, limit: number): Promise<PaginateApiResponse> => {
   const query = encodeURIComponent(`${OFFICIALS_PATH}?page=${page}&limit=${limit}`);
   const response = await fetch(`/api/search?query=${query}`, {
@@ -23,7 +29,11 @@ export const paginateOfficialsApi = async (page: number, limit: number): Promise
   return await response.json();
 };
 
-// find official by id api
+/**
+ * * Find official by id
+ * @param id
+ * @returns
+ */
 export const findOfficialByIdApi = async (id: number): Promise<OfficialsType> => {
   const query = encodeURIComponent(`${OFFICIALS_PATH}/${id}`);
   const response = await fetch(`/api/search?query=${query}`, {
@@ -37,16 +47,17 @@ export const findOfficialByIdApi = async (id: number): Promise<OfficialsType> =>
   return await response.json();
 };
 
-// update official api
-export const updateOfficialApi = async (formData: UpdateOfficialRequestDTO): Promise<SuccessResponse> => {
+/**
+ * * Update official
+ * @param formData
+ * @returns
+ */
+export const updateOfficialApi = async (formData: FormData): Promise<SuccessResponse> => {
   const query = encodeURIComponent(`${OFFICIALS_PATH}/update`);
   const response = await fetch(`/api/search?query=${query}`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     credentials: 'include',
-    body: JSON.stringify(formData)
+    body: formData
   });
   return await response.json();
 };

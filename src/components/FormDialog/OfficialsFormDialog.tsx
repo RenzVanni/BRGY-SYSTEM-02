@@ -15,24 +15,26 @@ import { Loader2 } from 'lucide-react';
 import { updateOfficialMutation, updateResidentMutation } from '@/hooks/useMutation';
 import { AccountType } from '@/types/accountType';
 import { OfficialsType } from '@/types/officialsType';
-import { getFullname } from '@/hooks/methods';
 import { officialsPositionData } from '@/data/officialsPosition';
 import CustomButtonGroup from './components/CustomButtonGroup';
-import { customOnOpenChange } from '@/hooks/customHooks';
+import { customOnOpenChange, onUpdateOfficial } from '@/hooks/customHooks';
+import { useFullname } from '@/hooks/methods';
+import CustomFile from './components/CustomFile';
 
 const OfficialsFormDialog = () => {
-  const { officialsData, setOfficialsData, isFormDialog, setIsFormDialog } = useContext(ContextTheme);
-  const { id, resident, term_start, term_end, position } = officialsData;
+  const { officialsData, setOfficialsData, isFormDialog, setIsFormDialog, residentData } = useContext(ContextTheme);
+  const { id, resident, term_start, term_end, position, imgurl } = officialsData;
   const { isOpen, dialogBoxType } = isFormDialog;
+  const fullname = useFullname(resident);
 
-  const fullname = getFullname(resident?.firstname, resident?.middlename, resident?.lastname);
+  console.log('Officials: ', officialsData);
+
   const [previewImg, setPreviewImg] = useState(null);
 
   const { mutate, isPending } = updateOfficialMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate({ id: id, resident_id: resident.id, term_start: term_start, term_end: term_end, position: position });
+    onUpdateOfficial({ e: e, data: officialsData, mutate: mutate });
   };
 
   return (
@@ -48,14 +50,9 @@ const OfficialsFormDialog = () => {
       }>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createOfficial' && <CreateResidentHeader />}
-        {dialogBoxType == 'editOfficial' && (
-          <EditResidentHeader
-            // imageUrl={previewImg || profile_image_url}
-            fullname={fullname}
-          />
-        )}
+        {dialogBoxType == 'editOfficial' && <EditResidentHeader imageUrl={previewImg || imgurl} fullname={fullname} />}
 
-        <form onSubmit={handleSubmit} className="grid gap-4">
+        <form onSubmit={(e) => handleSubmit(e)} className="grid gap-4">
           <CustomSelect
             label="Position"
             name="position"
@@ -88,11 +85,13 @@ const OfficialsFormDialog = () => {
               setPreviewImg(URL.createObjectURL(e.target.files[0]));
               setOfficialsData((prev) => ({
                 ...prev,
-                profile_image_url: e.target.files?.[0]
+                imgUrl: e.target.files?.[0]
               }));
             }}
             hidden
           />
+
+          <CustomFile setPreviewImg={setPreviewImg} setOfficialsData={setOfficialsData} />
 
           <Input type="hidden" name="resident_id" value={resident?.id} />
           <Input type="hidden" name="id" value={id} />

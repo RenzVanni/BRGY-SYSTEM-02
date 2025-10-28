@@ -38,7 +38,7 @@ export const OfficialsDefaultData: OfficialsType = {
   term_start: '',
   term_end: '',
   position: '',
-  imgUrl: ''
+  imgurl: ''
 };
 
 export const contextDefaultData: ContextType = {
@@ -52,6 +52,6 @@ export const contextDefaultData: ContextType = {
   setPaginateValue: () => {},
   isFormDialog: { dialogBoxType: 'none', isOpen: false },
   setIsFormDialog: () => {},
-  dataId: { resident: 0, account: 0 },
-  setDataId: () => {}
+  previewImg: null,
+  setPreviewImg: () => {}
 };

@@ -6,33 +6,21 @@ import ResidentFormDialog from '@/components/FormDialog/ResidentFormDialog';
 import { DataTable } from '@/components/table/data-table';
 import { ContextTheme } from '@/config/config_context';
 import { residentColumn } from '@/config/residents/residentsColumnsDef';
+import { RESIDENTS_PATH } from '@/constants/Backend_Slugs';
 import { LOGIN } from '@/constants/navigation';
+import { apiHooks } from '@/hooks/apiHooks';
 import { mapResidents } from '@/hooks/mapper';
-import { useResidents } from '@/hooks/useQuery';
+import { usePaginate, useResidents } from '@/hooks/useQuery';
 import { ResidentColumnModel, ResidentType } from '@/types/residentsType';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 
 const page = () => {
-  const [resident, setResident] = useState<ResidentColumnModel[]>([]);
-  // const isResidentPresent = Object.keys(residentData).length > 0;
-
-  const { paginateValue } = useContext(ContextTheme);
-
-  const { data, error, isPending, isSuccess, status } = useResidents(paginateValue);
-
-  useEffect(() => {
-    if (isSuccess) {
-      const mapped = data?.data?.map((resident) => {
-        return mapResidents(resident);
-      });
-      setResident(mapped);
-    }
-  }, [isSuccess, data]);
-
+  const { paginateResidentsHook } = apiHooks(RESIDENTS_PATH);
+  const { payload, pages } = paginateResidentsHook();
   return (
     <>
-      <DataTable columns={residentColumn} data={resident} pages={data?.pages} />
+      <DataTable columns={residentColumn} data={payload} pages={pages} />
 
       <ResidentFormDialog />
 
