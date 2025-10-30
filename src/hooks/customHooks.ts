@@ -1,15 +1,7 @@
-import { AccountDefaultData, OfficialsDefaultData, ResidentDefaultData } from '@/data/defaultData';
-import { AccountType, LoginType } from '@/types/accountType';
-import { ResidentType } from '@/types/residentsType';
-import { Dispatch, SetStateAction, useContext } from 'react';
-import { accountMapper, updateOfficialRequestDTOMapper } from './mapper';
 import { UseMutateFunction } from '@tanstack/react-query';
 import { ErrorResponse, SuccessResponse } from '@/types/commonType';
-import { FormDialogProp } from '@/types/contextType';
-import { OfficialsType } from '@/types/officialsType';
 import { FormState, LoginFormSchema } from '@/lib/definitions';
 import { useContextTheme } from './hooks';
-import { updateResidentMutation } from './useMutation';
 
 export const useFullname = () => {
   const { residentData, accountData, officialsData } = useContextTheme();

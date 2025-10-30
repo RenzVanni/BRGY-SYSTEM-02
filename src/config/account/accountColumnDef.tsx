@@ -1,6 +1,5 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { customColumnDef, CustomColumnDefProp } from '../column_Definition';
-import { AccountColumnModel, AccountType } from '@/types/accountType';
+import { AccountColumnModel } from '@/types/accountType';
 
 const columnData: CustomColumnDefProp[] = [
   { accessorKey: 'name', title: 'Resident' },
