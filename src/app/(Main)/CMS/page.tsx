@@ -1,10 +1,9 @@
-import CustomTitle from "@/components/CustomTitle";
-import React from "react";
+import React from 'react';
 
 const page = () => {
   return (
     <>
-      <CustomTitle>Content Management System</CustomTitle>
+      <h1>Content Management</h1>
     </>
   );
 };

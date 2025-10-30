@@ -3,8 +3,8 @@ import { DialogDescription, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { CircleUserRound } from 'lucide-react';
 import Image from 'next/image';
 import { Label } from '../../ui/label';
+import { useFullname } from '@/hooks/customHooks';
 import { useContextTheme } from '@/hooks/hooks';
-import { useFullname } from '@/hooks/methods';
 
 export const CreateResidentHeader = () => {
   return (
@@ -17,20 +17,17 @@ export const CreateResidentHeader = () => {
   );
 };
 
-type editResidentHeaderProp = {
-  imageUrl?: string;
-  fullname: string;
-};
-
-export const EditResidentHeader = (prop: editResidentHeaderProp) => {
-  const { imageUrl, fullname } = prop;
+export const EditResidentHeader = ({ picture }: { picture: string | File }) => {
+  const { previewImg } = useContextTheme();
+  const fullname = useFullname();
+  const validPicture = previewImg ?? (picture as string);
   return (
     <>
-      {imageUrl ? (
+      {validPicture ? (
         <Label
           htmlFor="picture"
           className="rounded-full w-[70px] h-[70px] overflow-hidden absolute top-[-35px] left-6 cursor-pointer hover:opacity-50">
-          <Image src={imageUrl} alt="image" fill style={{ objectFit: 'cover' }} />
+          <Image src={validPicture} alt="image" fill style={{ objectFit: 'cover' }} />
         </Label>
       ) : (
         <Label htmlFor="picture" className="cursor-pointer hover:opacity-50">

@@ -1,9 +1,9 @@
-"use client";
-import { SIDEBAR_DATA } from "@/data/sidebar";
-import { ChevronUp, User2 } from "lucide-react";
-import Image from "next/image";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import { SIDEBAR_DATA } from '@/data/sidebar';
+import { ChevronUp, User2 } from 'lucide-react';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Sidebar,
   SidebarContent,
@@ -13,19 +13,14 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-} from "./ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { LOGIN } from "@/constants/navigation";
-import NavMain from "./SidebarComponents/NavMain";
-import NavDocuments from "./SidebarComponents/NavDocuments";
-import NavSecondary from "./SidebarComponents/NavSecondary";
-import { logout_auth } from "@/app/api/auth/auth";
+  SidebarMenuItem
+} from './ui/sidebar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { LOGIN } from '@/constants/navigation';
+import NavMain from './SidebarComponents/NavMain';
+import NavDocuments from './SidebarComponents/NavDocuments';
+import NavSecondary from './SidebarComponents/NavSecondary';
+import { logoutAuth } from '@/app/api/accountApi';
 
 const AppSidebar = () => {
   const [isOptions, setIsOptions] = useState<null | number>(null);
@@ -42,12 +37,7 @@ const AppSidebar = () => {
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Image
-                src="/images/brgy-logo.png"
-                alt="logo"
-                width={35}
-                height={35}
-              />
+              <Image src="/images/brgy-logo.png" alt="logo" width={35} height={35} />
               <p>Barangay Zone 4</p>
             </div>
           </SidebarMenuItem>
@@ -76,10 +66,7 @@ const AppSidebar = () => {
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
                 <DropdownMenuItem>
                   <span>Account</span>
                 </DropdownMenuItem>
@@ -88,9 +75,8 @@ const AppSidebar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    logout_auth(), router.push(LOGIN);
-                  }}
-                >
+                    logoutAuth(), router.push(LOGIN);
+                  }}>
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

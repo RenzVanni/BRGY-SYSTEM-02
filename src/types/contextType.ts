@@ -28,6 +28,6 @@ export type ContextType = {
   setPaginateValue: Dispatch<SetStateAction<number>>;
   isFormDialog: FormDialogProp;
   setIsFormDialog: Dispatch<SetStateAction<FormDialogProp>>;
-  previewImg: any;
-  setPreviewImg: Dispatch<any>;
+  previewImg: string;
+  setPreviewImg: Dispatch<string>;
 };

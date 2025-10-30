@@ -1,8 +1,6 @@
 import { ResidentType } from '@/types/residentsType';
-import { useContextTheme } from './hooks';
-import { ResidentDefaultData } from '@/data/defaultData';
 
-export const useFullname = (data: ResidentType): string => {
+export const mapName = (data: ResidentType): string => {
   if (!data) return '';
   const { firstname, middlename, lastname } = data;
 

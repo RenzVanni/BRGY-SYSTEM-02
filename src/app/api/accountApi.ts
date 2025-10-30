@@ -88,3 +88,11 @@ export const updateAccountApi = async (formData: FormData): Promise<SuccessRespo
 
   return data;
 };
+
+export const logoutAuth = async () => {
+  const query = encodeURIComponent(`${ACCOUNT_PATH}/logout`);
+  const response = await fetch(`/api/search?query=${query}`, {
+    method: 'GET',
+    credentials: 'include'
+  });
+};

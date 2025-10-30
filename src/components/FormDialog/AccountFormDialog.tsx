@@ -1,48 +1,39 @@
-import { ContextTheme } from '@/config/config_context';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
 import { CreateResidentHeader, EditResidentHeader } from './components/CustomHeader';
 import { Input } from '../ui/input';
 import CustomInput from './components/CustomInput';
 import { updateAccountMutation } from '@/hooks/useMutation';
 import CustomButtonGroup from './components/CustomButtonGroup';
-import { customOnOpenChange, onUpdateAccount } from '@/hooks/customHooks';
 import { useContextTheme } from '@/hooks/hooks';
-import { ResidentDefaultData } from '@/data/defaultData';
-import { useFullname } from '@/hooks/methods';
 import CustomFile from './components/CustomFile';
+import { updateHook } from '@/hooks/updateHook';
+import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 
 const AccountFormDialog = () => {
-  const { accountData, setAccountData, isFormDialog, setIsFormDialog } = useContextTheme();
+  const { accountData, setAccountData, isFormDialog } = useContextTheme();
   const { id, username, email, resident, role, imgUrl } = accountData;
   const { isOpen, dialogBoxType } = isFormDialog;
-  const fullname = useFullname(resident);
 
   const { mutate, isPending } = updateAccountMutation();
 
-  const [previewImg, setPreviewImg] = useState(null);
+  const { handleOpenChange } = onOpenChangeHook();
+  const { onUpdateAccount } = updateHook();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    onUpdateAccount({ e: e, data: accountData, mutate: mutate });
-  };
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(open) =>
-        customOnOpenChange({
+        handleOpenChange({
           isOpen: open,
-          type: 'account',
-          setAccountData: setAccountData,
-          setIsFormDialog: setIsFormDialog
+          type: 'account'
         })
       }>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createAccount' && <CreateResidentHeader />}
-        {dialogBoxType == 'editAccount' && (
-          <EditResidentHeader imageUrl={previewImg || imgUrl} fullname={fullname} />
-        )}
+        {dialogBoxType == 'editAccount' && <EditResidentHeader picture={imgUrl} />}
 
-        <form onSubmit={(e) => handleSubmit(e)} className="grid gap-4">
+        <form onSubmit={(e) => onUpdateAccount(e, mutate)} className="grid gap-4">
           <CustomInput
             label="Username"
             name="username"
@@ -61,20 +52,7 @@ const AccountFormDialog = () => {
             setAccountData={setAccountData}
           />
 
-          <Input
-            id="picture"
-            type="file"
-            onChange={(e) => {
-              setPreviewImg(URL.createObjectURL(e.target.files[0]));
-              setAccountData((prev) => ({
-                ...prev,
-                imgUrl: e.target.files?.[0]
-              }));
-            }}
-            hidden
-          />
-
-          <CustomFile setPreviewImg={setPreviewImg} setAccountData={setAccountData} />
+          <CustomFile setAccountData={setAccountData} />
 
           <Input type="hidden" name="resident_id" value={resident?.id ?? 0} />
           <Input type="hidden" name="id" value={id} />

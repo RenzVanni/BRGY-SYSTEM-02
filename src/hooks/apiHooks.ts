@@ -7,12 +7,12 @@ import { AccountColumnModel } from '@/types/accountType';
 import { ResidentColumnModel } from '@/types/residentsType';
 import { TableColumnData } from '@/types/commonType';
 import { OfficialsColumnModel } from '@/types/officialsType';
-import { useFullname } from './methods';
 import { BlotterColumnModel, BlotterType } from '@/types/blotterType';
 import { ComplaintColumnModel, ComplaintType } from '@/types/complaintType';
 import { DisasterAndEmergencyColumnModel, DisasterAndEmergencyType } from '@/types/disasterAndEmergencyType';
 import { HealthAndSanitationColumnModel, HealthAndSanitationType } from '@/types/healthAndSanitationType';
 import { IncidentColumnModel, IncidentType } from '@/types/incidentType';
+import { mapName } from './methods';
 
 export const apiHooks = (path: string) => {
   const { paginateValue } = useContext(ContextTheme);
@@ -41,18 +41,19 @@ export const apiHooks = (path: string) => {
    * @returns
    */
   const paginateOfficialsHook = (): TableColumnData<OfficialsColumnModel> => {
-    const payload = data?.data?.map((item) => {
-      const { id, resident, term_end, term_start, position } = item;
-      const fullname = useFullname(resident);
-      return {
-        id: id,
-        resident: fullname,
-        resident_id: resident.id,
-        term_start: term_start,
-        term_end: term_end,
-        position: position
-      };
-    });
+    const payload =
+      data?.data?.map((item) => {
+        const { id, resident, term_end, term_start, position } = item;
+        const fullname = mapName(resident);
+        return {
+          id: id,
+          resident: fullname,
+          resident_id: resident.id,
+          term_start: term_start,
+          term_end: term_end,
+          position: position
+        };
+      }) ?? [];
     return { payload: payload, pages: data?.pages };
   };
 

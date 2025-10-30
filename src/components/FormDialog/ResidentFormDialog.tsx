@@ -1,6 +1,4 @@
-import { ContextTheme } from '@/config/config_context';
-import { ResidentType } from '@/types/residentsType';
-import React, { useActionState, useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
 import { CreateCertificateHeader, CreateResidentHeader, EditResidentHeader } from './components/CustomHeader';
 import { Input } from '../ui/input';
@@ -8,21 +6,16 @@ import CustomInput from './components/CustomInput';
 import CustomSelect from './components/CustomSelect';
 import { genderData } from '@/data/gender';
 import { civilStatusData } from '@/data/civilStatus';
-import { Button } from '../ui/button';
-import { resident_auth } from '@/app/api/resident_api';
-import { ResidentDefaultData } from '@/data/defaultData';
-import { Loader2 } from 'lucide-react';
 import { updateResidentMutation } from '@/hooks/useMutation';
-import { useFindResidentById } from '@/hooks/useQuery';
-import { customOnOpenChange, onUpdateAccount, onUpdateResident } from '@/hooks/customHooks';
-import { useFullname } from '@/hooks/methods';
 import CustomFile from './components/CustomFile';
 import CustomButtonGroup from './components/CustomButtonGroup';
+import { updateHook } from '@/hooks/updateHook';
+import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
+import { useContextTheme } from '@/hooks/hooks';
 
 const ResidentFormDialog = () => {
   const { mutate, isPending } = updateResidentMutation();
-  const { residentData, setResidentData, isFormDialog, setIsFormDialog, previewImg, setPreviewImg } =
-    useContext(ContextTheme);
+  const { residentData, setResidentData, isFormDialog, setIsFormDialog, previewImg, setPreviewImg } = useContextTheme();
   const { isOpen, dialogBoxType } = isFormDialog;
 
   const {
@@ -45,31 +38,17 @@ const ResidentFormDialog = () => {
     account_id
   } = residentData;
 
-  const fullname = useFullname(residentData);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    onUpdateResident({ e: e, data: residentData, mutate: mutate });
-  };
+  const { handleOpenChange } = onOpenChangeHook();
+  const { onUpdateResident } = updateHook();
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) =>
-        customOnOpenChange({
-          isOpen: open,
-          type: 'resident',
-          setIsFormDialog: setIsFormDialog,
-          setResidentData: setResidentData
-        })
-      }>
+    <Dialog open={isOpen} onOpenChange={(open) => handleOpenChange({ isOpen: open, type: 'resident' })}>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createResident' && <CreateResidentHeader />}
-        {dialogBoxType == 'editResident' && (
-          <EditResidentHeader imageUrl={previewImg || profile_image_url} fullname={fullname} />
-        )}
+        {dialogBoxType == 'editResident' && <EditResidentHeader picture={profile_image_url} />}
         {dialogBoxType == 'createCertificate' && <CreateCertificateHeader />}
 
-        <form onSubmit={(e) => handleSubmit(e)} className="grid gap-4">
+        <form onSubmit={(e) => onUpdateResident(e, mutate)} className="grid gap-4">
           <CustomInput
             label="Firstname"
             name="firstname"
@@ -161,7 +140,7 @@ const ResidentFormDialog = () => {
             setResidentData={setResidentData}
           />
 
-          <CustomFile setPreviewImg={setPreviewImg} setResidentData={setResidentData} />
+          <CustomFile setResidentData={setResidentData} />
           <Input type="hidden" name="id" value={id ?? 0} />
 
           <CustomButtonGroup isPending={isPending} btnFor="editResident" />

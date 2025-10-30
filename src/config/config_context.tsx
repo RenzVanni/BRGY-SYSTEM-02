@@ -17,7 +17,7 @@ export const ContextProvider = ({ children }: { children: React.ReactNode }) => 
     dialogBoxType: 'none',
     isOpen: false
   });
-  const [previewImg, setPreviewImg] = useState(null);
+  const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   return (
     <ContextTheme.Provider

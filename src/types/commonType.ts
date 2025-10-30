@@ -38,6 +38,9 @@ export type SuccessResponse = {
   message: string;
 };
 
+/**
+ * ! Main table column definition
+ */
 export type TableColumnData<T> = {
   payload: T[];
   pages: number;

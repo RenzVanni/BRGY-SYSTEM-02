@@ -1,7 +1,8 @@
 import { AccountColumnModel, AccountType, UpdateAccountRequestDTO } from '@/types/accountType';
 import { MappedResidentType, ResidentType } from '@/types/residentsType';
-import { useFullname } from './methods';
 import { OfficialsType, UpdateOfficialRequestDTO } from '@/types/officialsType';
+import { useFullname } from './customHooks';
+import { mapName } from './methods';
 
 export const mapResidents = (prop: ResidentType): MappedResidentType => {
   const {
@@ -51,7 +52,7 @@ export const accountMapper = (prop: AccountType): UpdateAccountRequestDTO => {
 
 export const accountMapperForData = (prop: AccountType): AccountColumnModel => {
   const { id, username, email, resident, role, imgUrl } = prop;
-  const fullname = useFullname(resident);
+  const fullname = mapName(resident);
   return {
     id: id,
     name: fullname,
