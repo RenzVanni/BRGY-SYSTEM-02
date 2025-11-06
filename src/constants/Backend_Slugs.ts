@@ -3,6 +3,11 @@ export const LOGIN_SLUG = '/accounts/login';
 //* Accounts
 export const ACCOUNT_PATH = '/accounts';
 export const ACCOUNT_COUNT_PATH = ACCOUNT_PATH + '/count';
+export const ACCOUNT_VERIFICATION_FIND_BY_TOKEN = ACCOUNT_PATH + '/findEmailByToken';
+
+//* Notifications
+export const NOTIFICATIONS = '/notification';
+export const NOTIFICATIONS_SEND_REGISTRATION_LINK = NOTIFICATIONS + '/sendRegistrationLink';
 
 //* Residents
 export const RESIDENTS_PATH = '/residents';

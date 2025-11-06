@@ -5,21 +5,34 @@ import Image from 'next/image';
 import { Label } from '../../ui/label';
 import { useFullname } from '@/hooks/customHooks';
 import { useContextTheme } from '@/hooks/hooks';
+import { ResidentType } from '@/types/residentsType';
 
 export const CreateResidentHeader = () => {
+  const { isFormDialog } = useContextTheme();
+  let title = '';
+  if (isFormDialog.dialogBoxType == 'createResident') {
+    title = 'Resident';
+  }
+  if (isFormDialog.dialogBoxType == 'createAccount') {
+    title = 'Account';
+  }
+  if (isFormDialog.dialogBoxType == 'createOfficial') {
+    title = 'Official';
+  }
+
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Create Resident</DialogTitle>
-        <DialogDescription>Create resident here. Click save when you're done.</DialogDescription>
+        <DialogTitle>Create {title}</DialogTitle>
+        <DialogDescription>Create {title.toLowerCase()} here. Click save when you're done.</DialogDescription>
       </DialogHeader>
     </>
   );
 };
 
-export const EditResidentHeader = ({ picture }: { picture: string | File }) => {
+export const EditResidentHeader = ({ picture, data }: { picture: string | File; data: ResidentType }) => {
   const { previewImg } = useContextTheme();
-  const fullname = useFullname();
+  const fullname = useFullname(data);
   const validPicture = previewImg ?? (picture as string);
   return (
     <>
@@ -47,6 +60,18 @@ export const CreateCertificateHeader = () => {
       <DialogHeader>
         <DialogTitle>Create Certificate/Clearance</DialogTitle>
         <DialogDescription>Create your certificate/clearance here. Click save when you're done.</DialogDescription>
+      </DialogHeader>
+    </>
+  );
+};
+
+export const ReportsHeader = () => {
+  const { isFormDialog } = useContextTheme();
+  const { dialogBoxType } = isFormDialog;
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>Reports</DialogTitle>
       </DialogHeader>
     </>
   );

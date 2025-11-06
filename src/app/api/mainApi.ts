@@ -1,4 +1,4 @@
-import { PaginateApiResponse } from '@/types/commonType';
+import { ErrorResponse, PaginateApiResponse } from '@/types/commonType';
 
 /**
  * ! Main Paginate API
@@ -16,6 +16,12 @@ export const mainPaginateApi = async (page: number, limit: number, path: string)
     },
     credentials: 'include'
   });
+
+  if (!response.ok) {
+    if (response.status == 401) {
+      throw { code: response.status, message: 'User Does Not Exists' } as ErrorResponse;
+    }
+  }
 
   return await response.json();
 };

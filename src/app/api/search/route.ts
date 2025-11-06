@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get('query');
   const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
+    method: 'GET',
     headers: {
       Cookie: req.headers.get('cookie')
     },
@@ -35,6 +36,12 @@ export async function GET(req: NextRequest) {
       headers: response.headers
     });
 
+    return nextResponse;
+  }
+
+  if (!response.ok) {
+    const data = await response.json();
+    const nextResponse = NextResponse.json(data, { status: response.status, headers: response.headers });
     return nextResponse;
   }
 }

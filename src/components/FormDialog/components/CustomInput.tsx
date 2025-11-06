@@ -4,10 +4,11 @@ import { Input } from '../../ui/input';
 import { ResidentType } from '@/types/residentsType';
 import { AccountType } from '@/types/accountType';
 import { OfficialsType } from '@/types/officialsType';
+import { useContextTheme } from '@/hooks/hooks';
 
 type Prop = {
   label: string;
-  type: 'text' | 'date' | 'email';
+  type: 'text' | 'date' | 'email' | 'time' | 'textarea';
   name?:
     | 'firstname'
     | 'middlename'
@@ -25,7 +26,14 @@ type Prop = {
     | 'resident_id'
     | 'role'
     | 'term_start'
-    | 'term_end';
+    | 'term_end'
+    | 'victim'
+    | 'complaint'
+    | 'respondent'
+    | 'location'
+    | 'time'
+    | 'date'
+    | 'details';
   placeholder?: string;
   value: string | number;
   setResidentData?: React.Dispatch<React.SetStateAction<ResidentType>>;
@@ -35,18 +43,8 @@ type Prop = {
   isDisabled?: boolean;
 };
 const CustomInput = (prop: Prop) => {
-  const {
-    label,
-    type,
-    name,
-    placeholder,
-    value,
-    setResidentData,
-    setAccountData,
-    setOfficialsData,
-    isRequired = true,
-    isDisabled = false
-  } = prop;
+  const { setResidentData, setAccountData, setOfficialsData, setBlotterData } = useContextTheme();
+  const { label, type, name, placeholder, value, isRequired = true, isDisabled = false } = prop;
 
   return (
     <div className="grid grid-cols-3 items-center gap-2">
@@ -70,6 +68,10 @@ const CustomInput = (prop: Prop) => {
             [name]: e.target.value
           }));
           setOfficialsData?.((prev) => ({
+            ...prev,
+            [name]: e.target.value
+          }));
+          setBlotterData?.((prev) => ({
             ...prev,
             [name]: e.target.value
           }));

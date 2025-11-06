@@ -1,13 +1,41 @@
-import { AccountDefaultData, OfficialsDefaultData, ResidentDefaultData } from '@/data/defaultData';
+import {
+  AccountDefaultData,
+  BlotterDefaultData,
+  ComplaintDefaultData,
+  DisasterAndEmergencyDefaultData,
+  HealthAndSanitationDefaultData,
+  IncidentDefaultData,
+  OfficialsDefaultData,
+  ResidentDefaultData
+} from '@/data/defaultData';
 import { useContextTheme } from './hooks';
 
 type customOnOpenChangePropType = {
   isOpen: boolean;
-  type: 'account' | 'resident' | 'officials';
+  type:
+    | 'account'
+    | 'resident'
+    | 'officials'
+    | 'blotter'
+    | 'complaint'
+    | 'disasterAndEmergency'
+    | 'healthAndSanitation'
+    | 'incident';
 };
 
 export const onOpenChangeHook = () => {
-  const { setPreviewImg, setAccountData, setResidentData, setOfficialsData, setIsFormDialog } = useContextTheme();
+  const {
+    setPreviewImg,
+    setIsFormDialog,
+    setAccountData,
+    setResidentData,
+    setOfficialsData,
+    setBlotterData,
+    setComplaintData,
+    setDisasterAndEmergencyData,
+    setHealthAndSanitationData,
+    setIncidentData
+  } = useContextTheme();
 
   const handleOpenChange = (prop: customOnOpenChangePropType) => {
     const { type, isOpen } = prop;
@@ -22,6 +50,21 @@ export const onOpenChangeHook = () => {
     }
     if (type == 'officials') {
       setOfficialsData(OfficialsDefaultData);
+    }
+    if (type == 'blotter') {
+      setBlotterData(BlotterDefaultData);
+    }
+    if (type == 'complaint') {
+      setComplaintData(ComplaintDefaultData);
+    }
+    if (type == 'disasterAndEmergency') {
+      setDisasterAndEmergencyData(DisasterAndEmergencyDefaultData);
+    }
+    if (type == 'healthAndSanitation') {
+      setHealthAndSanitationData(HealthAndSanitationDefaultData);
+    }
+    if (type == 'incident') {
+      setIncidentData(IncidentDefaultData);
     }
   };
   return { handleOpenChange };

@@ -33,7 +33,7 @@ const OfficialsFormDialog = () => {
       }>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createOfficial' && <CreateResidentHeader />}
-        {dialogBoxType == 'editOfficial' && <EditResidentHeader picture={imgurl} />}
+        {dialogBoxType == 'editOfficial' && <EditResidentHeader picture={imgurl} data={resident} />}
 
         <form onSubmit={(e) => onUpdateOfficial(e, mutate)} className="grid gap-4">
           <CustomSelect

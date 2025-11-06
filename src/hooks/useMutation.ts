@@ -1,7 +1,8 @@
-import { loginApi, updateAccountApi } from '@/app/api/accountApi';
+import { loginApi, logoutAuth, updateAccountApi } from '@/app/api/accountApi';
+import { sendRegistrationLinkApi } from '@/app/api/notificationApi';
 import { updateOfficialApi } from '@/app/api/officialsApi';
 import { updateResidentApi } from '@/app/api/residentApi';
-import { DASHBOARD } from '@/constants/navigation';
+import { DASHBOARD, LOGIN } from '@/constants/navigation';
 import { LoginType } from '@/types/accountType';
 import { ErrorResponse, SuccessResponse } from '@/types/commonType';
 import { UpdateOfficialRequestDTO } from '@/types/officialsType';
@@ -23,8 +24,40 @@ export const loginMutation = () => {
     },
     onError: (err) => {
       if (err.code) {
-        toast.error(err.error);
+        toast.error(err.message);
       }
+    }
+  });
+};
+
+/**
+ * * Send registration link
+ * @returns
+ */
+export const sendRegistrationLinkMutation = () => {
+  const router = useRouter();
+  return useMutation<SuccessResponse, ErrorResponse, string>({
+    mutationFn: (email: string) => sendRegistrationLinkApi(email),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (err) => {
+      if (err.code) {
+        toast.error(err.message);
+      }
+    }
+  });
+};
+
+/**
+ * * Logout mutation
+ */
+export const logoutMutation = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: () => logoutAuth(),
+    onSuccess: () => {
+      router.push(LOGIN);
     }
   });
 };
@@ -40,7 +73,7 @@ export const updateResidentMutation = () => {
     },
     onError: (err) => {
       if (err.code) {
-        toast.error(err.error);
+        toast.error(err.message);
       }
     }
   });
@@ -54,7 +87,7 @@ export const updateOfficialMutation = () => {
     },
     onError: (err) => {
       if (err.code) {
-        toast.error(err.error);
+        toast.error(err.message);
       }
     }
   });
@@ -68,7 +101,7 @@ export const updateAccountMutation = () => {
     },
     onError: (err) => {
       if (err.code) {
-        toast.error(err.error);
+        toast.error(err.message);
       }
     }
   });

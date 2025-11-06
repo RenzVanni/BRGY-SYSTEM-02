@@ -2,6 +2,11 @@ import { Dispatch, SetStateAction } from 'react';
 import { ResidentType } from './residentsType';
 import { AccountType } from './accountType';
 import { OfficialsType } from './officialsType';
+import { BlotterType } from './blotterType';
+import { ComplaintType } from './complaintType';
+import { DisasterAndEmergencyType } from './disasterAndEmergencyType';
+import { HealthAndSanitationType } from './healthAndSanitationType';
+import { IncidentType } from './incidentType';
 
 export type FormDialogProp = {
   dialogBoxType?:
@@ -12,9 +17,23 @@ export type FormDialogProp = {
     | 'editAccount'
     | 'createOfficial'
     | 'editOfficial'
+    | 'createBlotter'
+    | 'editBlotter'
+    | 'createComplaint'
+    | 'editComplaint'
+    | 'createDae'
+    | 'editDae'
+    | 'createHas'
+    | 'editHas'
+    | 'createIncident'
+    | 'editIncident'
     | 'createCertificate'
     | 'none';
   isOpen: boolean;
+};
+
+export type ForgotPasswordOrSignupProp = {
+  prop?: 'none' | 'forgotPassword' | 'signup';
 };
 
 export type ContextType = {
@@ -24,10 +43,23 @@ export type ContextType = {
   setAccountData: Dispatch<SetStateAction<AccountType>>;
   officialsData: OfficialsType;
   setOfficialsData: Dispatch<SetStateAction<OfficialsType>>;
+  blotterData: BlotterType;
+  setBlotterData: Dispatch<SetStateAction<BlotterType>>;
+  complaintData: ComplaintType;
+  setComplaintData: Dispatch<SetStateAction<ComplaintType>>;
+  disasterAndEmergencyData: DisasterAndEmergencyType;
+  setDisasterAndEmergencyData: Dispatch<SetStateAction<DisasterAndEmergencyType>>;
+  healthAndSanitationData: HealthAndSanitationType;
+  setHealthAndSanitationData: Dispatch<SetStateAction<HealthAndSanitationType>>;
+  incidentData: IncidentType;
+  setIncidentData: Dispatch<SetStateAction<IncidentType>>;
+
   paginateValue: number;
   setPaginateValue: Dispatch<SetStateAction<number>>;
   isFormDialog: FormDialogProp;
   setIsFormDialog: Dispatch<SetStateAction<FormDialogProp>>;
+  isForgotPasswordOrSignup: ForgotPasswordOrSignupProp;
+  setIsForgotPasswordOrSignup: Dispatch<SetStateAction<ForgotPasswordOrSignupProp>>;
   previewImg: string;
   setPreviewImg: Dispatch<string>;
 };

@@ -31,7 +31,7 @@ const AccountFormDialog = () => {
       }>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createAccount' && <CreateResidentHeader />}
-        {dialogBoxType == 'editAccount' && <EditResidentHeader picture={imgUrl} />}
+        {dialogBoxType == 'editAccount' && <EditResidentHeader picture={imgUrl} data={resident} />}
 
         <form onSubmit={(e) => onUpdateAccount(e, mutate)} className="grid gap-4">
           <CustomInput

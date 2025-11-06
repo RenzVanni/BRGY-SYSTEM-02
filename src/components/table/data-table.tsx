@@ -19,6 +19,7 @@ import {
 import { useContext, useState } from 'react';
 import DataTablePagination from './data-table-pagination';
 import { ContextTheme } from '@/config/config_context';
+import { toggleCreateHook } from '@/hooks/toggleCreateHook';
 
 interface DataTableProp<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,6 +56,8 @@ export const DataTable = <TData, TValue>({ columns, data, pages }: DataTableProp
     }
   });
 
+  const { toggleCreate } = toggleCreateHook();
+
   return (
     <div>
       <div className="flex items-center justify-between py-4">
@@ -65,10 +68,7 @@ export const DataTable = <TData, TValue>({ columns, data, pages }: DataTableProp
           className="max-w-sm"
         />
         <div className="flex gap-3">
-          <Button
-            onClick={() => {
-              setIsFormDialog({ dialogBoxType: 'createResident', isOpen: true });
-            }}>
+          <Button className="cursor-pointer" onClick={toggleCreate}>
             Create
           </Button>
           <Button

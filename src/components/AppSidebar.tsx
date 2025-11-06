@@ -21,6 +21,7 @@ import NavMain from './SidebarComponents/NavMain';
 import NavDocuments from './SidebarComponents/NavDocuments';
 import NavSecondary from './SidebarComponents/NavSecondary';
 import { logoutAuth } from '@/app/api/accountApi';
+import { logoutMutation } from '@/hooks/useMutation';
 
 const AppSidebar = () => {
   const [isOptions, setIsOptions] = useState<null | number>(null);
@@ -30,6 +31,7 @@ const AppSidebar = () => {
     setIsOptions((prev) => (prev == id ? null : id));
     console.log(slug);
   };
+  const {} = logoutMutation();
 
   return (
     <Sidebar className="border-none">

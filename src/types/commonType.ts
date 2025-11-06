@@ -28,7 +28,7 @@ export type PaginateApiResponse = {
  */
 export type ErrorResponse = {
   code: number;
-  error: string;
+  message: string;
 };
 
 /**
@@ -44,4 +44,17 @@ export type SuccessResponse = {
 export type TableColumnData<T> = {
   payload: T[];
   pages: number;
+};
+
+export type RegistrationFormType = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  gender: string;
+  birth_date: string;
+  address: string;
 };

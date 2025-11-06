@@ -13,8 +13,12 @@ import { DisasterAndEmergencyColumnModel, DisasterAndEmergencyType } from '@/typ
 import { HealthAndSanitationColumnModel, HealthAndSanitationType } from '@/types/healthAndSanitationType';
 import { IncidentColumnModel, IncidentType } from '@/types/incidentType';
 import { mapName } from './methods';
+import { mainFindByIdApi } from '@/app/api/mainApi';
+import { findAccountVerificationByTokenApi } from '@/app/api/accountApi';
+import { useParams } from 'next/navigation';
+import { sendRegistrationLinkMutation } from './useMutation';
 
-export const apiHooks = (path: string) => {
+export const apiPaginateHooks = (path: string) => {
   const { paginateValue } = useContext(ContextTheme);
   const { data } = usePaginate(paginateValue, 2, path);
 
@@ -113,3 +117,16 @@ export const apiHooks = (path: string) => {
     paginateIncidentHook
   };
 };
+
+export const apiFindByHooks = () => {
+  const path = useParams();
+
+  const findAccountVerificationHook = async () => {
+    const response = findAccountVerificationByTokenApi(path.token as string);
+    return await response;
+  };
+
+  return { findAccountVerificationHook };
+};
+
+

@@ -6,7 +6,7 @@ import { OfficialsType } from '@/types/officialsType';
 
 type prop = {
   label: string;
-  name: 'gender' | 'civil_status' | 'position';
+  name: 'gender' | 'civil_status' | 'position' | 'status';
   placeholder: string;
   value: string;
   setResidentData?: React.Dispatch<React.SetStateAction<ResidentType>>;

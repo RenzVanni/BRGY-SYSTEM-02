@@ -45,7 +45,7 @@ const ResidentFormDialog = () => {
     <Dialog open={isOpen} onOpenChange={(open) => handleOpenChange({ isOpen: open, type: 'resident' })}>
       <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
         {dialogBoxType == 'createResident' && <CreateResidentHeader />}
-        {dialogBoxType == 'editResident' && <EditResidentHeader picture={profile_image_url} />}
+        {dialogBoxType == 'editResident' && <EditResidentHeader picture={profile_image_url} data={residentData} />}
         {dialogBoxType == 'createCertificate' && <CreateCertificateHeader />}
 
         <form onSubmit={(e) => onUpdateResident(e, mutate)} className="grid gap-4">

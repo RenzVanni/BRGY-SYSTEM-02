@@ -16,8 +16,10 @@ import { loginMutation } from '@/hooks/useMutation';
 import { FormState, initialState } from '@/lib/definitions';
 import { stat } from 'fs';
 import { onLogin } from '@/hooks/customHooks';
+import { useContextTheme } from '@/hooks/hooks';
 
 export function LoginForm() {
+  const { setIsForgotPasswordOrSignup } = useContextTheme();
   const [formState, setFormState] = useState<FormState>({});
   const { mutate, isPending, data } = loginMutation();
 
@@ -45,9 +47,11 @@ export function LoginForm() {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-[11px] underline">
+                <p
+                  onClick={() => setIsForgotPasswordOrSignup({ prop: 'forgotPassword' })}
+                  className="ml-auto inline-block text-[11px] underline cursor-pointer">
                   Forgot your password?
-                </Link>
+                </p>
               </div>
               <Input id="password" type="password" name="password" placeholder="Password" required />
             </div>
@@ -66,9 +70,11 @@ export function LoginForm() {
 
         <div className="mt-4 text-center text-[11px]">
           Don&apos;t have an account?{' '}
-          <Link href="#" className="underline text-[11px]">
+          <p
+            onClick={() => setIsForgotPasswordOrSignup({ prop: 'signup' })}
+            className="underline cursor-pointer text-[11px]">
             Sign Up
-          </Link>
+          </p>
         </div>
       </CardContent>
     </Card>

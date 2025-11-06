@@ -2,12 +2,9 @@ import { UseMutateFunction } from '@tanstack/react-query';
 import { ErrorResponse, SuccessResponse } from '@/types/commonType';
 import { FormState, LoginFormSchema } from '@/lib/definitions';
 import { useContextTheme } from './hooks';
+import { ResidentType } from '@/types/residentsType';
 
-export const useFullname = () => {
-  const { residentData, accountData, officialsData } = useContextTheme();
-  let data = residentData ?? accountData?.resident ?? officialsData?.resident;
-
-  if (!data) return '';
+export const useFullname = (data: ResidentType) => {
   const { firstname, middlename, lastname } = data;
 
   const checkMiddleName = middlename == undefined ? ' ' : ' ' + middlename + ' ';
