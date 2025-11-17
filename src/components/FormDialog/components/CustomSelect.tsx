@@ -4,29 +4,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ResidentType } from '@/types/residentsType';
 import { OfficialsType } from '@/types/officialsType';
 
-type prop = {
+type Prop<T> = {
   label: string;
-  name: 'gender' | 'civil_status' | 'position' | 'status';
+  name: 'gender' | 'civil_status' | 'position' | 'status' | 'role';
   placeholder: string;
   value: string;
-  setResidentData?: React.Dispatch<React.SetStateAction<ResidentType>>;
-  setOfficialsData?: React.Dispatch<React.SetStateAction<OfficialsType>>;
   data: string[];
+  setData: React.Dispatch<React.SetStateAction<T>>;
 };
 
-const CustomSelect = (prop: prop) => {
-  const { label, name, setResidentData, placeholder, value, data, setOfficialsData } = prop;
+const CustomSelect = <T,>(prop: Prop<T>) => {
+  const { label, name, placeholder, value, data, setData } = prop;
   return (
     <div className="grid grid-cols-3 items-center gap-2">
       <Label htmlFor={name}>{label}</Label>
       <Select
         value={value ?? ''}
         onValueChange={(e) => {
-          setResidentData?.((prev) => ({
-            ...prev,
-            [name]: e
-          }));
-          setOfficialsData?.((prev) => ({
+          setData?.((prev) => ({
             ...prev,
             [name]: e
           }));

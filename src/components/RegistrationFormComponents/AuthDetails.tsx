@@ -6,7 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { apiFindByHooks } from '@/hooks/apiHooks';
 import { useFindAccountVerificationByToken } from '@/hooks/useQuery';
-import { RegistrationFormType } from '@/types/commonType';
+import { RegistrationFormType } from '@/types/accountType';
 
 const AuthDetails = ({
   setIsNext,

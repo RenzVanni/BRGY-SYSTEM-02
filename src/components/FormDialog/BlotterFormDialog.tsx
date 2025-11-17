@@ -8,12 +8,25 @@ import CustomInput from './components/CustomInput';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import CustomSelect from './components/CustomSelect';
+import { apiRequestBodyHooks, apiRequestPartHooks } from '@/hooks/apiHooks';
+import { BLOTTER_ADD, BLOTTER_UPDATE } from '@/constants/Backend_Slugs';
 
 const BlotterFormDialog = () => {
   const { isFormDialog, blotterData, setBlotterData } = useContextTheme();
   const { id, victim, complainant, respondent, location, time, date, details, status, type } = blotterData;
   const { isOpen, dialogBoxType } = isFormDialog;
   const { handleOpenChange } = onOpenChangeHook();
+
+  const { requestBodyHook, isPending } = apiRequestBodyHooks();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (dialogBoxType == 'createBlotter') {
+      requestBodyHook({ body: blotterData, path: BLOTTER_ADD, method: 'POST' });
+    } else if (dialogBoxType == 'editBlotter') {
+      requestBodyHook({ body: blotterData, path: BLOTTER_UPDATE, method: 'PATCH' });
+    }
+  };
 
   return (
     <Dialog
@@ -26,7 +39,7 @@ const BlotterFormDialog = () => {
       }>
       <DialogContent className="py-12" aria-describedby="">
         <ReportsHeader />
-        <form action="" className="grid gap-4">
+        <form onSubmit={handleSubmit} className="grid gap-4">
           <CustomInput label="Victim Name" name="victim" value={victim} type="text" />
           <CustomInput label="Complainant Name" name="complaint" value={complainant} type="text" />
           <CustomInput label="Respondent Name" name="respondent" value={respondent} type="text" />

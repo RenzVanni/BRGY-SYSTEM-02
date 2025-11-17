@@ -46,15 +46,36 @@ export type TableColumnData<T> = {
   pages: number;
 };
 
-export type RegistrationFormType = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  gender: string;
-  birth_date: string;
-  address: string;
+/**
+ * ! Main POST Request Param Type
+ */
+export type PostRequestParamType<T> = {
+  param: T;
+  path: string;
+};
+
+/**
+ * ! Main GET Path Variable
+ */
+export type GetPathVariableType<T> = {
+  id: T;
+  path: string;
+};
+
+/**
+ * ! Main Request Part Type
+ */
+export type RequestPartType = {
+  formdata: FormData;
+  path: string;
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+};
+
+/**
+ * ! Main Request Body Type
+ */
+export type RequestBodyType<T> = {
+  body: T;
+  path: string;
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 };

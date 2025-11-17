@@ -4,23 +4,26 @@ import { CreateResidentHeader, EditResidentHeader } from './components/CustomHea
 import { Input } from '../ui/input';
 import CustomInput from './components/CustomInput';
 import CustomSelect from './components/CustomSelect';
-import { updateOfficialMutation } from '@/hooks/useMutation';
 import { officialsPositionData } from '@/data/officialsPosition';
 import CustomButtonGroup from './components/CustomButtonGroup';
 import CustomFile from './components/CustomFile';
-import { updateHook } from '@/hooks/updateHook';
 import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 import { useContextTheme } from '@/hooks/hooks';
+import { apiRequestPartHooks } from '@/hooks/apiHooks';
+import { OfficialsType } from '@/types/officialsType';
 
 const OfficialsFormDialog = () => {
   const { officialsData, setOfficialsData, isFormDialog } = useContextTheme();
   const { id, resident, term_start, term_end, position, imgurl } = officialsData;
   const { isOpen, dialogBoxType } = isFormDialog;
 
-  const { mutate, isPending } = updateOfficialMutation();
-
   const { handleOpenChange } = onOpenChangeHook();
-  const { onUpdateOfficial } = updateHook();
+  const { officialRequestPartHook, isPending } = apiRequestPartHooks();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    officialRequestPartHook();
+  };
 
   return (
     <Dialog
@@ -35,31 +38,19 @@ const OfficialsFormDialog = () => {
         {dialogBoxType == 'createOfficial' && <CreateResidentHeader />}
         {dialogBoxType == 'editOfficial' && <EditResidentHeader picture={imgurl} data={resident} />}
 
-        <form onSubmit={(e) => onUpdateOfficial(e, mutate)} className="grid gap-4">
-          <CustomSelect
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          <CustomSelect<OfficialsType>
             label="Position"
             name="position"
             placeholder="Select Position"
             value={position}
-            setOfficialsData={setOfficialsData}
             data={officialsPositionData}
+            setData={setOfficialsData}
           />
 
-          <CustomInput
-            label="Term Start"
-            name="term_start"
-            value={term_start}
-            type="date"
-            setOfficialsData={setOfficialsData}
-          />
+          <CustomInput label="Term Start" name="term_start" value={term_start} type="date" />
 
-          <CustomInput
-            label="Term End"
-            name="term_end"
-            value={term_end}
-            type="date"
-            setOfficialsData={setOfficialsData}
-          />
+          <CustomInput label="Term End" name="term_end" value={term_end} type="date" />
 
           <CustomFile setOfficialsData={setOfficialsData} />
 

@@ -1,12 +1,29 @@
 import { ContextTheme } from '@/config/config_context';
 import { useContext } from 'react';
-import { usePaginate } from './useQuery';
-import { accountMapperForData, mapResidents } from './mapper';
-import { ACCOUNT_PATH } from '@/constants/Backend_Slugs';
-import { AccountColumnModel } from '@/types/accountType';
-import { ResidentColumnModel } from '@/types/residentsType';
-import { TableColumnData } from '@/types/commonType';
-import { OfficialsColumnModel } from '@/types/officialsType';
+import { useGet, usePaginate } from './useQuery';
+import {
+  accountMapper,
+  accountMapperForData,
+  accountRequestMapper,
+  mapResidents,
+  updateOfficialRequestDTOMapper
+} from './mapper';
+import {
+  ACCOUNT_FORGOT_PASSWORD,
+  ACCOUNT_PATH,
+  ACCOUNT_REGISTER,
+  ACCOUNT_UPDATE,
+  NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK,
+  NOTIFICATIONS_SEND_REGISTRATION_LINK,
+  OFFICIALS_ADD,
+  OFFICIALS_UPDATE,
+  RESIDENTS_ADD,
+  RESIDENTS_UPDATE
+} from '@/constants/Backend_Slugs';
+import { AccountColumnModel, AccountRequestDTO, AccountType } from '@/types/accountType';
+import { ResidentColumnModel, ResidentType } from '@/types/residentsType';
+import { PostRequestParamType, RequestBodyType, SuccessResponse, TableColumnData } from '@/types/commonType';
+import { OfficialsColumnModel, OfficialsType } from '@/types/officialsType';
 import { BlotterColumnModel, BlotterType } from '@/types/blotterType';
 import { ComplaintColumnModel, ComplaintType } from '@/types/complaintType';
 import { DisasterAndEmergencyColumnModel, DisasterAndEmergencyType } from '@/types/disasterAndEmergencyType';
@@ -16,8 +33,15 @@ import { mapName } from './methods';
 import { mainFindByIdApi } from '@/app/api/mainApi';
 import { findAccountVerificationByTokenApi } from '@/app/api/accountApi';
 import { useParams } from 'next/navigation';
-import { sendRegistrationLinkMutation } from './useMutation';
+import { usePostRequestParamMutation, usePostRequestPartMutation, useRequestBodyMutation } from './useMutation';
+import toast from 'react-hot-toast';
+import { useContextTheme } from './hooks';
 
+/**
+ * ! Main Paginate Hook
+ * @param path
+ * @returns
+ */
 export const apiPaginateHooks = (path: string) => {
   const { paginateValue } = useContext(ContextTheme);
   const { data } = usePaginate(paginateValue, 2, path);
@@ -129,4 +153,112 @@ export const apiFindByHooks = () => {
   return { findAccountVerificationHook };
 };
 
+/**
+ * ! Main POST Request Param Hook
+ * @returns
+ */
+export const apiPostRequestParamHooks = <T>() => {
+  const { mutate, isSuccess, data } = usePostRequestParamMutation<T>();
 
+  const sendEmailNotification = ({ param, path }: PostRequestParamType<T>) => {
+    mutate({ param: param, path: path });
+  };
+
+  return { sendEmailNotification };
+};
+
+/**
+ * ! Main Request Body Hook
+ * @returns
+ */
+export const apiRequestBodyHooks = <T>() => {
+  const { isFormDialog, residentData, accountData, officialsData } = useContextTheme();
+  const { dialogBoxType } = isFormDialog;
+
+  const { mutate, isPending, isSuccess } = useRequestBodyMutation<SuccessResponse, T>();
+
+  const requestBodyHook = ({ body, path, method }: RequestBodyType<T>) => {
+    mutate({ body: body, path: path, method: method });
+  };
+
+  return { isPending, isSuccess, requestBodyHook };
+};
+
+/**
+ * ! Main Request Part Hook
+ * @returns
+ */
+export const apiRequestPartHooks = () => {
+  const { isFormDialog, residentData, accountData, officialsData } = useContextTheme();
+  const { dialogBoxType } = isFormDialog;
+
+  const { mutate, isPending } = usePostRequestPartMutation();
+  const formData = new FormData();
+
+  //* create and update resident hook
+  const residentRequestPartHook = () => {
+    if (residentData?.profile_image_url != null) {
+      formData.append('file', residentData?.profile_image_url);
+    }
+    formData.append(
+      'body',
+      new Blob(
+        [
+          JSON.stringify({
+            ...residentData,
+            profile_image_url: null
+          })
+        ],
+        {
+          type: 'application/json'
+        }
+      )
+    );
+
+    if (dialogBoxType == 'editResident') {
+      mutate({ formdata: formData, path: RESIDENTS_UPDATE, method: 'PATCH' });
+    } else if (dialogBoxType == 'createResident') {
+      mutate({ formdata: formData, path: RESIDENTS_ADD, method: 'POST' });
+    }
+  };
+
+  //* create and update account hook
+  const accountRequestPartHook = () => {
+    if (accountData?.imgUrl != null) {
+      formData.append('file', accountData?.imgUrl);
+    }
+
+    if (dialogBoxType == 'editAccount') {
+      const mappedAccount = accountMapper(accountData);
+      formData.append('body', new Blob([JSON.stringify({ ...mappedAccount })], { type: 'application/json' }));
+      mutate({ formdata: formData, path: ACCOUNT_UPDATE, method: 'PUT' });
+    } else if (dialogBoxType == 'createAccount') {
+      const mappedAccount = accountRequestMapper(accountData);
+      formData.append('body', new Blob([JSON.stringify({ ...mappedAccount })], { type: 'application/json' }));
+      mutate({ formdata: formData, path: NOTIFICATIONS_SEND_REGISTRATION_LINK, method: 'POST' });
+    }
+  };
+
+  //* create and update officials hook
+  const officialRequestPartHook = () => {
+    if (officialsData?.imgurl != null) {
+      formData.append('file', officialsData?.imgurl);
+    }
+
+    const mappedOfficial = updateOfficialRequestDTOMapper(officialsData);
+    formData.append(
+      'body',
+      new Blob([JSON.stringify({ ...mappedOfficial })], {
+        type: 'application/json'
+      })
+    );
+
+    if (dialogBoxType == 'editOfficial') {
+      mutate({ formdata: formData, path: OFFICIALS_UPDATE, method: 'PATCH' });
+    } else if (dialogBoxType == 'createOfficial') {
+      mutate({ formdata: formData, path: OFFICIALS_ADD, method: 'POST' });
+    }
+  };
+
+  return { isPending, residentRequestPartHook, accountRequestPartHook, officialRequestPartHook };
+};

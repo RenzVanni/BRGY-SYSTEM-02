@@ -49,15 +49,43 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get('query');
-  const body = await req.json();
-  const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-    body: JSON.stringify(body)
-  });
+  const contentType = req.headers.get('content-type');
+  let response: Response = null;
+  if (contentType?.includes('application/json')) {
+    const body = await req.json();
+    const backend = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(body)
+    });
+
+    response = backend;
+  } else if (contentType?.includes('multipart/form-data')) {
+    const body = await req.formData();
+    const backend = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
+      method: 'POST',
+      headers: {
+        Cookie: req.headers.get('cookie')
+      },
+      credentials: 'include',
+      body: body
+    });
+
+    response = backend;
+  } else {
+    const backend = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
+      method: 'POST',
+      headers: {
+        Cookie: req.headers.get('cookie')
+      },
+      credentials: 'include'
+    });
+
+    response = backend;
+  }
 
   if (response.status == 401) {
     (await cookies()).delete('access_token');
@@ -80,6 +108,12 @@ export async function POST(req: NextRequest) {
       headers: response.headers
     });
 
+    return nextResponse;
+  }
+
+  if (!response.ok) {
+    const data = await response.json();
+    const nextResponse = NextResponse.json(data, { status: response.status, headers: response.headers });
     return nextResponse;
   }
 }

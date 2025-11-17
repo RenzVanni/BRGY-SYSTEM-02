@@ -1,6 +1,5 @@
-import { AccountType } from '@/types/accountType';
+import { AccountRequestDTO, AccountType, RegistrationFormType } from '@/types/accountType';
 import { BlotterType } from '@/types/blotterType';
-import { RegistrationFormType } from '@/types/commonType';
 import { ComplaintType } from '@/types/complaintType';
 import { ContextType } from '@/types/contextType';
 import { DisasterAndEmergencyType } from '@/types/disasterAndEmergencyType';
@@ -27,7 +26,8 @@ export const ResidentDefaultData: ResidentType = {
   official_id: 0,
   account_id: 0,
   profile_image_url: '',
-  created_at: ''
+  created_at: '',
+  fullname: ''
 };
 
 export const AccountDefaultData: AccountType = {
@@ -37,6 +37,14 @@ export const AccountDefaultData: AccountType = {
   resident: ResidentDefaultData,
   role: [],
   imgUrl: ''
+};
+
+export const AccountFormDefaultData: AccountRequestDTO = {
+  username: '',
+  email: '',
+  resident_id: 0,
+  birth_date: '',
+  role: []
 };
 
 export const OfficialsDefaultData: OfficialsType = {
@@ -183,6 +191,7 @@ export const registrationFormDefaultData: RegistrationFormType = {
   firstname: '',
   middlename: '',
   lastname: '',
+  token: '',
   gender: '',
   birth_date: '',
   address: ''

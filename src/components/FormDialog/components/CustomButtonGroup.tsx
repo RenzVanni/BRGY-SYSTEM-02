@@ -21,7 +21,7 @@ const CustomButtonGroup = (prop: CustomButtonGroupType) => {
         <Button
           // disabled={pending}
           variant="outline"
-          className="w-fit">
+          className="w-fit cursor-pointer">
           View
         </Button>
       )}
@@ -32,7 +32,7 @@ const CustomButtonGroup = (prop: CustomButtonGroupType) => {
           Save...
         </Button>
       ) : (
-        <Button type="submit" variant="outline" className="w-fit">
+        <Button type="submit" variant="outline" className="w-fit cursor-pointer">
           Save
         </Button>
       )}

@@ -1,12 +1,14 @@
-import { loginApi, logoutAuth, updateAccountApi } from '@/app/api/accountApi';
-import { sendRegistrationLinkApi } from '@/app/api/notificationApi';
-import { updateOfficialApi } from '@/app/api/officialsApi';
-import { updateResidentApi } from '@/app/api/residentApi';
+import { loginApi, logoutAuth, submitRegisterFormApi } from '@/app/api/accountApi';
+import { mainFindByIdApi, mainPostRequestParamApi, mainRequestBodyApi, mainRequestPartApi } from '@/app/api/mainApi';
 import { DASHBOARD, LOGIN } from '@/constants/navigation';
-import { LoginType } from '@/types/accountType';
-import { ErrorResponse, SuccessResponse } from '@/types/commonType';
-import { UpdateOfficialRequestDTO } from '@/types/officialsType';
-import { ResidentType } from '@/types/residentsType';
+import {
+  ErrorResponse,
+  GetPathVariableType,
+  PostRequestParamType,
+  RequestBodyType,
+  RequestPartType,
+  SuccessResponse
+} from '@/types/commonType';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -31,16 +33,82 @@ export const loginMutation = () => {
 };
 
 /**
- * * Send registration link
+ * * Submit registration form mutation
  * @returns
  */
-export const sendRegistrationLinkMutation = () => {
+export const useSubmitRegisterFormMutation = () => {
   const router = useRouter();
-  return useMutation<SuccessResponse, ErrorResponse, string>({
-    mutationFn: (email: string) => sendRegistrationLinkApi(email),
+  return useMutation<SuccessResponse, ErrorResponse, FormData>({
+    mutationFn: (formData: FormData) => submitRegisterFormApi(formData),
+    onSuccess: (data) => {
+      toast.success(data.message);
+      router.push(LOGIN);
+    },
+    onError: (err) => {
+      if (err.code) {
+        toast.error(err.message);
+      }
+    }
+  });
+};
+
+/**
+ * ! Main Request Body
+ * @returns
+ */
+export const useRequestBodyMutation = <TSUCCESS, TDATA>() => {
+  return useMutation<TSUCCESS, ErrorResponse, RequestBodyType<TDATA>>({
+    mutationFn: ({ body, path, method }) => mainRequestBodyApi<TSUCCESS, TDATA>({ body, path, method }),
+    onError: (err) => {
+      if (err.code) {
+        toast.error(err.message);
+      }
+    }
+  });
+};
+
+/**
+ * ! Main POST Request Param Mutation
+ * @returns
+ */
+export const usePostRequestParamMutation = <T>() => {
+  const router = useRouter();
+  return useMutation<SuccessResponse, ErrorResponse, PostRequestParamType<T>>({
+    mutationFn: ({ param, path }) => mainPostRequestParamApi<T>(param, path),
     onSuccess: (data) => {
       toast.success(data.message);
     },
+    onError: (err) => {
+      if (err.code) {
+        toast.error(err.message);
+      }
+    }
+  });
+};
+
+/**
+ * ! Main Request Part Mutation
+ * @returns
+ */
+export const usePostRequestPartMutation = () => {
+  const router = useRouter();
+  return useMutation<SuccessResponse, ErrorResponse, RequestPartType>({
+    mutationFn: ({ formdata, path, method }) => mainRequestPartApi({ formdata: formdata, path: path, method: method }),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (err) => {
+      if (err.code) {
+        toast.error(err.message);
+      }
+    }
+  });
+};
+
+export const useGetPathVariableMutation = <TSUCCESS, TDATA>() => {
+  const router = useRouter();
+  return useMutation<TSUCCESS, ErrorResponse, GetPathVariableType<TDATA>>({
+    mutationFn: ({ id, path }) => mainFindByIdApi<TSUCCESS, TDATA>(id, path),
     onError: (err) => {
       if (err.code) {
         toast.error(err.message);
@@ -58,51 +126,6 @@ export const logoutMutation = () => {
     mutationFn: () => logoutAuth(),
     onSuccess: () => {
       router.push(LOGIN);
-    }
-  });
-};
-
-/**
- * * Update mutation
- */
-export const updateResidentMutation = () => {
-  return useMutation<SuccessResponse, ErrorResponse, FormData>({
-    mutationFn: (formData: FormData) => updateResidentApi(formData),
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (err) => {
-      if (err.code) {
-        toast.error(err.message);
-      }
-    }
-  });
-};
-
-export const updateOfficialMutation = () => {
-  return useMutation<SuccessResponse, ErrorResponse, FormData>({
-    mutationFn: (formData: FormData) => updateOfficialApi(formData),
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (err) => {
-      if (err.code) {
-        toast.error(err.message);
-      }
-    }
-  });
-};
-
-export const updateAccountMutation = () => {
-  return useMutation<SuccessResponse, ErrorResponse, FormData>({
-    mutationFn: (formData: FormData) => updateAccountApi(formData),
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (err) => {
-      if (err.code) {
-        toast.error(err.message);
-      }
     }
   });
 };

@@ -6,15 +6,14 @@ import CustomInput from './components/CustomInput';
 import CustomSelect from './components/CustomSelect';
 import { genderData } from '@/data/gender';
 import { civilStatusData } from '@/data/civilStatus';
-import { updateResidentMutation } from '@/hooks/useMutation';
 import CustomFile from './components/CustomFile';
 import CustomButtonGroup from './components/CustomButtonGroup';
-import { updateHook } from '@/hooks/updateHook';
 import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 import { useContextTheme } from '@/hooks/hooks';
+import { apiRequestPartHooks } from '@/hooks/apiHooks';
+import { ResidentType } from '@/types/residentsType';
 
 const ResidentFormDialog = () => {
-  const { mutate, isPending } = updateResidentMutation();
   const { residentData, setResidentData, isFormDialog, setIsFormDialog, previewImg, setPreviewImg } = useContextTheme();
   const { isOpen, dialogBoxType } = isFormDialog;
 
@@ -39,7 +38,12 @@ const ResidentFormDialog = () => {
   } = residentData;
 
   const { handleOpenChange } = onOpenChangeHook();
-  const { onUpdateResident } = updateHook();
+  const { residentRequestPartHook, isPending } = apiRequestPartHooks();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    residentRequestPartHook();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => handleOpenChange({ isOpen: open, type: 'resident' })}>
@@ -48,14 +52,13 @@ const ResidentFormDialog = () => {
         {dialogBoxType == 'editResident' && <EditResidentHeader picture={profile_image_url} data={residentData} />}
         {dialogBoxType == 'createCertificate' && <CreateCertificateHeader />}
 
-        <form onSubmit={(e) => onUpdateResident(e, mutate)} className="grid gap-4">
+        <form onSubmit={handleSubmit} className="grid gap-4">
           <CustomInput
             label="Firstname"
             name="firstname"
             placeholder="Enter First Name..."
             value={firstname}
             type="text"
-            setResidentData={setResidentData}
           />
 
           <CustomInput
@@ -64,27 +67,12 @@ const ResidentFormDialog = () => {
             placeholder="Enter Middle Name..."
             value={middlename}
             type="text"
-            setResidentData={setResidentData}
             isRequired={false}
           />
 
-          <CustomInput
-            label="Lastname"
-            name="lastname"
-            placeholder="Enter Last Name..."
-            value={lastname}
-            type="text"
-            setResidentData={setResidentData}
-          />
+          <CustomInput label="Lastname" name="lastname" placeholder="Enter Last Name..." value={lastname} type="text" />
 
-          <CustomInput
-            label="Address"
-            name="address"
-            placeholder="Enter Address..."
-            value={address}
-            type="text"
-            setResidentData={setResidentData}
-          />
+          <CustomInput label="Address" name="address" placeholder="Enter Address..." value={address} type="text" />
 
           <CustomInput
             label="Birth Place"
@@ -92,7 +80,6 @@ const ResidentFormDialog = () => {
             placeholder="Enter birth place..."
             value={birth_place}
             type="text"
-            setResidentData={setResidentData}
           />
 
           <CustomInput
@@ -101,25 +88,24 @@ const ResidentFormDialog = () => {
             placeholder="Enter birth date..."
             value={birth_date}
             type="date"
-            setResidentData={setResidentData}
           />
 
-          <CustomSelect
+          <CustomSelect<ResidentType>
             label="Gender"
             name="gender"
             placeholder="Select Gender"
             value={gender}
-            setResidentData={setResidentData}
             data={genderData}
+            setData={setResidentData}
           />
 
-          <CustomSelect
+          <CustomSelect<ResidentType>
             label="Civil Status"
             name="civil_status"
             placeholder="Select Civil Status"
             value={civil_status}
-            setResidentData={setResidentData}
             data={civilStatusData}
+            setData={setResidentData}
           />
 
           <CustomInput
@@ -128,7 +114,6 @@ const ResidentFormDialog = () => {
             placeholder="Enter contact no..."
             value={contact_no}
             type="text"
-            setResidentData={setResidentData}
           />
 
           <CustomInput
@@ -137,7 +122,6 @@ const ResidentFormDialog = () => {
             placeholder="Enter Citizenship..."
             value={citizenship}
             type="text"
-            setResidentData={setResidentData}
           />
 
           <CustomFile setResidentData={setResidentData} />

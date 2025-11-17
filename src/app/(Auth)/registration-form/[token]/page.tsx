@@ -12,8 +12,9 @@ import { ACCOUNT_PATH } from '@/constants/Backend_Slugs';
 import { LOGIN } from '@/constants/navigation';
 import { registrationFormDefaultData } from '@/data/defaultData';
 import { useContextTheme } from '@/hooks/hooks';
+import { useSubmitRegisterFormMutation } from '@/hooks/useMutation';
 import { useFindAccountVerificationByToken } from '@/hooks/useQuery';
-import { RegistrationFormType } from '@/types/commonType';
+import { RegistrationFormType, SubmitRegistrationFormType } from '@/types/accountType';
 import { Loader2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -23,14 +24,39 @@ const page = () => {
   const params = useParams();
   const token = useMemo(() => params.token as string, [params.token]);
   const [isNext, setIsNext] = useState<number>(0);
-  const { data, isError, error, isLoading, isSuccess } = useFindAccountVerificationByToken(token);
   const router = useRouter();
+
+  // * fetch email and initialize it in form
+  const { data, isError, error, isLoading, isSuccess } = useFindAccountVerificationByToken(token);
+
+  const { mutate, isPending } = useSubmitRegisterFormMutation();
 
   useEffect(() => {
     if (data?.data) {
       setRegistrationFormData((prev) => ({ ...prev, email: data?.data }));
     }
   }, [data]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    // if (imgUrl != null) {
+    //   formData.append('file', imgUrl);
+    // }
+    // const mappedAccount = accountMapper(accountData);
+    const bodyData: SubmitRegistrationFormType = {
+      username: registrationFormData?.username,
+      email: registrationFormData?.email,
+      firstname: registrationFormData?.firstname,
+      middlename: registrationFormData?.middlename.trim() !== '' ? registrationFormData?.middlename : null,
+      lastname: registrationFormData?.lastname,
+      password: registrationFormData?.password,
+      confirmPassword: registrationFormData?.confirmPassword,
+      token: token
+    };
+    formData.append('body', new Blob([JSON.stringify(bodyData)], { type: 'application/json' }));
+    mutate(formData);
+  };
 
   if (isLoading) {
     return (
@@ -68,7 +94,7 @@ const page = () => {
         </CardHeader>
 
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-7">
               {isNext == 0 && (
                 <AuthDetails
@@ -83,6 +109,7 @@ const page = () => {
                   setIsNext={setIsNext}
                   setRegistrationFormData={setRegistrationFormData}
                   registrationFormData={registrationFormData}
+                  isPending={isPending}
                 />
               )}
             </div>

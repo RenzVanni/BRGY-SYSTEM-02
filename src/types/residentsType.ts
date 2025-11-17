@@ -20,6 +20,7 @@ export type ResidentType = {
   account_id: number;
   profile_image_url: string | File;
   created_at: string;
+  fullname: string;
 };
 
 /**

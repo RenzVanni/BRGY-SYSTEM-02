@@ -4,16 +4,19 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { genderData } from '@/data/gender';
 import { Button } from '../ui/button';
-import { RegistrationFormType } from '@/types/commonType';
+import { RegistrationFormType } from '@/types/accountType';
+import { Loader2 } from 'lucide-react';
 
 const PersonalDetails = ({
   setIsNext,
   setRegistrationFormData,
-  registrationFormData
+  registrationFormData,
+  isPending
 }: {
   setIsNext: React.Dispatch<React.SetStateAction<number>>;
   setRegistrationFormData: React.Dispatch<React.SetStateAction<RegistrationFormType>>;
   registrationFormData: RegistrationFormType;
+  isPending: boolean;
 }) => {
   return (
     <>
@@ -97,9 +100,16 @@ const PersonalDetails = ({
         <Button onClick={() => setIsNext(0)} variant="outline" className="cursor-pointer">
           Back
         </Button>
-        <Button variant="outline" className="cursor-pointer">
-          Next
-        </Button>
+        {isPending ? (
+          <Button disabled variant="outline" className="w-fit">
+            <Loader2 className="animate-spin" />
+            Submit...
+          </Button>
+        ) : (
+          <Button type="submit" variant="outline" className="w-fit">
+            Submit
+          </Button>
+        )}
       </div>
     </>
   );

@@ -5,19 +5,17 @@ import { Input } from './ui/input';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useContextTheme } from '@/hooks/hooks';
-import { sendRegistrationLinkMutation } from '@/hooks/useMutation';
-import { useRouter } from 'next/navigation';
-import { LOGIN } from '@/constants/navigation';
+import { usePostRequestParamMutation } from '@/hooks/useMutation';
+import { NOTIFICATIONS_SEND_REGISTRATION_LINK } from '@/constants/Backend_Slugs';
 
 const SignupForm = () => {
   const [email, setEmail] = useState<string>('');
-  const { mutate, isPending, data, status } = sendRegistrationLinkMutation();
   const { setIsForgotPasswordOrSignup } = useContextTheme();
-  const router = useRouter();
+  const { mutate, isPending } = usePostRequestParamMutation<string>();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(email);
+    mutate({ param: email, path: NOTIFICATIONS_SEND_REGISTRATION_LINK });
   };
 
   return (
