@@ -3,27 +3,31 @@ import { Loader2 } from 'lucide-react';
 import React from 'react';
 
 type CustomButtonGroupType = {
-  btnFor: 'editOfficial' | 'editResident' | 'editAccount';
+  btnFor?: 'editOfficial' | 'editResident' | 'editAccount' | 'createAccount' | 'createOfficial' | 'create';
   isPending: boolean;
 };
 
 const CustomButtonGroup = (prop: CustomButtonGroupType) => {
-  const { btnFor, isPending } = prop;
+  const { btnFor = 'create', isPending } = prop;
   return (
     <div className="flex items-center justify-end gap-3">
-      <Button
-        // disabled={pending}
-        variant="outline"
-        className="w-fit">
-        Delete
-      </Button>
-      {btnFor != 'editAccount' && (
-        <Button
-          // disabled={pending}
-          variant="outline"
-          className="w-fit cursor-pointer">
-          View
-        </Button>
+      {btnFor != 'create' && (
+        <>
+          <Button
+            // disabled={pending}
+            variant="outline"
+            className="w-fit">
+            Delete
+          </Button>
+          {btnFor != 'editAccount' && (
+            <Button
+              // disabled={pending}
+              variant="outline"
+              className="w-fit cursor-pointer">
+              View
+            </Button>
+          )}
+        </>
       )}
 
       {isPending ? (

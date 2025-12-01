@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction } from 'react';
 import { ResidentType } from './residentsType';
-import { AccountType } from './accountType';
+import { AccountType, RegisterAccountRequestDTO } from './accountType';
 import { OfficialsType } from './officialsType';
 import { BlotterType } from './blotterType';
 import { ComplaintType } from './complaintType';
 import { DisasterAndEmergencyType } from './disasterAndEmergencyType';
 import { HealthAndSanitationType } from './healthAndSanitationType';
 import { IncidentType } from './incidentType';
+import { SendEmailRegistrationAdminDTO } from './notificationType';
 
 export type FormDialogProp = {
   dialogBoxType?:
@@ -53,6 +54,10 @@ export type ContextType = {
   setHealthAndSanitationData: Dispatch<SetStateAction<HealthAndSanitationType>>;
   incidentData: IncidentType;
   setIncidentData: Dispatch<SetStateAction<IncidentType>>;
+  registerAccountData: RegisterAccountRequestDTO;
+  setRegisterAccountData: Dispatch<SetStateAction<RegisterAccountRequestDTO>>;
+  sendEmailRegistrationAdmin: SendEmailRegistrationAdminDTO;
+  setSendEmailRegistrationAdmin: Dispatch<SetStateAction<SendEmailRegistrationAdminDTO>>;
 
   paginateValue: number;
   setPaginateValue: Dispatch<SetStateAction<number>>;

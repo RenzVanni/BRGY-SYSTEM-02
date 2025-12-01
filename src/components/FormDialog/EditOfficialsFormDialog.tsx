@@ -7,17 +7,17 @@ import CustomSelect from './components/CustomSelect';
 import { officialsPositionData } from '@/data/officialsPosition';
 import CustomButtonGroup from './components/CustomButtonGroup';
 import CustomFile from './components/CustomFile';
-import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 import { useContextTheme } from '@/hooks/hooks';
-import { apiRequestPartHooks } from '@/hooks/apiHooks';
+import { apiRequestPartHooks } from '@/hooks/useApiHooks';
 import { OfficialsType } from '@/types/officialsType';
+import { useOpenChange } from '@/hooks/useOpenChangeHook';
 
-const OfficialsFormDialog = () => {
+const EditOfficialsFormDialog = () => {
   const { officialsData, setOfficialsData, isFormDialog } = useContextTheme();
   const { id, resident, term_start, term_end, position, imgurl } = officialsData;
   const { isOpen, dialogBoxType } = isFormDialog;
 
-  const { handleOpenChange } = onOpenChangeHook();
+  const { handleOpenChange } = useOpenChange();
   const { officialRequestPartHook, isPending } = apiRequestPartHooks();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,16 +27,15 @@ const OfficialsFormDialog = () => {
 
   return (
     <Dialog
-      open={isOpen}
+      open={dialogBoxType == 'editOfficial'}
       onOpenChange={(open) =>
         handleOpenChange({
           isOpen: open,
           type: 'officials'
         })
       }>
-      <DialogContent className={`${isOpen && 'pt-12'}`} aria-describedby="">
-        {dialogBoxType == 'createOfficial' && <CreateResidentHeader />}
-        {dialogBoxType == 'editOfficial' && <EditResidentHeader picture={imgurl} data={resident} />}
+      <DialogContent className="pt-12" aria-describedby="">
+        <EditResidentHeader picture={imgurl} data={resident} />
 
         <form onSubmit={handleSubmit} className="grid gap-4">
           <CustomSelect<OfficialsType>
@@ -64,4 +63,4 @@ const OfficialsFormDialog = () => {
   );
 };
 
-export default OfficialsFormDialog;
+export default EditOfficialsFormDialog;

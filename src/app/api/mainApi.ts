@@ -2,6 +2,7 @@ import {
   ErrorResponse,
   PaginateApiResponse,
   RequestBodyType,
+  RequestParamType,
   RequestPartType,
   SuccessResponse
 } from '@/types/commonType';
@@ -87,16 +88,20 @@ export const mainRequestPartApi = async ({ formdata, path, method }: RequestPart
 };
 
 /**
- * ! Main POST Request Param API
+ * ! Main Request Param API
  * @param param
  * @param path
  * @returns
  */
-export const mainPostRequestParamApi = async <T>(param: T, path: string): Promise<SuccessResponse> => {
+export const mainRequestParamApi = async <TSUCCESS, TPARAM>({
+  param,
+  path,
+  method
+}: RequestParamType<TPARAM>): Promise<TSUCCESS> => {
   const query = encodeURIComponent(`${path}?param=${param}`);
 
   const response = await fetch(`/api/search?query=${query}`, {
-    method: 'POST',
+    method: method,
     credentials: 'include'
   });
 
@@ -109,11 +114,11 @@ export const mainPostRequestParamApi = async <T>(param: T, path: string): Promis
  * @param path
  * @returns
  */
-export const mainRequestBodyApi = async <TSUCCESS, TDATA>({
+export const mainRequestBodyApi = async <TDATA>({
   body,
   path,
   method
-}: RequestBodyType<TDATA>): Promise<TSUCCESS> => {
+}: RequestBodyType<TDATA>): Promise<SuccessResponse> => {
   const query = encodeURIComponent(`${path}`);
   const response = await fetch(`/api/search?query=${query}`, {
     method: method,

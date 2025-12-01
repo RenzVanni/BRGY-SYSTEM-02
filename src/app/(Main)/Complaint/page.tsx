@@ -3,7 +3,7 @@
 import { DataTable } from '@/components/table/data-table';
 import { complaintColumn } from '@/config/complaint/complaintColumnDef';
 import { COMPLAINT_PATH } from '@/constants/Backend_Slugs';
-import { apiPaginateHooks } from '@/hooks/apiHooks';
+import { apiPaginateHooks } from '@/hooks/useApiHooks';
 import React from 'react';
 
 const page = () => {

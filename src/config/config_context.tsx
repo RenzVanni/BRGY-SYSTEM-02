@@ -10,9 +10,11 @@ import {
   HealthAndSanitationDefaultData,
   IncidentDefaultData,
   OfficialsDefaultData,
-  ResidentDefaultData
+  RegisterAccountDefaultData,
+  ResidentDefaultData,
+  SendEmailRegistrationAdminDefaultData
 } from '@/data/defaultData';
-import { AccountType } from '@/types/accountType';
+import { AccountType, RegisterAccountRequestDTO } from '@/types/accountType';
 import { ForgotPasswordOrSignupProp, FormDialogProp } from '@/types/contextType';
 import { OfficialsType } from '@/types/officialsType';
 import { BlotterType } from '@/types/blotterType';
@@ -20,6 +22,7 @@ import { ComplaintType } from '@/types/complaintType';
 import { DisasterAndEmergencyType } from '@/types/disasterAndEmergencyType';
 import { HealthAndSanitationType } from '@/types/healthAndSanitationType';
 import { IncidentType } from '@/types/incidentType';
+import { SendEmailRegistrationAdminDTO } from '@/types/notificationType';
 
 export const ContextTheme = createContext(contextDefaultData);
 
@@ -35,6 +38,7 @@ export const ContextProvider = ({ children }: { children: React.ReactNode }) => 
   const [healthAndSanitationData, setHealthAndSanitationData] =
     useState<HealthAndSanitationType>(HealthAndSanitationDefaultData);
   const [incidentData, setIncidentData] = useState<IncidentType>(IncidentDefaultData);
+  const [registerAccountData, setRegisterAccountData] = useState<RegisterAccountRequestDTO>(RegisterAccountDefaultData);
 
   const [paginateValue, setPaginateValue] = useState(0);
   const [isFormDialog, setIsFormDialog] = useState<FormDialogProp>({
@@ -44,6 +48,10 @@ export const ContextProvider = ({ children }: { children: React.ReactNode }) => 
   const [isForgotPasswordOrSignup, setIsForgotPasswordOrSignup] = useState<ForgotPasswordOrSignupProp>({
     prop: 'none'
   });
+  const [sendEmailRegistrationAdmin, setSendEmailRegistrationAdmin] = useState<SendEmailRegistrationAdminDTO>(
+    SendEmailRegistrationAdminDefaultData
+  );
+
   const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   return (
@@ -65,6 +73,10 @@ export const ContextProvider = ({ children }: { children: React.ReactNode }) => 
         setHealthAndSanitationData,
         incidentData,
         setIncidentData,
+        registerAccountData,
+        setRegisterAccountData,
+        sendEmailRegistrationAdmin,
+        setSendEmailRegistrationAdmin,
         paginateValue,
         setPaginateValue,
         isFormDialog,

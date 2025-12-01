@@ -5,18 +5,18 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { useContextTheme } from '@/hooks/hooks';
-import { usePostRequestParamMutation } from '@/hooks/useMutation';
-import { apiPostRequestParamHooks } from '@/hooks/apiHooks';
+import { apiPostRequestParamHooks } from '@/hooks/useApiHooks';
 import { NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK } from '@/constants/Backend_Slugs';
+import { useRequestParamMutation } from '@/hooks/useMutation';
 
 const ForgotPasswordForm = () => {
   const { setIsForgotPasswordOrSignup } = useContextTheme();
   const [emailData, setEmailData] = useState<{ email: string }>({ email: '' });
-  const { mutate, isPending } = usePostRequestParamMutation<string>();
+  const { mutate, isPending } = useRequestParamMutation<string>();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate({ param: emailData?.email, path: NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK });
+    mutate({ param: emailData?.email, path: NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK, method: 'POST' });
   };
 
   return (

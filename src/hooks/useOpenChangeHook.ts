@@ -23,7 +23,7 @@ type customOnOpenChangePropType = {
     | 'incident';
 };
 
-export const onOpenChangeHook = () => {
+export const useOpenChange = () => {
   const {
     setPreviewImg,
     setIsFormDialog,

@@ -2,9 +2,10 @@
 import React from 'react';
 import { officialsColumn } from '@/config/officials/officialsColumnDef';
 import { DataTable } from '@/components/table/data-table';
-import OfficialsFormDialog from '@/components/FormDialog/OfficialsFormDialog';
 import { OFFICIALS_PATH } from '@/constants/Backend_Slugs';
-import { apiPaginateHooks } from '@/hooks/apiHooks';
+import { apiPaginateHooks } from '@/hooks/useApiHooks';
+import CreateOfficialsFormDialog from '@/components/FormDialog/CreateOfficialsFormDialog';
+import EditOfficialsFormDialog from '@/components/FormDialog/EditOfficialsFormDialog';
 
 const page = () => {
   const { paginateOfficialsHook } = apiPaginateHooks(OFFICIALS_PATH);
@@ -12,7 +13,8 @@ const page = () => {
   return (
     <>
       <DataTable columns={officialsColumn} data={payload} pages={pages} />
-      <OfficialsFormDialog />
+      <CreateOfficialsFormDialog />
+      <EditOfficialsFormDialog />
     </>
   );
 };

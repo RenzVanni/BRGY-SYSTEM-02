@@ -77,6 +77,10 @@ export const submitRegisterFormApi = async (prop: FormData): Promise<SuccessResp
   return await response.json();
 };
 
+/**
+ * * Logout
+ * @returns
+ */
 export const logoutAuth = async () => {
   const query = encodeURIComponent(`${ACCOUNT_PATH}/logout`);
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_DEV_URL}${ACCOUNT_PATH}/logout`, {

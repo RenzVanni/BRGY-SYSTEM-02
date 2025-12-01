@@ -19,7 +19,7 @@ import {
 import { useContext, useState } from 'react';
 import DataTablePagination from './data-table-pagination';
 import { ContextTheme } from '@/config/config_context';
-import { toggleCreateHook } from '@/hooks/toggleCreateHook';
+import { useToggleCreate } from '@/hooks/useToggle';
 
 interface DataTableProp<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -56,7 +56,7 @@ export const DataTable = <TData, TValue>({ columns, data, pages }: DataTableProp
     }
   });
 
-  const { toggleCreate } = toggleCreateHook();
+  const { toggleCreate } = useToggleCreate();
 
   return (
     <div>

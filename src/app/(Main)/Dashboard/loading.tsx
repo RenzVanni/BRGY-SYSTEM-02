@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import React from "react";
+import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
 
 const loading = () => {
   return (
@@ -9,7 +9,7 @@ const loading = () => {
         <Skeleton className="min-w-[200px] w-full h-[200px]"></Skeleton>
         <Skeleton className="min-w-[200px] w-full h-[200px]"></Skeleton>
       </div>
-      <Skeleton className="flex-1 w-full"></Skeleton>
+      <Skeleton className="flex-1 w-full h-full"></Skeleton>
     </>
   );
 };

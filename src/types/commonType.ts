@@ -47,11 +47,12 @@ export type TableColumnData<T> = {
 };
 
 /**
- * ! Main POST Request Param Type
+ * ! Main Request Param Type
  */
-export type PostRequestParamType<T> = {
+export type RequestParamType<T> = {
   param: T;
   path: string;
+  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 };
 
 /**

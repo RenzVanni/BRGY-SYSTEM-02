@@ -1,18 +1,14 @@
 import { ContextTheme } from '@/config/config_context';
 import { useContext } from 'react';
-import { useGet, usePaginate } from './useQuery';
-import {
-  accountMapper,
-  accountMapperForData,
-  accountRequestMapper,
-  mapResidents,
-  updateOfficialRequestDTOMapper
-} from './mapper';
+import { useGet, usePaginate, useQueryRequestParam } from './useQuery';
+import { accountMapper, accountMapperForData, mapResidents, updateOfficialRequestDTOMapper } from './mapper';
 import {
   ACCOUNT_FORGOT_PASSWORD,
   ACCOUNT_PATH,
   ACCOUNT_REGISTER,
+  ACCOUNT_REGISTER_USING_LINK,
   ACCOUNT_UPDATE,
+  ACCOUNT_VERIFICATION_FETCH_DATA,
   NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK,
   NOTIFICATIONS_SEND_REGISTRATION_LINK,
   OFFICIALS_ADD,
@@ -20,9 +16,9 @@ import {
   RESIDENTS_ADD,
   RESIDENTS_UPDATE
 } from '@/constants/Backend_Slugs';
-import { AccountColumnModel, AccountRequestDTO, AccountType } from '@/types/accountType';
+import { AccountColumnModel, AccountType } from '@/types/accountType';
 import { ResidentColumnModel, ResidentType } from '@/types/residentsType';
-import { PostRequestParamType, RequestBodyType, SuccessResponse, TableColumnData } from '@/types/commonType';
+import { RequestBodyType, RequestParamType, SuccessResponse, TableColumnData } from '@/types/commonType';
 import { OfficialsColumnModel, OfficialsType } from '@/types/officialsType';
 import { BlotterColumnModel, BlotterType } from '@/types/blotterType';
 import { ComplaintColumnModel, ComplaintType } from '@/types/complaintType';
@@ -33,9 +29,11 @@ import { mapName } from './methods';
 import { mainFindByIdApi } from '@/app/api/mainApi';
 import { findAccountVerificationByTokenApi } from '@/app/api/accountApi';
 import { useParams } from 'next/navigation';
-import { usePostRequestParamMutation, usePostRequestPartMutation, useRequestBodyMutation } from './useMutation';
+import { usePostRequestPartMutation, useRequestBodyMutation, useRequestParamMutation } from './useMutation';
 import toast from 'react-hot-toast';
 import { useContextTheme } from './hooks';
+import { AccountVerificationResponseDTO } from '@/types/accountVerificationType';
+import { AccountVerificationResponseDTODefaultData } from '@/data/defaultData';
 
 /**
  * ! Main Paginate Hook
@@ -158,13 +156,27 @@ export const apiFindByHooks = () => {
  * @returns
  */
 export const apiPostRequestParamHooks = <T>() => {
-  const { mutate, isSuccess, data } = usePostRequestParamMutation<T>();
+  const { mutate, isSuccess, data } = useRequestParamMutation<T>();
 
-  const sendEmailNotification = ({ param, path }: PostRequestParamType<T>) => {
-    mutate({ param: param, path: path });
+  const sendEmailNotification = ({ param, path, method }: RequestParamType<T>) => {
+    mutate({ param: param, path: path, method: method });
   };
 
   return { sendEmailNotification };
+};
+
+export const apiRequestParamHooks = () => {
+  const fetchAccountVerification = (token: string) => {
+    const { data, isPending, isSuccess } = useQueryRequestParam<AccountVerificationResponseDTO, string>({
+      param: token,
+      path: ACCOUNT_VERIFICATION_FETCH_DATA,
+      method: 'GET'
+    });
+
+    return { data: data ?? AccountVerificationResponseDTODefaultData, isPending, isSuccess };
+  };
+
+  return { fetchAccountVerification };
 };
 
 /**
@@ -172,16 +184,16 @@ export const apiPostRequestParamHooks = <T>() => {
  * @returns
  */
 export const apiRequestBodyHooks = <T>() => {
-  const { isFormDialog, residentData, accountData, officialsData } = useContextTheme();
+  const { isFormDialog, residentData, accountData, officialsData, registerAccountData } = useContextTheme();
   const { dialogBoxType } = isFormDialog;
 
-  const { mutate, isPending, isSuccess } = useRequestBodyMutation<SuccessResponse, T>();
+  const { mutate, isPending, isSuccess, data } = useRequestBodyMutation<T>();
 
   const requestBodyHook = ({ body, path, method }: RequestBodyType<T>) => {
     mutate({ body: body, path: path, method: method });
   };
 
-  return { isPending, isSuccess, requestBodyHook };
+  return { isPending, isSuccess, data, requestBodyHook };
 };
 
 /**
@@ -233,9 +245,8 @@ export const apiRequestPartHooks = () => {
       formData.append('body', new Blob([JSON.stringify({ ...mappedAccount })], { type: 'application/json' }));
       mutate({ formdata: formData, path: ACCOUNT_UPDATE, method: 'PUT' });
     } else if (dialogBoxType == 'createAccount') {
-      const mappedAccount = accountRequestMapper(accountData);
-      formData.append('body', new Blob([JSON.stringify({ ...mappedAccount })], { type: 'application/json' }));
-      mutate({ formdata: formData, path: NOTIFICATIONS_SEND_REGISTRATION_LINK, method: 'POST' });
+      formData.append('body', new Blob([JSON.stringify({ ...residentData })], { type: 'application/json' }));
+      mutate({ formdata: formData, path: ACCOUNT_REGISTER_USING_LINK, method: 'POST' });
     }
   };
 

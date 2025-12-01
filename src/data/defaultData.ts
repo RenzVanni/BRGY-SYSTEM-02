@@ -1,10 +1,12 @@
-import { AccountRequestDTO, AccountType, RegistrationFormType } from '@/types/accountType';
+import { AccountType, RegisterAccountRequestDTO } from '@/types/accountType';
+import { AccountVerificationResponseDTO } from '@/types/accountVerificationType';
 import { BlotterType } from '@/types/blotterType';
 import { ComplaintType } from '@/types/complaintType';
 import { ContextType } from '@/types/contextType';
 import { DisasterAndEmergencyType } from '@/types/disasterAndEmergencyType';
 import { HealthAndSanitationType } from '@/types/healthAndSanitationType';
 import { IncidentType } from '@/types/incidentType';
+import { SendEmailRegistrationAdminDTO } from '@/types/notificationType';
 import { OfficialsType } from '@/types/officialsType';
 import { ResidentType } from '@/types/residentsType';
 
@@ -39,12 +41,23 @@ export const AccountDefaultData: AccountType = {
   imgUrl: ''
 };
 
-export const AccountFormDefaultData: AccountRequestDTO = {
+export const RegisterAccountDefaultData: RegisterAccountRequestDTO = {
   username: '',
+  password: '',
+  confirmPassword: '',
+  token: '',
+  role: []
+};
+
+export const AccountVerificationResponseDTODefaultData: AccountVerificationResponseDTO = {
+  resident: ResidentDefaultData,
+  email: ''
+};
+
+export const SendEmailRegistrationAdminDefaultData: SendEmailRegistrationAdminDTO = {
   email: '',
   resident_id: 0,
-  birth_date: '',
-  role: []
+  is_admin: false
 };
 
 export const OfficialsDefaultData: OfficialsType = {
@@ -172,6 +185,10 @@ export const contextDefaultData: ContextType = {
   setHealthAndSanitationData: () => {},
   incidentData: IncidentDefaultData,
   setIncidentData: () => {},
+  registerAccountData: RegisterAccountDefaultData,
+  setRegisterAccountData: () => {},
+  sendEmailRegistrationAdmin: SendEmailRegistrationAdminDefaultData,
+  setSendEmailRegistrationAdmin: () => {},
 
   paginateValue: 0,
   setPaginateValue: () => {},
@@ -181,18 +198,4 @@ export const contextDefaultData: ContextType = {
   setIsForgotPasswordOrSignup: () => {},
   previewImg: null,
   setPreviewImg: () => {}
-};
-
-export const registrationFormDefaultData: RegistrationFormType = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  firstname: '',
-  middlename: '',
-  lastname: '',
-  token: '',
-  gender: '',
-  birth_date: '',
-  address: ''
 };

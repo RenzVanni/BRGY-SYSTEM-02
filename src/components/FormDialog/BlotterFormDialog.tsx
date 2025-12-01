@@ -1,21 +1,21 @@
 import React from 'react';
 import { Dialog, DialogContent } from '../ui/dialog';
 import { useContextTheme } from '@/hooks/hooks';
-import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 import { ReportsHeader } from './components/CustomHeader';
 import { Input } from '../ui/input';
 import CustomInput from './components/CustomInput';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import CustomSelect from './components/CustomSelect';
-import { apiRequestBodyHooks, apiRequestPartHooks } from '@/hooks/apiHooks';
+import { apiRequestBodyHooks, apiRequestPartHooks } from '@/hooks/useApiHooks';
 import { BLOTTER_ADD, BLOTTER_UPDATE } from '@/constants/Backend_Slugs';
+import { useOpenChange } from '@/hooks/useOpenChangeHook';
 
 const BlotterFormDialog = () => {
   const { isFormDialog, blotterData, setBlotterData } = useContextTheme();
   const { id, victim, complainant, respondent, location, time, date, details, status, type } = blotterData;
   const { isOpen, dialogBoxType } = isFormDialog;
-  const { handleOpenChange } = onOpenChangeHook();
+  const { handleOpenChange } = useOpenChange();
 
   const { requestBodyHook, isPending } = apiRequestBodyHooks();
 

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
-import { toggleEditHook } from '@/hooks/toggleEditHook';
+import { useToggleEdit } from '@/hooks/useToggle';
 
 export type CustomColumnDefProp = {
   accessorKey: string;
@@ -59,7 +59,7 @@ export const customColumnDef = <TDATA extends { id: number | string }>({
     {
       id: 'actions',
       cell: ({ row }) => {
-        const { toggleEdit } = toggleEditHook();
+        const { toggleEdit } = useToggleEdit();
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

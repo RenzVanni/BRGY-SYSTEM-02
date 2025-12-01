@@ -3,7 +3,7 @@ import BlotterFormDialog from '@/components/FormDialog/BlotterFormDialog';
 import { DataTable } from '@/components/table/data-table';
 import { blotterColumn } from '@/config/blotter/blotterColumnDef';
 import { BLOTTER_PATH } from '@/constants/Backend_Slugs';
-import { apiPaginateHooks } from '@/hooks/apiHooks';
+import { apiPaginateHooks } from '@/hooks/useApiHooks';
 import React from 'react';
 
 const page = () => {

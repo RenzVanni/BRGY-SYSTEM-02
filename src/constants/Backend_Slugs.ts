@@ -14,16 +14,25 @@ export const ACCOUNT_VERIFICATION_FIND_BY_TOKEN = ACCOUNT_PATH + PUBLIC + '/find
 export const ACCOUNT_REGISTER_USING_LINK = ACCOUNT_PATH + PUBLIC + '/register-form';
 export const ACCOUNT_FORGOT_PASSWORD = ACCOUNT_PATH + PUBLIC + '/forgot-password';
 
+// * Account Verification
+export const ACCOUNT_VERIFICATION_PATH = '/accountVerification';
+export const ACCOUNT_VERIFICATION_FETCH_DATA = ACCOUNT_VERIFICATION_PATH + '/token';
+export const REFRESH_TOKEN = ACCOUNT_VERIFICATION_PATH + '/refreshToken';
+
 //* Notifications
 export const NOTIFICATIONS = '/notification';
 export const NOTIFICATIONS_SEND_REGISTRATION_LINK = NOTIFICATIONS + PUBLIC + '/sendRegistrationLink';
+export const NOTIFICATIONS_SEND_REGISTRATION_LINK_FROM_ADMIN = NOTIFICATIONS + '/sendRegistrationLinkFromAdmin';
 export const NOTIFICATIONS_SEND_FORGOT_PASSWORD_LINK = NOTIFICATIONS + PUBLIC + '/sendForgotPasswordLink';
 
 //* Residents
 export const RESIDENTS_PATH = '/residents';
 export const RESIDENTS_ADD = RESIDENTS_PATH + ADD_SLUG;
 export const RESIDENTS_UPDATE = RESIDENTS_PATH + UPDATE_SLUG;
+export const RESIDENTS_SEARCH = RESIDENTS_PATH + '/search';
 export const RESIDENTS_FIND_BY_NAME_AND_BIRTHDATE = RESIDENTS_PATH + '/name_birthdate';
+export const RESIDENTS_FIND_BY_YEAR = RESIDENTS_PATH + '/findByYear';
+export const RESIDENTS_FETCH_GROUP_BY_GENDER = RESIDENTS_PATH + '/groupByGender';
 
 //* Officials
 export const OFFICIALS_PATH = '/officials';

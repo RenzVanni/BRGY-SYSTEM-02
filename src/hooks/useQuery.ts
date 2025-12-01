@@ -1,8 +1,9 @@
 import { findAccountVerificationByTokenApi } from '@/app/api/accountApi';
-import { mainFindByIdApi, mainGetApi, mainPaginateApi } from '@/app/api/mainApi';
+import { mainFindByIdApi, mainGetApi, mainPaginateApi, mainRequestParamApi } from '@/app/api/mainApi';
+import { searchResidentsApi } from '@/app/api/residentApi';
 import { LOGIN } from '@/constants/navigation';
-import { ErrorResponse, PaginateApiResponse } from '@/types/commonType';
-import { useQuery } from '@tanstack/react-query';
+import { ErrorResponse, PaginateApiResponse, RequestParamType } from '@/types/commonType';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 // find all or paginate
@@ -19,6 +20,15 @@ export const usePaginate = (page: number, limit: number, path: string) => {
         }
       }
     }
+  });
+};
+
+export const useSearch = (name: string, page: number, limit: number) => {
+  return useInfiniteQuery({
+    queryKey: ['searchResidents', name, page, limit],
+    queryFn: () => searchResidentsApi(name, page, limit),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.pages ?? undefined
   });
 };
 
@@ -52,3 +62,11 @@ export const useFindAccountVerificationByToken = (token: string) =>
     refetchOnReconnect: false,
     refetchOnWindowFocus: false
   });
+
+// ! Main Query Request Param
+export const useQueryRequestParam = <TSUCCESS, TPARAM>({ param, path, method }: RequestParamType<TPARAM>) => {
+  return useQuery<TSUCCESS, ErrorResponse>({
+    queryKey: ['requestParam', param, path, method],
+    queryFn: () => mainRequestParamApi<TSUCCESS, TPARAM>({ param, path, method })
+  });
+};

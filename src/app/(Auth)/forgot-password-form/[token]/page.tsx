@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ACCOUNT_FORGOT_PASSWORD } from '@/constants/Backend_Slugs';
 import { LOGIN } from '@/constants/navigation';
-import { apiRequestBodyHooks } from '@/hooks/apiHooks';
+import { apiRequestBodyHooks } from '@/hooks/useApiHooks';
 import { SubmitForgotPasswordFormType } from '@/types/accountType';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';

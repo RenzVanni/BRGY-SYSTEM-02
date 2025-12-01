@@ -8,10 +8,10 @@ import { genderData } from '@/data/gender';
 import { civilStatusData } from '@/data/civilStatus';
 import CustomFile from './components/CustomFile';
 import CustomButtonGroup from './components/CustomButtonGroup';
-import { onOpenChangeHook } from '@/hooks/onOpenChangeHook';
 import { useContextTheme } from '@/hooks/hooks';
-import { apiRequestPartHooks } from '@/hooks/apiHooks';
+import { apiRequestPartHooks } from '@/hooks/useApiHooks';
 import { ResidentType } from '@/types/residentsType';
+import { useOpenChange } from '@/hooks/useOpenChangeHook';
 
 const ResidentFormDialog = () => {
   const { residentData, setResidentData, isFormDialog, setIsFormDialog, previewImg, setPreviewImg } = useContextTheme();
@@ -37,7 +37,7 @@ const ResidentFormDialog = () => {
     account_id
   } = residentData;
 
-  const { handleOpenChange } = onOpenChangeHook();
+  const { handleOpenChange } = useOpenChange();
   const { residentRequestPartHook, isPending } = apiRequestPartHooks();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -21,13 +21,13 @@ export type LoginType = {
 };
 
 /**
- * * Account request DTO
+ * * Register account request DTO
  */
-export type AccountRequestDTO = {
+export type RegisterAccountRequestDTO = {
   username: string;
-  email: string;
-  resident_id: number;
-  birth_date: string;
+  password: string;
+  confirmPassword: string;
+  token: string;
   role: string[];
 };
 
@@ -40,37 +40,6 @@ export type UpdateAccountRequestDTO = {
   email: string;
   resident_id: number;
   role: string[];
-};
-
-/**
- * * Registration form requirements
- */
-export type RegistrationFormType = {
-  username: string;
-  email: string;
-  firstname: string;
-  middlename?: string;
-  lastname: string;
-  password: string;
-  confirmPassword: string;
-  token: string;
-  gender: string;
-  address: string;
-  birth_date: string;
-};
-
-/**
- * * Registration form submission requirements
- */
-export type SubmitRegistrationFormType = {
-  username: string;
-  email: string;
-  firstname: string;
-  middlename?: string;
-  lastname: string;
-  password: string;
-  confirmPassword: string;
-  token: string;
 };
 
 /**

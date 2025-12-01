@@ -1,3 +1,4 @@
+import { REFRESH_TOKEN } from '@/constants/Backend_Slugs';
 import { LOGIN } from '@/constants/navigation';
 import { error } from 'console';
 import { cookies, headers } from 'next/headers';
@@ -16,9 +17,17 @@ export async function GET(req: NextRequest) {
   });
 
   if (response.status == 401) {
-    (await cookies()).delete('access_token');
-    const unAuthorized = NextResponse.json({}, { status: response.status });
-    return unAuthorized;
+    const refresh = await fetch(REFRESH_TOKEN, {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    if (refresh.status == 401) {
+      (await cookies()).delete('access_token');
+      (await cookies()).delete('refresh_token');
+      const unAuthorized = NextResponse.json({}, { status: response.status });
+      return unAuthorized;
+    }
   }
 
   if (response.status == 204) {
@@ -51,12 +60,14 @@ export async function POST(req: NextRequest) {
   const query = searchParams.get('query');
   const contentType = req.headers.get('content-type');
   let response: Response = null;
+
   if (contentType?.includes('application/json')) {
     const body = await req.json();
     const backend = await fetch(process.env.NEXT_PUBLIC_BACKEND_DEV_URL + query, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Cookie: req.headers.get('cookie')
       },
       credentials: 'include',
       body: JSON.stringify(body)
@@ -87,34 +98,33 @@ export async function POST(req: NextRequest) {
     response = backend;
   }
 
-  if (response.status == 401) {
-    (await cookies()).delete('access_token');
-    const unAuthorized = NextResponse.json({}, { status: response.status });
-    return unAuthorized;
-  }
+  switch (response.status) {
+    case 401: {
+      (await cookies()).delete('access_token');
+      const unAuthorized = NextResponse.json({}, { status: response.status });
+      return unAuthorized;
+    }
+    case 204: {
+      console.log('Status inside server: ', response.status);
+      const noContent = new NextResponse(null, {
+        status: response.status
+      });
+      return noContent;
+    }
+    case 200: {
+      const data = await response.json().catch(() => {});
+      const nextResponse = NextResponse.json(data, {
+        status: response.status,
+        headers: response.headers
+      });
 
-  if (response.status == 204) {
-    console.log('Status inside server: ', response.status);
-    const noContent = new NextResponse(null, {
-      status: response.status
-    });
-    return noContent;
-  }
-
-  if (response.status == 200) {
-    const data = await response.json().catch(() => {});
-    const nextResponse = NextResponse.json(data, {
-      status: response.status,
-      headers: response.headers
-    });
-
-    return nextResponse;
-  }
-
-  if (!response.ok) {
-    const data = await response.json();
-    const nextResponse = NextResponse.json(data, { status: response.status, headers: response.headers });
-    return nextResponse;
+      return nextResponse;
+    }
+    default: {
+      const data = await response.json();
+      const nextResponse = NextResponse.json(data, { status: response.status, headers: response.headers });
+      return nextResponse;
+    }
   }
 }
 

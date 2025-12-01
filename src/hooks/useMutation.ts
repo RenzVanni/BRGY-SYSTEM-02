@@ -1,11 +1,11 @@
 import { loginApi, logoutAuth, submitRegisterFormApi } from '@/app/api/accountApi';
-import { mainFindByIdApi, mainPostRequestParamApi, mainRequestBodyApi, mainRequestPartApi } from '@/app/api/mainApi';
+import { mainFindByIdApi, mainRequestBodyApi, mainRequestParamApi, mainRequestPartApi } from '@/app/api/mainApi';
 import { DASHBOARD, LOGIN } from '@/constants/navigation';
 import {
   ErrorResponse,
   GetPathVariableType,
-  PostRequestParamType,
   RequestBodyType,
+  RequestParamType,
   RequestPartType,
   SuccessResponse
 } from '@/types/commonType';
@@ -42,7 +42,7 @@ export const useSubmitRegisterFormMutation = () => {
     mutationFn: (formData: FormData) => submitRegisterFormApi(formData),
     onSuccess: (data) => {
       toast.success(data.message);
-      router.push(LOGIN);
+      // router.push(LOGIN);
     },
     onError: (err) => {
       if (err.code) {
@@ -56,9 +56,12 @@ export const useSubmitRegisterFormMutation = () => {
  * ! Main Request Body
  * @returns
  */
-export const useRequestBodyMutation = <TSUCCESS, TDATA>() => {
-  return useMutation<TSUCCESS, ErrorResponse, RequestBodyType<TDATA>>({
-    mutationFn: ({ body, path, method }) => mainRequestBodyApi<TSUCCESS, TDATA>({ body, path, method }),
+export const useRequestBodyMutation = <TDATA>() => {
+  return useMutation<SuccessResponse, ErrorResponse, RequestBodyType<TDATA>>({
+    mutationFn: ({ body, path, method }) => mainRequestBodyApi<TDATA>({ body, path, method }),
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
     onError: (err) => {
       if (err.code) {
         toast.error(err.message);
@@ -68,16 +71,13 @@ export const useRequestBodyMutation = <TSUCCESS, TDATA>() => {
 };
 
 /**
- * ! Main POST Request Param Mutation
+ * ! Main Request Param Mutation
  * @returns
  */
-export const usePostRequestParamMutation = <T>() => {
+export const useRequestParamMutation = <TPARAM>() => {
   const router = useRouter();
-  return useMutation<SuccessResponse, ErrorResponse, PostRequestParamType<T>>({
-    mutationFn: ({ param, path }) => mainPostRequestParamApi<T>(param, path),
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
+  return useMutation<SuccessResponse, ErrorResponse, RequestParamType<TPARAM>>({
+    mutationFn: ({ param, path, method }) => mainRequestParamApi<SuccessResponse, TPARAM>({ param, path, method }),
     onError: (err) => {
       if (err.code) {
         toast.error(err.message);
